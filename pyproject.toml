@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "winterswim"
+version = "0.1.0"
+description = "Winter swimming location database"
+authors = ["winterswim"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.12,<4"
+django = "^6.0"
+psycopg2-binary = "^2.9.11"
+django-modeltranslation = "^0.19.17"
+pillow = "^12.0.0"
+gunicorn = "^23.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

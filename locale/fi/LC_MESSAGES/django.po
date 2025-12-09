@@ -1,0 +1,550 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-09 15:24+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: apps/locations/admin.py:69
+msgid "Basic Information"
+msgstr ""
+
+#: apps/locations/admin.py:76 apps/locations/models/location.py:52
+#: apps/locations/models/location.py:153 apps/locations/models/photo.py:22
+msgid "Location"
+msgstr ""
+
+#: apps/locations/admin.py:84 apps/locations/models/location.py:74
+#: templates/locations/location_detail.html:51
+msgid "Facilities"
+msgstr ""
+
+#: apps/locations/admin.py:91
+msgid "Contact Information"
+msgstr ""
+
+#: apps/locations/admin.py:99
+msgid "Moderation"
+msgstr ""
+
+#: apps/locations/admin.py:107
+msgid "Timestamps"
+msgstr ""
+
+#: apps/locations/admin.py:129
+msgid "Status"
+msgstr ""
+
+#: apps/locations/admin.py:141
+msgid "Map preview"
+msgstr ""
+
+#: apps/locations/admin.py:150
+msgid "Approve selected locations"
+msgstr ""
+
+#: apps/locations/admin.py:159
+msgid "Reject selected locations"
+msgstr ""
+
+#: apps/locations/admin.py:175
+msgid "Metadata"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:22
+msgid "Location name"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:23
+msgid "What is this place called?"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:26
+msgid "e.g., Pirita Beach"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:31
+#: apps/locations/models/location.py:45
+#: templates/locations/location_detail.html:37
+msgid "Description"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:32
+msgid "Describe this swimming location"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:36
+msgid "Tell us about this location..."
+msgstr ""
+
+#: apps/locations/forms/location_form.py:42
+msgid "Latitude"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:51
+msgid "Longitude"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:62
+#: apps/locations/models/location.py:59
+#: templates/locations/location_detail.html:41
+msgid "Address"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:63
+msgid "Nearest address or landmark"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:66
+msgid "e.g., Pirita tee 1, Tallinn"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:74
+#: apps/locations/models/location.py:69
+msgid "Location type"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:81
+msgid "Available facilities"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:82
+msgid "Select all that apply"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:88
+#: apps/locations/models/location.py:80
+msgid "Access instructions"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:89
+msgid "How to get there and find the swimming spot"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:93
+msgid "e.g., Park at the beach parking lot, walk 200m north..."
+msgstr ""
+
+#: apps/locations/forms/location_form.py:100
+#: apps/locations/models/location.py:87
+msgid "Website"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:109
+msgid "Contact email"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:110
+msgid "Email for inquiries about this location"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:120
+msgid "Phone number"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:131
+#: apps/locations/models/location.py:105
+#: templates/locations/location_detail.html:29
+#: templates/locations/location_list.html:38 templates/locations/map.html:76
+msgid "Free access"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:137
+#: apps/locations/models/location.py:110
+msgid "Pricing details"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:138
+msgid "If not free, describe the pricing"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:142
+msgid "e.g., €5 per visit, €50 monthly membership"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:150
+#: apps/locations/forms/location_form.py:154
+msgid "Your name"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:151
+msgid "Optional: Let us know who suggested this location"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:160
+msgid "Your email"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:161
+msgid "Optional: We may contact you about this submission"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:177
+msgid "Latitude must be between -90 and 90"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:180
+msgid "Longitude must be between -180 and 180"
+msgstr ""
+
+#: apps/locations/forms/location_form.py:189
+msgid "Please provide pricing details if access is not free"
+msgstr ""
+
+#: apps/locations/models/location.py:11 templates/locations/map.html:110
+msgid "Wild spot"
+msgstr ""
+
+#: apps/locations/models/location.py:12 templates/locations/map.html:111
+msgid "Commercial facility"
+msgstr ""
+
+#: apps/locations/models/location.py:13 templates/locations/map.html:112
+msgid "Swimming club"
+msgstr ""
+
+#: apps/locations/models/location.py:14 templates/locations/map.html:113
+msgid "Public facility"
+msgstr ""
+
+#: apps/locations/models/location.py:19
+msgid "Sauna"
+msgstr ""
+
+#: apps/locations/models/location.py:20
+msgid "Changing room"
+msgstr ""
+
+#: apps/locations/models/location.py:21
+msgid "Shower"
+msgstr ""
+
+#: apps/locations/models/location.py:22
+msgid "Lockers"
+msgstr ""
+
+#: apps/locations/models/location.py:23
+msgid "Parking"
+msgstr ""
+
+#: apps/locations/models/location.py:24
+msgid "Disabled access"
+msgstr ""
+
+#: apps/locations/models/location.py:25
+msgid "Toilet"
+msgstr ""
+
+#: apps/locations/models/location.py:26
+msgid "Café"
+msgstr ""
+
+#: apps/locations/models/location.py:40
+msgid "Name"
+msgstr ""
+
+#: apps/locations/models/location.py:41
+msgid "Name of the swimming location"
+msgstr ""
+
+#: apps/locations/models/location.py:46
+msgid "Detailed description of the location"
+msgstr ""
+
+#: apps/locations/models/location.py:53
+msgid "Geographic coordinates"
+msgstr ""
+
+#: apps/locations/models/location.py:60
+msgid "Human-readable address"
+msgstr ""
+
+#: apps/locations/models/location.py:75
+msgid "Available facilities (sauna, changing rooms, etc.)"
+msgstr ""
+
+#: apps/locations/models/location.py:81
+msgid "How to access this location"
+msgstr ""
+
+#: apps/locations/models/location.py:92
+msgid "Email"
+msgstr ""
+
+#: apps/locations/models/location.py:98
+msgid "Phone"
+msgstr ""
+
+#: apps/locations/models/location.py:106
+msgid "Whether access is free"
+msgstr ""
+
+#: apps/locations/models/location.py:111
+msgid "Details about pricing if not free"
+msgstr ""
+
+#: apps/locations/models/location.py:118
+msgid "Approved"
+msgstr ""
+
+#: apps/locations/models/location.py:119
+msgid "Whether this location has been approved by moderators"
+msgstr ""
+
+#: apps/locations/models/location.py:124
+msgid "Submitted by"
+msgstr ""
+
+#: apps/locations/models/location.py:125
+msgid "Name of person who submitted this location"
+msgstr ""
+
+#: apps/locations/models/location.py:130
+msgid "Submitter email"
+msgstr ""
+
+#: apps/locations/models/location.py:131
+msgid "Email of person who submitted (for follow-up)"
+msgstr ""
+
+#: apps/locations/models/location.py:136
+msgid "Moderation notes"
+msgstr ""
+
+#: apps/locations/models/location.py:137
+msgid "Internal notes for moderators"
+msgstr ""
+
+#: apps/locations/models/location.py:144
+msgid "Created at"
+msgstr ""
+
+#: apps/locations/models/location.py:149
+msgid "Updated at"
+msgstr ""
+
+#: apps/locations/models/location.py:154 templates/base.html:74
+msgid "Locations"
+msgstr ""
+
+#: apps/locations/models/photo.py:28
+msgid "Image"
+msgstr ""
+
+#: apps/locations/models/photo.py:33
+msgid "Caption"
+msgstr ""
+
+#: apps/locations/models/photo.py:34
+msgid "Optional caption for the photo"
+msgstr ""
+
+#: apps/locations/models/photo.py:40
+msgid "Display order"
+msgstr ""
+
+#: apps/locations/models/photo.py:41
+msgid "Order in which photos are displayed"
+msgstr ""
+
+#: apps/locations/models/photo.py:46
+msgid "Uploaded at"
+msgstr ""
+
+#: apps/locations/models/photo.py:50
+msgid "Location photo"
+msgstr ""
+
+#: apps/locations/models/photo.py:51
+msgid "Location photos"
+msgstr ""
+
+#: apps/locations/views/location_views.py:39 templates/base.html:10
+#: templates/locations/location_detail.html:4
+#: templates/locations/location_list.html:4
+#: templates/locations/location_submit.html:4 templates/locations/map.html:5
+#: templates/locations/submit_success.html:4
+msgid "Winter Swimming Locations"
+msgstr ""
+
+#: apps/locations/views/location_views.py:70 templates/base.html:33
+#: templates/locations/location_list.html:4
+#: templates/locations/location_list.html:9
+msgid "All Locations"
+msgstr ""
+
+#: apps/locations/views/location_views.py:120
+msgid ""
+"Thank you! Your location has been submitted and will be reviewed by our "
+"moderators."
+msgstr ""
+
+#: apps/locations/views/location_views.py:130
+#: templates/locations/location_submit.html:4
+#: templates/locations/location_submit.html:24
+msgid "Suggest a Location"
+msgstr ""
+
+#: apps/locations/views/location_views.py:139
+#: templates/locations/submit_success.html:4
+msgid "Submission Successful"
+msgstr ""
+
+#: templates/base.html:8
+msgid "Discover winter swimming locations around the world"
+msgstr ""
+
+#: templates/base.html:21
+msgid "Winter Swim"
+msgstr ""
+
+#: templates/base.html:24
+msgid "Toggle menu"
+msgstr ""
+
+#: templates/base.html:30 templates/base.html:73 templates/locations/map.html:5
+msgid "Map"
+msgstr ""
+
+#: templates/base.html:36 templates/base.html:75
+msgid "Add Location"
+msgstr ""
+
+#: templates/base.html:71
+msgid "Winter Swimming Community"
+msgstr ""
+
+#: templates/locations/location_detail.html:22
+msgid "Back to list"
+msgstr ""
+
+#: templates/locations/location_detail.html:31
+#: templates/locations/location_list.html:40 templates/locations/map.html:76
+msgid "Paid"
+msgstr ""
+
+#: templates/locations/location_detail.html:46
+msgid "Access Instructions"
+msgstr ""
+
+#: templates/locations/location_detail.html:60
+msgid "Pricing"
+msgstr ""
+
+#: templates/locations/location_detail.html:65
+msgid "Contact"
+msgstr ""
+
+#: templates/locations/location_detail.html:83
+#: templates/locations/location_submit.html:41
+msgid "Location on Map"
+msgstr ""
+
+#: templates/locations/location_detail.html:89
+msgid "Nearby Locations"
+msgstr ""
+
+#: templates/locations/location_list.html:10
+msgid "Browse all winter swimming locations"
+msgstr ""
+
+#: templates/locations/location_list.html:52
+msgid "First"
+msgstr ""
+
+#: templates/locations/location_list.html:53
+msgid "Previous"
+msgstr ""
+
+#: templates/locations/location_list.html:56
+msgid "Page"
+msgstr ""
+
+#: templates/locations/location_list.html:56
+msgid "of"
+msgstr ""
+
+#: templates/locations/location_list.html:59
+msgid "Next"
+msgstr ""
+
+#: templates/locations/location_list.html:60
+msgid "Last"
+msgstr ""
+
+#: templates/locations/location_list.html:66
+msgid "No locations found yet."
+msgstr ""
+
+#: templates/locations/location_list.html:67
+msgid "Add the first location"
+msgstr ""
+
+#: templates/locations/location_submit.html:25
+msgid "Help grow our community by adding a winter swimming location!"
+msgstr ""
+
+#: templates/locations/location_submit.html:31
+msgid "Note:"
+msgstr ""
+
+#: templates/locations/location_submit.html:32
+msgid ""
+"All submissions will be reviewed by our moderators before being published."
+msgstr ""
+
+#: templates/locations/location_submit.html:42
+msgid "Click on the map to set the location coordinates"
+msgstr ""
+
+#: templates/locations/location_submit.html:81
+msgid "Submit Location"
+msgstr ""
+
+#: templates/locations/map.html:77
+msgid "View Details"
+msgstr ""
+
+#: templates/locations/submit_success.html:10
+msgid "Thank You!"
+msgstr ""
+
+#: templates/locations/submit_success.html:13
+msgid "Your location has been submitted successfully."
+msgstr ""
+
+#: templates/locations/submit_success.html:18
+msgid "What happens next?"
+msgstr ""
+
+#: templates/locations/submit_success.html:21
+msgid "Our moderators will review your submission"
+msgstr ""
+
+#: templates/locations/submit_success.html:22
+msgid "If approved, it will appear on the map and in the location list"
+msgstr ""
+
+#: templates/locations/submit_success.html:23
+msgid "We may contact you via email if we need more information"
+msgstr ""
+
+#: templates/locations/submit_success.html:29
+msgid "View Map"
+msgstr ""
+
+#: templates/locations/submit_success.html:32
+msgid "Submit Another Location"
+msgstr ""

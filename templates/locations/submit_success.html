@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans 'Submission Successful' %} - {% trans 'Winter Swimming Locations' %}{% endblock %}
+
+{% block content %}
+<div class="container mt-xl text-center">
+    <div class="card">
+        <div class="card-body">
+            <h1>✓ {% trans 'Thank You!' %}</h1>
+
+            <p class="mb-lg">
+                {% trans 'Your location has been submitted successfully.' %}
+            </p>
+
+            <div class="form-info-message text-left">
+                <p>
+                    <strong>{% trans 'What happens next?' %}</strong>
+                </p>
+                <ul>
+                    <li>{% trans 'Our moderators will review your submission' %}</li>
+                    <li>{% trans 'If approved, it will appear on the map and in the location list' %}</li>
+                    <li>{% trans 'We may contact you via email if we need more information' %}</li>
+                </ul>
+            </div>
+
+            <div class="mt-xl">
+                <a href="{% url 'locations:map' %}" class="btn btn-primary">
+                    {% trans 'View Map' %}
+                </a>
+                <a href="{% url 'locations:submit' %}" class="btn btn-secondary">
+                    {% trans 'Submit Another Location' %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

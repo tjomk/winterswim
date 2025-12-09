@@ -1,0 +1,84 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% trans 'Discover winter swimming locations around the world' %}">
+
+    <title>{% block title %}{% trans 'Winter Swimming Locations' %}{% endblock %}</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="{% url 'locations:map' %}" class="site-logo">
+                ❄️ {% trans 'Winter Swim' %}
+            </a>
+
+            <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="{% trans 'Toggle menu' %}">
+                <span class="mobile-menu-icon"></span>
+            </button>
+
+            <nav class="site-nav" id="site-nav">
+                <a href="{% url 'locations:map' %}" class="nav-link {% if request.resolver_match.url_name == 'map' %}nav-link-active{% endif %}">
+                    {% trans 'Map' %}
+                </a>
+                <a href="{% url 'locations:list' %}" class="nav-link {% if request.resolver_match.url_name == 'list' %}nav-link-active{% endif %}">
+                    {% trans 'All Locations' %}
+                </a>
+                <a href="{% url 'locations:submit' %}" class="nav-link {% if request.resolver_match.url_name == 'submit' %}nav-link-active{% endif %}">
+                    {% trans 'Add Location' %}
+                </a>
+
+                <div class="language-switcher">
+                    {% get_current_language as LANGUAGE_CODE %}
+                    {% get_available_languages as LANGUAGES %}
+                    {% for lang_code, lang_name in LANGUAGES %}
+                        {% language lang_code %}
+                            <a href="{% url 'set_language' %}?language={{ lang_code }}&next={{ request.path }}"
+                               class="language-link {% if LANGUAGE_CODE == lang_code %}language-link-active{% endif %}">
+                                {{ lang_code }}
+                            </a>
+                        {% endlanguage %}
+                    {% endfor %}
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        {% if messages %}
+            <div class="container mt-lg">
+                {% for message in messages %}
+                    <div class="form-{% if message.tags %}{{ message.tags }}{% else %}info{% endif %}-message">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container text-center">
+            <p>&copy; {% now "Y" %} {% trans 'Winter Swimming Community' %}</p>
+            <p>
+                <a href="{% url 'locations:map' %}">{% trans 'Map' %}</a> |
+                <a href="{% url 'locations:list' %}">{% trans 'Locations' %}</a> |
+                <a href="{% url 'locations:submit' %}">{% trans 'Add Location' %}</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

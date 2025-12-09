@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans 'All Locations' %} - {% trans 'Winter Swimming Locations' %}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1>{% trans 'All Locations' %}</h1>
+        <p>{% trans 'Browse all winter swimming locations' %}</p>
+    </div>
+</div>
+
+<div class="container">
+    {% if locations %}
+        <div class="card-grid">
+            {% for location in locations %}
+                <a href="{% url 'locations:detail' location.pk %}" class="card location-card">
+                    {% if location.photos.first %}
+                        <img src="{{ location.photos.first.image.url }}"
+                             alt="{{ location.name }}"
+                             class="location-card-image">
+                    {% endif %}
+
+                    <div class="card-body">
+                        <span class="location-card-type">{{ location.get_location_type_display }}</span>
+                        <h3 class="card-title">{{ location.name }}</h3>
+                        <p class="card-text">{{ location.description|truncatewords:20 }}</p>
+
+                        {% if location.address %}
+                            <p class="card-text">
+                                <small>📍 {{ location.address }}</small>
+                            </p>
+                        {% endif %}
+
+                        <p class="card-text">
+                            {% if location.is_free %}
+                                <small>✓ {% trans "Free access" %}</small>
+                            {% else %}
+                                <small>💰 {% trans "Paid" %}</small>
+                            {% endif %}
+                        </p>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+            <div class="mt-xl text-center">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1" class="btn btn-secondary">{% trans "First" %}</a>
+                    <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">{% trans "Previous" %}</a>
+                {% endif %}
+
+                <span>{% trans "Page" %} {{ page_obj.number }} {% trans "of" %} {{ page_obj.paginator.num_pages }}</span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">{% trans "Next" %}</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-secondary">{% trans "Last" %}</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="text-center mt-xl">
+            <p>{% trans "No locations found yet." %}</p>
+            <a href="{% url 'locations:submit' %}" class="btn btn-primary">{% trans "Add the first location" %}</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

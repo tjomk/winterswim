@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(poetry init:*)",
+      "Bash(poetry add:*)",
+      "Bash(poetry run django-admin:*)",
+      "Bash(poetry lock:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -1,0 +1,179 @@
+"""
+Django admin configuration for Location models.
+
+Provides moderation interface for submitted locations.
+"""
+
+from django.contrib import admin
+from django.utils.html import format_html
+from django.utils.translation import gettext_lazy as _
+from modeltranslation.admin import TranslationAdmin
+
+from .models import Location, LocationPhoto
+
+
+class LocationPhotoInline(admin.TabularInline):
+    """Inline admin for location photos."""
+    model = LocationPhoto
+    extra = 1
+    fields = ('image', 'caption', 'order')
+    readonly_fields = ('uploaded_at',)
+
+
+@admin.register(Location)
+class LocationAdmin(TranslationAdmin):
+    """
+    Admin interface for Location model with moderation features.
+    """
+    # Use OSMGeoAdmin for the map widget
+    gis_widget_kwargs = {
+        'attrs': {
+            'default_lon': 25.0,
+            'default_lat': 59.0,
+            'default_zoom': 7,
+        },
+    }
+
+    list_display = (
+        'name',
+        'location_type',
+        'is_approved_badge',
+        'submitted_by_name',
+        'created_at',
+    )
+
+    list_filter = (
+        'is_approved',
+        'location_type',
+        'is_free',
+        'created_at',
+    )
+
+    search_fields = (
+        'name',
+        'description',
+        'address',
+        'submitted_by_name',
+        'submitted_by_email',
+    )
+
+    readonly_fields = (
+        'created_at',
+        'updated_at',
+        'submitted_by_name',
+        'submitted_by_email',
+        'location_map',
+    )
+
+    fieldsets = (
+        (_('Basic Information'), {
+            'fields': (
+                'name',
+                'description',
+                'location_type',
+            )
+        }),
+        (_('Location'), {
+            'fields': (
+                'location',
+                'address',
+                'access_instructions',
+                'location_map',
+            )
+        }),
+        (_('Facilities'), {
+            'fields': (
+                'facilities',
+                'is_free',
+                'pricing_details',
+            )
+        }),
+        (_('Contact Information'), {
+            'fields': (
+                'website',
+                'email',
+                'phone',
+            ),
+            'classes': ('collapse',)
+        }),
+        (_('Moderation'), {
+            'fields': (
+                'is_approved',
+                'moderation_notes',
+                'submitted_by_name',
+                'submitted_by_email',
+            )
+        }),
+        (_('Timestamps'), {
+            'fields': (
+                'created_at',
+                'updated_at',
+            ),
+            'classes': ('collapse',)
+        }),
+    )
+
+    inlines = [LocationPhotoInline]
+
+    actions = ['approve_locations', 'reject_locations']
+
+    def is_approved_badge(self, obj):
+        """Display approval status as colored badge."""
+        if obj.is_approved:
+            return format_html(
+                '<span style="color: green; font-weight: bold;">✓ Approved</span>'
+            )
+        return format_html(
+            '<span style="color: orange; font-weight: bold;">⧗ Pending</span>'
+        )
+    is_approved_badge.short_description = _('Status')
+
+    def location_map(self, obj):
+        """Display a small preview of the location on the map."""
+        if obj.location:
+            return format_html(
+                '<a href="https://www.openstreetmap.org/?mlat={lat}&mlon={lon}#map=15/{lat}/{lon}" '
+                'target="_blank">View on OpenStreetMap</a>',
+                lat=obj.latitude,
+                lon=obj.longitude
+            )
+        return '-'
+    location_map.short_description = _('Map preview')
+
+    def approve_locations(self, request, queryset):
+        """Bulk action to approve selected locations."""
+        updated = queryset.update(is_approved=True)
+        self.message_user(
+            request,
+            _(f'{updated} location(s) have been approved.')
+        )
+    approve_locations.short_description = _('Approve selected locations')
+
+    def reject_locations(self, request, queryset):
+        """Bulk action to reject (un-approve) selected locations."""
+        updated = queryset.update(is_approved=False)
+        self.message_user(
+            request,
+            _(f'{updated} location(s) have been rejected.')
+        )
+    reject_locations.short_description = _('Reject selected locations')
+
+
+@admin.register(LocationPhoto)
+class LocationPhotoAdmin(admin.ModelAdmin):
+    """Admin interface for LocationPhoto model."""
+
+    list_display = ('location', 'caption', 'order', 'uploaded_at')
+    list_filter = ('uploaded_at',)
+    search_fields = ('location__name', 'caption')
+    readonly_fields = ('uploaded_at',)
+
+    fieldsets = (
+        (None, {
+            'fields': ('location', 'image', 'caption', 'order')
+        }),
+        (_('Metadata'), {
+            'fields': ('uploaded_at',),
+            'classes': ('collapse',)
+        }),
+    )
