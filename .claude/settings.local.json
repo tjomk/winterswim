@@ -4,7 +4,16 @@
       "Bash(poetry init:*)",
       "Bash(poetry add:*)",
       "Bash(poetry run django-admin:*)",
-      "Bash(poetry lock:*)"
+      "Bash(poetry lock:*)",
+      "mcp__browsermcp__browser_press_key",
+      "mcp__browsermcp__browser_screenshot",
+      "mcp__browsermcp__browser_wait",
+      "mcp__browsermcp__browser_snapshot",
+      "mcp__browsermcp__browser_get_console_logs",
+      "Bash(find:*)",
+      "mcp__browsermcp__browser_navigate",
+      "Bash(curl:*)",
+      "Bash(python:*)"
     ],
     "deny": [],
     "ask": []
