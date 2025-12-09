@@ -58,6 +58,30 @@
         }
     }
 
+    /* Locate Me button on map */
+    .leaflet-control-locate {
+        background: white;
+        border: 2px solid rgba(0,0,0,0.2);
+        border-radius: 4px;
+        cursor: pointer;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    }
+
+    .leaflet-control-locate a {
+        display: block;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        text-decoration: none;
+        color: #333;
+        font-size: 18px;
+    }
+
+    .leaflet-control-locate a:hover {
+        background: #f4f4f4;
+    }
+
 </style>
 {% endblock %}
 
@@ -166,34 +190,81 @@
     // Marker
     let marker = null;
 
+    // User's detected location (for "Locate Me" button)
+    let userLocation = null;
+
     // Set initial marker if coordinates are provided
     if (latField.value && lonField.value) {
         marker = L.marker([latField.value, lonField.value]).addTo(map);
     }
 
-    // Add marker on click
-    map.on('click', function(e) {
-        const lat = e.latlng.lat;
-        const lon = e.latlng.lng;
-
-        // Update form fields
+    // Function to update location
+    function updateLocation(lat, lon) {
         latField.value = lat.toFixed(6);
         lonField.value = lon.toFixed(6);
 
-        // Update or create marker
         if (marker) {
-            marker.setLatLng(e.latlng);
+            marker.setLatLng([lat, lon]);
         } else {
-            marker = L.marker(e.latlng).addTo(map);
+            marker = L.marker([lat, lon]).addTo(map);
+        }
+    }
+
+    // Add marker on click
+    map.on('click', function(e) {
+        updateLocation(e.latlng.lat, e.latlng.lng);
+    });
+
+    // Create "Locate Me" control
+    L.Control.LocateMe = L.Control.extend({
+        onAdd: function(map) {
+            const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-locate');
+            const link = L.DomUtil.create('a', '', container);
+            link.innerHTML = '📍';
+            link.href = '#';
+            link.title = 'Locate me';
+
+            L.DomEvent.on(link, 'click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (userLocation) {
+                    // Return to saved user location
+                    map.setView([userLocation.lat, userLocation.lon], 13);
+                    updateLocation(userLocation.lat, userLocation.lon);
+                } else {
+                    // Try to get current location
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(function(position) {
+                            const lat = position.coords.latitude;
+                            const lon = position.coords.longitude;
+                            userLocation = { lat: lat, lon: lon };
+                            map.setView([lat, lon], 13);
+                            updateLocation(lat, lon);
+                        }, function(error) {
+                            alert('Could not get your location: ' + error.message);
+                        });
+                    } else {
+                        alert('Geolocation is not supported by your browser');
+                    }
+                }
+            });
+
+            return container;
         }
     });
 
-    // Try to get user's location
-    if (navigator.geolocation) {
+    // Add the control to the map
+    new L.Control.LocateMe({ position: 'topleft' }).addTo(map);
+
+    // Try to get user's location on page load
+    if (navigator.geolocation && !latField.value && !lonField.value) {
         navigator.geolocation.getCurrentPosition(function(position) {
-            const userLat = position.coords.latitude;
-            const userLon = position.coords.longitude;
-            map.setView([userLat, userLon], 10);
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            userLocation = { lat: lat, lon: lon };
+            map.setView([lat, lon], 13);
+            updateLocation(lat, lon);
         });
     }
 })();
