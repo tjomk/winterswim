@@ -121,10 +121,12 @@ class LocationAdmin(TranslationAdmin):
         """Display approval status as colored badge."""
         if obj.is_approved:
             return format_html(
-                '<span style="color: green; font-weight: bold;">✓ Approved</span>'
+                '<span style="color: {}; font-weight: bold;">✓ Approved</span>',
+                'green'
             )
         return format_html(
-            '<span style="color: orange; font-weight: bold;">⧗ Pending</span>'
+            '<span style="color: {}; font-weight: bold;">⧗ Pending</span>',
+            'orange'
         )
     is_approved_badge.short_description = _('Status')
 
@@ -145,7 +147,7 @@ class LocationAdmin(TranslationAdmin):
         updated = queryset.update(is_approved=True)
         self.message_user(
             request,
-            _(f'{updated} location(s) have been approved.')
+            _('%(count)d location(s) have been approved.') % {'count': updated}
         )
     approve_locations.short_description = _('Approve selected locations')
 
@@ -154,7 +156,7 @@ class LocationAdmin(TranslationAdmin):
         updated = queryset.update(is_approved=False)
         self.message_user(
             request,
-            _(f'{updated} location(s) have been rejected.')
+            _('%(count)d location(s) have been rejected.') % {'count': updated}
         )
     reject_locations.short_description = _('Reject selected locations')
 

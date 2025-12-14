@@ -15,6 +15,7 @@ import json
 from apps.locations.models import Location
 from apps.locations.forms import LocationSubmissionForm
 from apps.locations.services import prepare_location_data_for_save
+from infrastructure.notifications.telegram import telegram_service
 
 
 def map_view(request):
@@ -113,7 +114,8 @@ def location_submit_view(request):
             # Create location (imperative shell)
             location = Location.objects.create(**location_data)
 
-            # TODO: Send Telegram notification to moderators
+            # Send Telegram notification to moderators
+            telegram_service.notify_new_submission(location)
 
             messages.success(
                 request,

@@ -152,3 +152,8 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = ('en',)
 MODELTRANSLATION_TRANSLATION_FILES = (
     'apps.locations.translation',
 )
+
+
+# Telegram notifications
+TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '')
+TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID', '')
