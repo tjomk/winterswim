@@ -12,7 +12,6 @@ psycopg2-binary = "^2.9.11"
 django-modeltranslation = "^0.19.17"
 pillow = "^12.0.0"
 gunicorn = "^23.0.0"
-whitenoise = "^6.11.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
