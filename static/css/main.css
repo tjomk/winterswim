@@ -1,0 +1,83 @@
+/**
+ * Main Stylesheet
+ *
+ * This file imports all CSS modules in the correct order.
+ * To change the theme, modify variables.css.
+ */
+
+/* 1. Variables (must be first) */
+@import url('variables.css');
+
+/* 2. Base styles */
+@import url('base.css');
+
+/* 3. Components */
+@import url('components/header.css');
+@import url('components/buttons.css');
+@import url('components/forms.css');
+@import url('components/cards.css');
+
+/* 4. Page-specific styles */
+.map-container {
+    width: 100%;
+    height: calc(100vh - var(--header-height));
+    position: relative;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+/* Location markers on map */
+.location-marker-popup {
+    min-width: 200px;
+}
+
+.location-marker-popup h3 {
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-lg);
+}
+
+.location-marker-popup p {
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+}
+
+.location-marker-popup .btn {
+    margin-top: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+}
+
+/* Page headers */
+.page-header {
+    padding: var(--spacing-xl) 0;
+    background-color: var(--color-bg-secondary);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: var(--spacing-xl);
+}
+
+.page-header h1 {
+    margin-bottom: var(--spacing-sm);
+}
+
+.page-header p {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-lg);
+}
+
+/* Footer */
+.site-footer {
+    background-color: var(--color-bg-dark);
+    color: var(--color-text-light);
+    padding: var(--spacing-xl) 0;
+    margin-top: auto;
+}
+
+.site-footer a {
+    color: var(--color-secondary);
+}
+
+.site-footer a:hover {
+    color: var(--color-secondary-light);
+}
