@@ -35,13 +35,11 @@ echo "Compiling translations..."
 python manage.py compilemessages || true
 echo "✓ Translations ready"
 
-# Collect static files (for production)
-if [ "${DJANGO_ENV}" = "production" ]; then
-    echo ""
-    echo "Collecting static files..."
-    python manage.py collectstatic --noinput
-    echo "✓ Static files collected"
-fi
+# Collect static files
+echo ""
+echo "Collecting static files..."
+python manage.py collectstatic --noinput
+echo "✓ Static files collected"
 
 # Create superuser if environment variables are set
 if [ -n "${DJANGO_SUPERUSER_USERNAME}" ] && [ -n "${DJANGO_SUPERUSER_EMAIL}" ] && [ -n "${DJANGO_SUPERUSER_PASSWORD}" ]; then
