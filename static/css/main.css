@@ -18,15 +18,108 @@
 @import url('components/cards.css');
 
 /* 4. Page-specific styles */
+
+/* Use CSS Grid for map page layout */
+.map-page {
+    display: grid !important;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.map-page main {
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.map-page .site-footer {
+    margin-top: 0 !important;
+}
+
 .map-container {
     width: 100%;
-    height: calc(100vh - var(--header-height));
+    height: 100%;
+    flex: 1;
     position: relative;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block;
 }
 
 #map {
     width: 100%;
     height: 100%;
+}
+
+/* Map overlay for click-to-activate */
+.map-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+}
+
+.map-overlay:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.map-overlay-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    pointer-events: none;
+}
+
+.map-overlay-content svg {
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+}
+
+.map-overlay-content p {
+    font-size: var(--font-size-lg);
+    font-weight: 500;
+    color: var(--color-text);
+    margin: 0;
+}
+
+.map-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Disable map interactions when overlay is active */
+.map-container.inactive #map {
+    pointer-events: none;
+}
+
+/* Responsive map height */
+@media (max-width: 768px) {
+    .map-container {
+        height: 50vh;
+        min-height: 350px;
+    }
+}
+
+@media (max-width: 480px) {
+    .map-container {
+        height: 40vh;
+        min-height: 300px;
+    }
 }
 
 /* Location markers on map */
@@ -47,6 +140,22 @@
 .location-marker-popup .btn {
     margin-top: var(--spacing-sm);
     font-size: var(--font-size-sm);
+}
+
+/* Ensure proper button contrast in Leaflet popups */
+.leaflet-popup-content-wrapper .btn-primary,
+.leaflet-popup-content .btn-primary {
+    color: white !important;
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+    text-decoration: none !important;
+}
+
+.leaflet-popup-content-wrapper .btn-primary:hover,
+.leaflet-popup-content .btn-primary:hover {
+    background-color: var(--color-primary-dark) !important;
+    border-color: var(--color-primary-dark) !important;
+    color: white !important;
 }
 
 /* Page headers */

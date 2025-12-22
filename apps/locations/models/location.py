@@ -2,7 +2,9 @@
 Domain model for winter swimming locations.
 """
 
+import uuid
 from django.contrib.gis.db import models
+from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
 
@@ -39,6 +41,15 @@ class Location(models.Model):
         max_length=200,
         verbose_name=_('Name'),
         help_text=_('Name of the swimming location')
+    )
+
+    slug = models.SlugField(
+        max_length=255,
+        unique=True,
+        verbose_name=_('Slug'),
+        help_text=_('SEO-friendly URL slug (auto-generated)'),
+        null=True,
+        blank=True
     )
 
     description = models.TextField(
@@ -160,6 +171,15 @@ class Location(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        """Generate slug if not exists."""
+        if not self.slug:
+            # Generate slug from name + first 8 chars of UUID4
+            base_slug = slugify(self.name)
+            uuid_part = str(uuid.uuid4()).split('-')[0]
+            self.slug = f"{base_slug}-{uuid_part}"
+        super().save(*args, **kwargs)
 
     @property
     def latitude(self):

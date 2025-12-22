@@ -15,7 +15,7 @@
     {% if locations %}
         <div class="card-grid">
             {% for location in locations %}
-                <a href="{% url 'locations:detail' location.pk %}" class="card location-card">
+                <a href="{% url 'locations:detail' slug=location.slug %}" class="card location-card">
                     {% if location.photos.first %}
                         <img src="{{ location.photos.first.image.url }}"
                              alt="{{ location.name }}"
@@ -47,7 +47,7 @@
 
         <!-- Pagination -->
         {% if is_paginated %}
-            <div class="mt-xl text-center">
+            <div class="mt-xl mb-xl text-center">
                 {% if page_obj.has_previous %}
                     <a href="?page=1" class="btn btn-secondary">{% trans "First" %}</a>
                     <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">{% trans "Previous" %}</a>

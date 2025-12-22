@@ -11,14 +11,16 @@ urlpatterns = [
     # Main map view (home page)
     path('', views.map_view, name='map'),
 
-    # Location views
-    path('list/', views.LocationListView.as_view(), name='list'),
-    path('<int:pk>/', views.LocationDetailView.as_view(), name='detail'),
-
-    # Submission
+    # Submission (must come before slug pattern)
     path('submit/', views.location_submit_view, name='submit'),
     path('submit/success/', views.submit_success_view, name='submit_success'),
 
+    # Location views
+    path('list/', views.LocationListView.as_view(), name='list'),
+
     # API
     path('api/locations/', views.locations_api_view, name='api_locations'),
+
+    # Detail view (must be last - catches all remaining paths)
+    path('<slug:slug>/', views.LocationDetailView.as_view(), name='detail'),
 ]

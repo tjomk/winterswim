@@ -79,6 +79,8 @@ class LocationDetailView(DetailView):
     model = Location
     template_name = 'locations/location_detail.html'
     context_object_name = 'location'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
 
     def get_queryset(self):
         """Only show approved locations."""
@@ -164,6 +166,7 @@ def locations_api_view(request):
         fields=(
             'pk',
             'name',
+            'slug',
             'description',
             'location_type',
             'facilities',
@@ -176,9 +179,10 @@ def locations_api_view(request):
     data = json.loads(geojson)
 
     # Add detail URL to each feature
+    from django.urls import reverse
     for feature in data['features']:
-        location_id = feature['properties']['pk']
-        feature['properties']['detail_url'] = f'/locations/{location_id}/'
+        location_slug = feature['properties']['slug']
+        feature['properties']['detail_url'] = reverse('locations:detail', kwargs={'slug': location_slug})
 
     from django.http import JsonResponse
     return JsonResponse(data)

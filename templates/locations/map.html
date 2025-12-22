@@ -4,6 +4,8 @@
 
 {% block title %}{% trans 'Map' %} - {% trans 'Winter Swimming Locations' %}{% endblock %}
 
+{% block body_class %}map-page{% endblock %}
+
 {% block extra_css %}
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -14,6 +16,15 @@
 {% block content %}
 <div class="map-container">
     <div id="map"></div>
+    <div class="map-overlay" id="map-overlay">
+        <div class="map-overlay-content">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <p>{% trans "Click to interact with map" %}</p>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
@@ -26,6 +37,39 @@
 <script>
 (function() {
     'use strict';
+
+    // Map overlay activation
+    const mapContainer = document.querySelector('.map-container');
+    const mapOverlay = document.getElementById('map-overlay');
+    let isMapActive = false;
+
+    // Add inactive class initially
+    mapContainer.classList.add('inactive');
+
+    // Activate map on click
+    mapOverlay.addEventListener('click', function() {
+        isMapActive = true;
+        mapOverlay.classList.add('hidden');
+        mapContainer.classList.remove('inactive');
+    });
+
+    // Optional: Deactivate when clicking outside map
+    document.addEventListener('click', function(e) {
+        if (isMapActive && !mapContainer.contains(e.target)) {
+            isMapActive = false;
+            mapOverlay.classList.remove('hidden');
+            mapContainer.classList.add('inactive');
+        }
+    });
+
+    // Optional: Press ESC to deactivate
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && isMapActive) {
+            isMapActive = false;
+            mapOverlay.classList.remove('hidden');
+            mapContainer.classList.add('inactive');
+        }
+    });
 
     // Initialize map centered on Estonia
     const map = L.map('map').setView([59.0, 25.0], 7);

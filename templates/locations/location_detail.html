@@ -89,7 +89,7 @@
         <h2 class="mt-xl">{% trans "Nearby Locations" %}</h2>
         <div class="card-grid">
             {% for nearby in nearby_locations %}
-                <a href="{% url 'locations:detail' nearby.pk %}" class="card location-card">
+                <a href="{% url 'locations:detail' slug=nearby.slug %}" class="card location-card">
                     <div class="card-body">
                         <span class="location-card-type">{{ nearby.get_location_type_display }}</span>
                         <h3 class="card-title">{{ nearby.name }}</h3>
@@ -104,13 +104,14 @@
 
 {% block extra_js %}
 {% if location.location %}
+{% load l10n %}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""></script>
 <script>
 (function() {
-    const lat = {{ location.latitude }};
-    const lon = {{ location.longitude }};
+    const lat = {% localize off %}{{ location.latitude }}{% endlocalize %};
+    const lon = {% localize off %}{{ location.longitude }}{% endlocalize %};
 
     const map = L.map('detail-map').setView([lat, lon], 13);
 
