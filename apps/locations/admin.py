@@ -144,9 +144,7 @@ class LocationAdmin(TranslationAdmin):
 
     def approve_locations(self, request, queryset):
         """Bulk action to approve selected locations."""
-        # Use model manager to avoid MultilingualQuerySet._update() signature issue
-        pks = list(queryset.values_list('pk', flat=True))
-        updated = Location.objects.filter(pk__in=pks).update(is_approved=True)
+        updated = queryset.update(is_approved=True)
         self.message_user(
             request,
             _('%(count)d location(s) have been approved.') % {'count': updated}
@@ -155,9 +153,7 @@ class LocationAdmin(TranslationAdmin):
 
     def reject_locations(self, request, queryset):
         """Bulk action to reject (un-approve) selected locations."""
-        # Use model manager to avoid MultilingualQuerySet._update() signature issue
-        pks = list(queryset.values_list('pk', flat=True))
-        updated = Location.objects.filter(pk__in=pks).update(is_approved=False)
+        updated = queryset.update(is_approved=False)
         self.message_user(
             request,
             _('%(count)d location(s) have been rejected.') % {'count': updated}
