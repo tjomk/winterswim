@@ -1,8 +1,13 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
+{% load seo_tags %}
 
-{% block title %}{% trans 'Map' %} - {% trans 'Winter Swimming Locations' %}{% endblock %}
+{% block title %}{% trans 'Winter Swimming Locations' %} - {% trans 'Interactive Map' %}{% endblock %}
+
+{% block meta_description %}{% trans 'Explore winter swimming locations on an interactive map. Discover cold water swimming spots, wild locations, commercial facilities, and swimming clubs around the world.' %}{% endblock %}
+
+{% block meta_keywords %}{% trans 'winter swimming map, ice swimming locations, cold water swimming spots, interactive map, winter swim finder' %}{% endblock %}
 
 {% block body_class %}map-page{% endblock %}
 
@@ -29,6 +34,10 @@
 {% endblock %}
 
 {% block extra_js %}
+<!-- Schema.org Structured Data -->
+{% website_schema %}
+{% organization_schema %}
+
 <!-- Leaflet JavaScript -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="

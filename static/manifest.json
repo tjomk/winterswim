@@ -1,0 +1,42 @@
+{
+  "name": "Winter Swimming Locations",
+  "short_name": "WinterSwim",
+  "description": "Discover winter swimming locations around the world",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0066cc",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/static/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["sports", "lifestyle", "travel"],
+  "shortcuts": [
+    {
+      "name": "View Map",
+      "url": "/",
+      "description": "View all locations on interactive map"
+    },
+    {
+      "name": "Browse Locations",
+      "url": "/list/",
+      "description": "Browse all winter swimming locations"
+    },
+    {
+      "name": "Add Location",
+      "url": "/submit/",
+      "description": "Submit a new location"
+    }
+  ]
+}

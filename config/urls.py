@@ -19,8 +19,21 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls.i18n import i18n_patterns
+from django.contrib.sitemaps.views import sitemap
+from apps.locations.views.seo_views import robots_txt
+from apps.locations.sitemaps import LocationSitemap, StaticViewSitemap
+
+# Sitemap configuration
+sitemaps = {
+    'locations': LocationSitemap,
+    'static': StaticViewSitemap,
+}
 
 urlpatterns = [
+    # SEO
+    path('robots.txt', robots_txt, name='robots_txt'),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+
     # Admin
     path('admin/', admin.site.urls),
 

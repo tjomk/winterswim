@@ -32,6 +32,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',  # PostGIS support
+    'django.contrib.sites',  # Required for sitemaps
+    'django.contrib.sitemaps',  # SEO sitemaps
 
     # Local apps
     'apps.locations',
@@ -143,6 +145,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Site ID for django.contrib.sites
+SITE_ID = 1
 
 
 # Modeltranslation settings

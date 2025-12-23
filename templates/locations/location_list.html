@@ -1,7 +1,24 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}{% trans 'All Locations' %} - {% trans 'Winter Swimming Locations' %}{% endblock %}
+{% block title %}{% trans 'All Locations' %}{% if page_obj and page_obj.number > 1 %} - {% trans 'Page' %} {{ page_obj.number }}{% endif %} - {% trans 'Winter Swimming Locations' %}{% endblock %}
+
+{% block meta_description %}{% trans 'Browse all winter swimming locations worldwide. Find cold water swimming spots, saunas, and facilities for ice swimming enthusiasts.' %}{% if page_obj and page_obj.number > 1 %} {% trans 'Page' %} {{ page_obj.number }}.{% endif %}{% endblock %}
+
+{% block meta_keywords %}{% trans 'winter swimming locations, ice swimming spots, cold water swimming, winter swim directory, outdoor swimming facilities' %}{% endblock %}
+
+{% block canonical_url %}{% if page_obj.number == 1 %}{{ block.super }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% url 'locations:list' %}{% endif %}{% endblock %}
+
+{% block extra_head %}
+{% if is_paginated %}
+    {% if page_obj.has_previous %}
+    <link rel="prev" href="{{ request.scheme }}://{{ request.get_host }}{% url 'locations:list' %}{% if page_obj.previous_page_number != 1 %}?page={{ page_obj.previous_page_number }}{% endif %}">
+    {% endif %}
+    {% if page_obj.has_next %}
+    <link rel="next" href="{{ request.scheme }}://{{ request.get_host }}{% url 'locations:list' %}?page={{ page_obj.next_page_number }}">
+    {% endif %}
+{% endif %}
+{% endblock %}
 
 {% block content %}
 <div class="page-header">
@@ -18,7 +35,8 @@
                 <a href="{% url 'locations:detail' slug=location.slug %}" class="card location-card">
                     {% if location.photos.first %}
                         <img src="{{ location.photos.first.image.url }}"
-                             alt="{{ location.name }}"
+                             alt="{{ location.name }} - {{ location.get_location_type_display }}"
+                             loading="lazy"
                              class="location-card-image">
                     {% endif %}
 

@@ -5,19 +5,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{% trans 'Discover winter swimming locations around the world' %}">
 
+    <!-- Primary Meta Tags -->
     <title>{% block title %}{% trans 'Winter Swimming Locations' %}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{% trans 'Discover winter swimming locations around the world. Find wild spots, commercial facilities, swimming clubs, and public facilities for cold water swimming.' %}{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}{% trans 'winter swimming, cold water swimming, ice swimming, winter swim locations, sauna, outdoor swimming' %}{% endblock %}">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}">
+
+    <!-- hreflang Tags for Multi-language Support -->
+    {% get_current_language as LANGUAGE_CODE %}
+    {% get_available_languages as LANGUAGES %}
+    {% block hreflang_tags %}
+    {% for lang_code, lang_name in LANGUAGES %}
+    <link rel="alternate" hreflang="{{ lang_code }}" href="{% block hreflang_url %}{{ request.scheme }}://{{ request.get_host }}/{{ lang_code }}{{ request.path|slice:'3:' }}{% endblock %}">
+    {% endfor %}
+    <link rel="alternate" hreflang="x-default" href="{{ request.scheme }}://{{ request.get_host }}/en{{ request.path|slice:'3:' }}">
+    {% endblock %}
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}{% block title_text %}{% trans 'Winter Swimming Locations' %}{% endblock %}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{% trans 'Discover winter swimming locations around the world. Find wild spots, commercial facilities, swimming clubs, and public facilities for cold water swimming.' %}{% endblock %}">
+    <meta property="og:url" content="{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}">
+    <meta property="og:site_name" content="{% trans 'Winter Swimming Locations' %}">
+    <meta property="og:locale" content="{% if LANGUAGE_CODE == 'en' %}en_US{% elif LANGUAGE_CODE == 'fi' %}fi_FI{% elif LANGUAGE_CODE == 'et' %}et_EE{% else %}en_US{% endif %}">
+    {% block og_image %}
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/og-default.jpg' %}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="{% trans 'Winter Swimming Locations' %}">
+    {% endblock %}
+
+    <!-- Favicon & Icons -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'icons/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'icons/icon-192.png' %}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{% static 'icons/icon-512.png' %}">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <meta name="theme-color" content="#0066cc">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="{% block twitter_card %}summary_large_image{% endblock %}">
+    <meta name="twitter:title" content="{% block twitter_title %}{% block title_text_twitter %}{% trans 'Winter Swimming Locations' %}{% endblock %}{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}{% trans 'Discover winter swimming locations around the world. Find wild spots, commercial facilities, swimming clubs, and public facilities for cold water swimming.' %}{% endblock %}">
+    {% block twitter_image %}
+    <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/og-default.jpg' %}">
+    <meta name="twitter:image:alt" content="{% trans 'Winter Swimming Locations' %}">
+    {% endblock %}
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 
+    <!-- Preconnect to external resources -->
+    <link rel="dns-prefetch" href="https://unpkg.com">
+    <link rel="dns-prefetch" href="https://tile.openstreetmap.org">
+
     <!-- CSS -->
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
 
     {% block extra_css %}{% endblock %}
+
+    <!-- Extra head tags (for pagination links, etc.) -->
+    {% block extra_head %}{% endblock %}
 </head>
 <body class="{% block body_class %}{% endblock %}">
     <header class="site-header">
