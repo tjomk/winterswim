@@ -124,3 +124,43 @@ def organization_schema(context):
 
     json_ld = json.dumps(schema, ensure_ascii=False, indent=2)
     return mark_safe(f'<script type="application/ld+json">\n{json_ld}\n</script>')
+
+
+@register.simple_tag(takes_context=True)
+def breadcrumb_schema(context, breadcrumbs):
+    """
+    Generate Schema.org BreadcrumbList JSON-LD markup.
+
+    Args:
+        breadcrumbs: List of tuples [(name, url), ...] representing the breadcrumb trail
+
+    Returns:
+        JSON-LD script tag with BreadcrumbList structured data
+    """
+    request = context['request']
+
+    # Build the itemListElement array
+    items = []
+    for position, (name, url) in enumerate(breadcrumbs, start=1):
+        # Build absolute URL
+        if url:
+            absolute_url = request.build_absolute_uri(url)
+        else:
+            # Current page (last item) - use current URL
+            absolute_url = request.build_absolute_uri()
+
+        items.append({
+            "@type": "ListItem",
+            "position": position,
+            "name": name,
+            "item": absolute_url if url else absolute_url  # Last item may not have link
+        })
+
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": items
+    }
+
+    json_ld = json.dumps(schema, ensure_ascii=False, indent=2)
+    return mark_safe(f'<script type="application/ld+json">\n{json_ld}\n</script>')

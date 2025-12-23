@@ -73,6 +73,9 @@
 
 {% block content %}
 <div class="container mt-xl">
+    {# Breadcrumb navigation #}
+    {% include 'components/breadcrumbs.html' with breadcrumbs=breadcrumb_list %}
+
     <a href="{% url 'locations:list' %}" class="btn btn-secondary mb-md">← {% trans "Back to list" %}</a>
 
     <h1>{{ location.name }}</h1>

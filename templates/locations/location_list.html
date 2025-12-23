@@ -23,6 +23,9 @@
 {% block content %}
 <div class="page-header">
     <div class="container">
+        {# Breadcrumb navigation #}
+        {% include 'components/breadcrumbs.html' with breadcrumbs=breadcrumb_list %}
+
         <h1>{% trans 'All Locations' %}</h1>
         <p>{% trans 'Browse all winter swimming locations' %}</p>
     </div>

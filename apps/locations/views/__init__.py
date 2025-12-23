@@ -8,6 +8,7 @@ from .location_views import (
     LocationDetailView,
     location_submit_view,
     submit_success_view,
+    sitemap_page_view,
     locations_api_view,
 )
 
@@ -17,5 +18,6 @@ __all__ = [
     'LocationDetailView',
     'location_submit_view',
     'submit_success_view',
+    'sitemap_page_view',
     'locations_api_view',
 ]

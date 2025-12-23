@@ -35,9 +35,16 @@ def map_view(request):
         fields=('name', 'location_type', 'description')
     )
 
+    # Add breadcrumb navigation (home page - single item for Schema.org)
+    from django.urls import reverse
+    breadcrumb_list = [
+        (_('Home'), None),  # Current page - no link
+    ]
+
     context = {
         'locations_geojson': locations_geojson,
         'page_title': _('Winter Swimming Locations'),
+        'breadcrumb_list': breadcrumb_list,
     }
 
     return render(request, 'locations/map.html', context)
@@ -69,6 +76,14 @@ class LocationListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = _('All Locations')
+
+        # Add breadcrumb navigation
+        from django.urls import reverse
+        context['breadcrumb_list'] = [
+            (_('Home'), reverse('locations:map')),
+            (_('All Locations'), None),  # Current page - no link
+        ]
+
         return context
 
 
@@ -98,6 +113,14 @@ class LocationDetailView(DetailView):
                 location__distance_lte=(self.object.location, D(km=50))
             ).exclude(pk=self.object.pk)[:5]
             context['nearby_locations'] = nearby
+
+        # Add breadcrumb navigation
+        from django.urls import reverse
+        context['breadcrumb_list'] = [
+            (_('Home'), reverse('locations:map')),
+            (_('All Locations'), reverse('locations:list')),
+            (self.object.name, None),  # Current page - no link
+        ]
 
         return context
 
@@ -143,6 +166,50 @@ def submit_success_view(request):
         'page_title': _('Submission Successful'),
     }
     return render(request, 'locations/submit_success.html', context)
+
+
+def sitemap_page_view(request):
+    """
+    HTML sitemap page for users.
+
+    Shows all locations grouped by type with statistics.
+    """
+    from collections import defaultdict
+    from django.urls import reverse
+
+    # Get all approved locations
+    locations = Location.objects.filter(is_approved=True).order_by('name')
+
+    # Group locations by type
+    locations_by_type = defaultdict(list)
+    location_type_counts = {}
+
+    for location in locations:
+        type_display = location.get_location_type_display()
+        locations_by_type[type_display].append(location)
+
+    # Convert defaultdict to regular dict for template
+    locations_by_type = dict(locations_by_type)
+
+    # Calculate counts for statistics
+    for type_name, type_locations in locations_by_type.items():
+        location_type_counts[type_name] = len(type_locations)
+
+    # Add breadcrumb navigation
+    breadcrumb_list = [
+        (_('Home'), reverse('locations:map')),
+        (_('Site Map'), None),  # Current page - no link
+    ]
+
+    context = {
+        'page_title': _('Site Map'),
+        'locations_by_type': locations_by_type,
+        'total_locations': locations.count(),
+        'location_type_counts': location_type_counts,
+        'breadcrumb_list': breadcrumb_list,
+    }
+
+    return render(request, 'locations/sitemap_page.html', context)
 
 
 def locations_api_view(request):

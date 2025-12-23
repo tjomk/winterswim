@@ -1,0 +1,73 @@
+{% load i18n %}
+{% load seo_tags %}
+
+{# Visual breadcrumb navigation #}
+<nav class="breadcrumb-nav" aria-label="{% trans 'Breadcrumb' %}">
+    <ol class="breadcrumb">
+        {% for name, url in breadcrumbs %}
+            <li class="breadcrumb-item{% if forloop.last %} active{% endif %}">
+                {% if url and not forloop.last %}
+                    <a href="{{ url }}">{{ name }}</a>
+                {% else %}
+                    <span>{{ name }}</span>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ol>
+</nav>
+
+{# Schema.org BreadcrumbList structured data #}
+{% breadcrumb_schema breadcrumbs %}
+
+<style>
+    .breadcrumb-nav {
+        margin-bottom: var(--spacing-lg, 1.5rem);
+        font-size: 0.9rem;
+    }
+
+    .breadcrumb {
+        display: flex;
+        flex-wrap: wrap;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        color: var(--text-secondary, #666);
+    }
+
+    .breadcrumb-item {
+        display: flex;
+        align-items: center;
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "›";
+        padding: 0 0.5rem;
+        color: var(--text-tertiary, #999);
+    }
+
+    .breadcrumb-item a {
+        color: var(--primary-color, #0066cc);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .breadcrumb-item a:hover {
+        color: var(--primary-color-dark, #004c99);
+        text-decoration: underline;
+    }
+
+    .breadcrumb-item.active span {
+        color: var(--text-primary, #333);
+        font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+        .breadcrumb-nav {
+            font-size: 0.85rem;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            padding: 0 0.3rem;
+        }
+    }
+</style>

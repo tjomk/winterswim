@@ -17,6 +17,7 @@ urlpatterns = [
 
     # Location views
     path('list/', views.LocationListView.as_view(), name='list'),
+    path('sitemap/', views.sitemap_page_view, name='sitemap_page'),
 
     # API
     path('api/locations/', views.locations_api_view, name='api_locations'),

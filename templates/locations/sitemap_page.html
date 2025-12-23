@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans 'Site Map' %} - {% trans 'Winter Swimming Locations' %}{% endblock %}
+
+{% block meta_description %}{% trans 'Browse all pages and winter swimming locations on our site. Complete sitemap with easy navigation to find cold water swimming spots worldwide.' %}{% endblock %}
+
+{% block meta_keywords %}{% trans 'sitemap, site navigation, winter swimming locations, ice swimming directory' %}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        {# Breadcrumb navigation #}
+        {% include 'components/breadcrumbs.html' with breadcrumbs=breadcrumb_list %}
+
+        <h1>{% trans 'Site Map' %}</h1>
+        <p>{% trans 'Browse all pages and locations on our site' %}</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Main Pages Section -->
+    <div class="sitemap-section">
+        <h2>{% trans 'Main Pages' %}</h2>
+        <ul class="sitemap-list">
+            <li><a href="{% url 'locations:map' %}">{% trans 'Home - Interactive Map' %}</a></li>
+            <li><a href="{% url 'locations:list' %}">{% trans 'All Locations' %}</a></li>
+            <li><a href="{% url 'locations:submit' %}">{% trans 'Suggest a Location' %}</a></li>
+            <li><a href="{% url 'locations:sitemap_page' %}">{% trans 'Site Map' %}</a> {% trans '(current page)' %}</li>
+        </ul>
+    </div>
+
+    <!-- Locations by Type Section -->
+    <div class="sitemap-section">
+        <h2>{% trans 'Locations by Type' %}</h2>
+
+        {% if locations_by_type %}
+            {% for location_type, type_locations in locations_by_type.items %}
+                <div class="sitemap-type-group">
+                    <h3>{{ location_type }} ({{ type_locations|length }})</h3>
+                    <ul class="sitemap-locations-list">
+                        {% for location in type_locations %}
+                            <li>
+                                <a href="{% url 'locations:detail' slug=location.slug %}">
+                                    {{ location.name }}
+                                </a>
+                                {% if location.address %}
+                                    <span class="sitemap-location-address">- {{ location.address }}</span>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>{% trans 'No locations available yet.' %}</p>
+        {% endif %}
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="sitemap-section sitemap-stats">
+        <h2>{% trans 'Statistics' %}</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ total_locations }}</div>
+                <div class="stat-label">{% trans 'Total Locations' %}</div>
+            </div>
+            {% for location_type, count in location_type_counts.items %}
+                <div class="stat-card">
+                    <div class="stat-number">{{ count }}</div>
+                    <div class="stat-label">{{ location_type }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .sitemap-section {
+        margin-bottom: var(--spacing-xl, 2rem);
+        padding-bottom: var(--spacing-xl, 2rem);
+        border-bottom: 1px solid var(--border-color, #e0e0e0);
+    }
+
+    .sitemap-section:last-child {
+        border-bottom: none;
+    }
+
+    .sitemap-section h2 {
+        color: var(--primary-color, #0066cc);
+        margin-bottom: var(--spacing-md, 1rem);
+        font-size: 1.5rem;
+    }
+
+    .sitemap-section h3 {
+        color: var(--text-primary, #333);
+        margin-top: var(--spacing-md, 1rem);
+        margin-bottom: var(--spacing-sm, 0.5rem);
+        font-size: 1.2rem;
+    }
+
+    .sitemap-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sitemap-list li {
+        padding: var(--spacing-sm, 0.5rem) 0;
+        border-bottom: 1px solid var(--border-light, #f0f0f0);
+    }
+
+    .sitemap-list li:last-child {
+        border-bottom: none;
+    }
+
+    .sitemap-list a {
+        color: var(--primary-color, #0066cc);
+        text-decoration: none;
+        font-size: 1.1rem;
+        transition: color 0.2s ease;
+    }
+
+    .sitemap-list a:hover {
+        color: var(--primary-color-dark, #004c99);
+        text-decoration: underline;
+    }
+
+    .sitemap-type-group {
+        margin-bottom: var(--spacing-lg, 1.5rem);
+    }
+
+    .sitemap-locations-list {
+        list-style: none;
+        padding-left: var(--spacing-md, 1rem);
+        margin: 0;
+        column-count: 1;
+    }
+
+    @media (min-width: 768px) {
+        .sitemap-locations-list {
+            column-count: 2;
+            column-gap: var(--spacing-lg, 1.5rem);
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .sitemap-locations-list {
+            column-count: 3;
+        }
+    }
+
+    .sitemap-locations-list li {
+        padding: var(--spacing-xs, 0.25rem) 0;
+        break-inside: avoid;
+    }
+
+    .sitemap-locations-list a {
+        color: var(--text-primary, #333);
+        text-decoration: none;
+        font-size: 1rem;
+    }
+
+    .sitemap-locations-list a:hover {
+        color: var(--primary-color, #0066cc);
+        text-decoration: underline;
+    }
+
+    .sitemap-location-address {
+        color: var(--text-secondary, #666);
+        font-size: 0.9rem;
+    }
+
+    /* Statistics Section */
+    .sitemap-stats {
+        background: var(--bg-light, #f8f9fa);
+        padding: var(--spacing-lg, 1.5rem);
+        border-radius: var(--radius-md, 8px);
+        border: none;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: var(--spacing-md, 1rem);
+        margin-top: var(--spacing-md, 1rem);
+    }
+
+    .stat-card {
+        background: white;
+        padding: var(--spacing-md, 1rem);
+        border-radius: var(--radius-sm, 4px);
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--primary-color, #0066cc);
+        margin-bottom: var(--spacing-xs, 0.25rem);
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: var(--text-secondary, #666);
+    }
+</style>
+{% endblock %}
