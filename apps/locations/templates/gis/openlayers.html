@@ -1,0 +1,152 @@
+{% load i18n %}
+<script type="text/javascript" src="{{ ol_js }}"></script>
+<script type="text/javascript">
+    {% block vars %}var {{ module }} = {};
+    {{ module }}.map = null;
+    {{ module }}.controls = null;
+    {{ module }}.panel = null;
+    {{ module }}.re = new RegExp("^SRID=\\d+;(.+)", "i");
+    {{ module }}.layers = {};
+    {{ module }}.modifiable = {{ modifiable|yesno:"true,false" }};
+    {{ module }}.wkt_f = new OpenLayers.Format.WKT();
+    {{ module }}.is_collection = {{ is_collection|yesno:"true,false" }};
+    {{ module }}.collection_type = '{{ collection_type }}';
+    {{ module }}.is_generic = {{ is_generic|yesno:"true,false" }};
+    {{ module }}.is_linestring = {{ is_linestring|yesno:"true,false" }};
+    {{ module }}.is_polygon = {{ is_polygon|yesno:"true,false" }};
+    {{ module }}.is_point = {{ is_point|yesno:"true,false" }};
+    {% endblock %}
+
+    {{ module }}.get_ewkt = function(feat){
+        return 'SRID={{ srid }};' + {{ module }}.wkt_f.write(feat);
+    };
+
+    {{ module }}.read_wkt = function(wkt){
+        var match = {{ module }}.re.exec(wkt);
+        if (match){wkt = match[1];}
+        return {{ module }}.wkt_f.read(wkt);
+    };
+
+    {{ module }}.write_wkt = function(feat){
+        if ({{ module }}.is_collection){
+            {{ module }}.num_geom = feat.geometry.components.length;
+        } else {
+            {{ module }}.num_geom = 1;
+        }
+        document.getElementById('{{ id }}').value = {{ module }}.get_ewkt(feat);
+    };
+
+    {{ module }}.add_wkt = function(event){
+        if ({{ module }}.is_collection){
+            var feat = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.{{ geom_type }}());
+            for (var i = 0; i < {{ module }}.layers.vector.features.length; i++){
+                feat.geometry.addComponents([{{ module }}.layers.vector.features[i].geometry]);
+            }
+            {{ module }}.write_wkt(feat);
+        } else {
+            if ({{ module }}.layers.vector.features.length > 1){
+                old_feats = [{{ module }}.layers.vector.features[0]];
+                {{ module }}.layers.vector.removeFeatures(old_feats);
+                {{ module }}.layers.vector.destroyFeatures(old_feats);
+            }
+            {{ module }}.write_wkt(event.feature);
+        }
+    };
+
+    {{ module }}.modify_wkt = function(event){
+        if ({{ module }}.is_collection){
+            if ({{ module }}.is_point){
+                {{ module }}.add_wkt(event);
+                return;
+            } else {
+                var feat = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.{{ geom_type }}());
+                for (var i = 0; i < {{ module }}.layers.vector.features.length; i++){
+                    feat.geometry.addComponents([{{ module }}.layers.vector.features[i].geometry]);
+                }
+                {{ module }}.write_wkt(feat);
+            }
+        } else {
+            {{ module }}.write_wkt(event.feature);
+        }
+    };
+
+    {{ module }}.deleteFeature = function(feature) {
+        {{ module }}.layers.vector.removeFeatures([feature]);
+        {{ module }}.layers.vector.destroyFeatures([feature]);
+        document.getElementById('{{ id }}').value = '';
+    };
+
+    {{ module }}.clearFeatures = function(){
+        {{ module }}.layers.vector.removeFeatures({{ module }}.layers.vector.features);
+        {{ module }}.layers.vector.destroyFeatures();
+    };
+
+    {{ module }}.map_options = {
+        units: 'm',
+        projection: new OpenLayers.Projection('EPSG:{{ srid }}'),
+        displayProjection: new OpenLayers.Projection('EPSG:4326')
+    };
+
+    {{ module }}.init = function(){
+        {% block map_creation %}
+        {{ module }}.map = new OpenLayers.Map('{{ id }}_map', {{ module }}.map_options);
+
+        // Configure OpenStreetMap layer with proper tile URL
+        {{ module }}.layers.osm = new OpenLayers.Layer.OSM(
+            "OpenStreetMap",
+            [
+                'https://a.tile.openstreetmap.org/${z}/${x}/${y}.png',
+                'https://b.tile.openstreetmap.org/${z}/${x}/${y}.png',
+                'https://c.tile.openstreetmap.org/${z}/${x}/${y}.png'
+            ],
+            {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                transitionEffect: 'resize'
+            }
+        );
+        {{ module }}.map.addLayer({{ module }}.layers.osm);
+        {% endblock %}
+
+        {% block vector_layer_creation %}
+        {{ module }}.layers.vector = new OpenLayers.Layer.Vector(" {{ field_name }} ");
+        {{ module }}.map.addLayer({{ module }}.layers.vector);
+        {% endblock %}
+
+        {% if default_lat %}
+        var default_center = new OpenLayers.LonLat({{ default_lon }}, {{ default_lat }});
+        default_center.transform({{ module }}.map.displayProjection, {{ module }}.map.projection);
+        {{ module }}.map.setCenter(default_center, {{ default_zoom }});
+        {% endif %}
+
+        {% block controls %}
+        {{ module }}.panel = new OpenLayers.Control.Panel({displayClass: 'olControlEditingToolbar'});
+        {{ module }}.controls = {
+            point: new OpenLayers.Control.DrawFeature({{ module }}.layers.vector, OpenLayers.Handler.Point, {'displayClass': 'olControlDrawFeaturePoint'}),
+            line: new OpenLayers.Control.DrawFeature({{ module }}.layers.vector, OpenLayers.Handler.Path, {'displayClass': 'olControlDrawFeaturePath'}),
+            polygon: new OpenLayers.Control.DrawFeature({{ module }}.layers.vector, OpenLayers.Handler.Polygon, {'displayClass': 'olControlDrawFeaturePolygon'}),
+            modify: new OpenLayers.Control.ModifyFeature({{ module }}.layers.vector, {'displayClass': 'olControlModifyFeature'})
+        };
+
+        if ({{ module }}.modifiable){
+            for(var key in {{ module }}.controls){
+                {{ module }}.panel.addControls([{{ module }}.controls[key]]);
+            }
+            {{ module }}.map.addControl({{ module }}.panel);
+        }
+
+        {{ module }}.layers.vector.events.on({"featureadded": {{ module }}.add_wkt});
+        {{ module }}.controls['modify'].events.on({"featuremodified": {{ module }}.modify_wkt});
+        {% endblock %}
+
+        {% if wkt %}
+        {% block load_wkt %}
+        var feat = {{ module }}.read_wkt('{{ wkt }}');
+        {{ module }}.layers.vector.addFeatures([feat]);
+        var bounds = {{ module }}.layers.vector.getDataExtent();
+        if (bounds) {
+            {{ module }}.map.zoomToExtent(bounds);
+        }
+        {% endblock %}
+        {% endif %}
+    };
+</script>

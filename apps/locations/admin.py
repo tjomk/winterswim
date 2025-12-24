@@ -4,12 +4,61 @@ Django admin configuration for Location models.
 Provides moderation interface for submitted locations.
 """
 
+from django import forms
 from django.contrib import admin
+from django.contrib.gis import admin as gis_admin
+from django.contrib.gis.geos import Point
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from modeltranslation.admin import TranslationAdmin
 
 from .models import Location, LocationPhoto
+
+
+class LocationAdminForm(forms.ModelForm):
+    """Custom form for Location admin with manual lat/lon input."""
+
+    latitude = forms.FloatField(
+        required=False,
+        label=_('Latitude'),
+        help_text=_('Latitude (e.g., 59.437222)'),
+        widget=forms.NumberInput(attrs={'step': 'any'})
+    )
+
+    longitude = forms.FloatField(
+        required=False,
+        label=_('Longitude'),
+        help_text=_('Longitude (e.g., 24.753889)'),
+        widget=forms.NumberInput(attrs={'step': 'any'})
+    )
+
+    class Meta:
+        model = Location
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        """Initialize form with current lat/lon values."""
+        super().__init__(*args, **kwargs)
+        if self.instance.pk and self.instance.location:
+            self.fields['latitude'].initial = self.instance.latitude
+            self.fields['longitude'].initial = self.instance.longitude
+
+    def clean(self):
+        """Validate and update location Point from lat/lon fields."""
+        cleaned_data = super().clean()
+        latitude = cleaned_data.get('latitude')
+        longitude = cleaned_data.get('longitude')
+
+        # If lat/lon are provided, update the location Point field
+        if latitude is not None and longitude is not None:
+            try:
+                cleaned_data['location'] = Point(longitude, latitude, srid=4326)
+            except (ValueError, TypeError) as e:
+                raise forms.ValidationError(
+                    _('Invalid coordinates: %(error)s') % {'error': str(e)}
+                )
+
+        return cleaned_data
 
 
 class LocationPhotoInline(admin.TabularInline):
@@ -21,11 +70,13 @@ class LocationPhotoInline(admin.TabularInline):
 
 
 @admin.register(Location)
-class LocationAdmin(TranslationAdmin):
+class LocationAdmin(gis_admin.GISModelAdmin, TranslationAdmin):
     """
     Admin interface for Location model with moderation features.
     """
-    # Use OSMGeoAdmin for the map widget
+    form = LocationAdminForm
+
+    # Configure the map widget with OpenStreetMap tiles
     gis_widget_kwargs = {
         'attrs': {
             'default_lon': 25.0,
@@ -33,6 +84,10 @@ class LocationAdmin(TranslationAdmin):
             'default_zoom': 7,
         },
     }
+
+    # Use custom OpenLayers template with OpenStreetMap tiles
+    map_template = 'gis/openlayers.html'
+    openlayers_url = 'https://cdnjs.cloudflare.com/ajax/libs/openlayers/2.13.1/OpenLayers.js'
 
     list_display = (
         'name',
@@ -76,10 +131,13 @@ class LocationAdmin(TranslationAdmin):
         (_('Location'), {
             'fields': (
                 'location',
+                'latitude',
+                'longitude',
                 'address',
                 'access_instructions',
                 'location_map',
-            )
+            ),
+            'description': _('You can either use the map to set coordinates, or manually enter latitude and longitude below.')
         }),
         (_('Facilities'), {
             'fields': (
