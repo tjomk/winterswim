@@ -137,6 +137,9 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
+# Use ManifestStaticFilesStorage for cache-busting in production
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+
 # Media files (user uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
