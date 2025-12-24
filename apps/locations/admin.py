@@ -13,6 +13,7 @@ from django.utils.translation import gettext_lazy as _
 from modeltranslation.admin import TranslationAdmin
 
 from .models import Location, LocationPhoto
+from .models.location import Facility
 
 
 class LocationAdminForm(forms.ModelForm):
@@ -32,19 +33,30 @@ class LocationAdminForm(forms.ModelForm):
         widget=forms.NumberInput(attrs={'step': 'any'})
     )
 
+    facilities = forms.MultipleChoiceField(
+        required=False,
+        label=_('Facilities'),
+        help_text=_('Select available facilities'),
+        choices=Facility.choices,
+        widget=forms.CheckboxSelectMultiple
+    )
+
     class Meta:
         model = Location
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        """Initialize form with current lat/lon values."""
+        """Initialize form with current lat/lon and facilities values."""
         super().__init__(*args, **kwargs)
-        if self.instance.pk and self.instance.location:
-            self.fields['latitude'].initial = self.instance.latitude
-            self.fields['longitude'].initial = self.instance.longitude
+        if self.instance.pk:
+            if self.instance.location:
+                self.fields['latitude'].initial = self.instance.latitude
+                self.fields['longitude'].initial = self.instance.longitude
+            if self.instance.facilities:
+                self.fields['facilities'].initial = self.instance.facilities
 
     def clean(self):
-        """Validate and update location Point from lat/lon fields."""
+        """Validate and update location Point from lat/lon fields and facilities."""
         cleaned_data = super().clean()
         latitude = cleaned_data.get('latitude')
         longitude = cleaned_data.get('longitude')
@@ -57,6 +69,10 @@ class LocationAdminForm(forms.ModelForm):
                 raise forms.ValidationError(
                     _('Invalid coordinates: %(error)s') % {'error': str(e)}
                 )
+
+        # Convert facilities from form (list of selected values) to JSONField format
+        facilities = cleaned_data.get('facilities', [])
+        cleaned_data['facilities'] = list(facilities) if facilities else []
 
         return cleaned_data
 
