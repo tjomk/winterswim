@@ -171,56 +171,41 @@
         color: var(--color-text-secondary);
     }
 
-    /* Map overlay for click-to-activate */
+    /* Map overlay for scroll instruction */
     .map-overlay {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: rgba(0, 0, 0, 0.3);
+        background-color: rgba(0, 0, 0, 0);
         display: flex;
         align-items: center;
         justify-content: center;
-        cursor: pointer;
+        pointer-events: none;
         z-index: 1000;
-        transition: opacity 0.3s ease;
+        transition: opacity 0.3s ease, background-color 0.3s ease;
+        opacity: 0;
         border-radius: var(--radius-lg);
     }
 
-    .map-overlay:hover {
-        background-color: rgba(0, 0, 0, 0.4);
+    .map-picker-container:hover .map-overlay {
+        opacity: 1;
+        background-color: rgba(0, 0, 0, 0.5);
     }
 
-    .map-overlay-content {
-        background-color: white;
-        padding: 2rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        text-align: center;
-        pointer-events: none;
+    /* Hide overlay when actively interacting with map */
+    .map-picker-container.interacting .map-overlay {
+        opacity: 0 !important;
     }
 
-    .map-overlay-content svg {
-        color: var(--color-primary);
-        margin-bottom: 1rem;
-    }
-
-    .map-overlay-content p {
+    .map-overlay p {
+        color: #ffffff;
         font-size: var(--font-size-lg);
-        font-weight: 500;
-        color: var(--color-text);
+        font-weight: 700;
         margin: 0;
-    }
-
-    .map-overlay.hidden {
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    /* Disable map interactions when overlay is active */
-    .map-picker-container.inactive #map-picker {
-        pointer-events: none;
+        text-align: center;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
 
 </style>
@@ -261,14 +246,8 @@
 
                 <div class="map-picker-container">
                     <div id="map-picker"></div>
-                    <div class="map-overlay" id="map-overlay">
-                        <div class="map-overlay-content">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                                <circle cx="12" cy="10" r="3"></circle>
-                            </svg>
-                            <p>{% trans "Click to interact with map" %}</p>
-                        </div>
+                    <div class="map-overlay">
+                        <p>{% trans "Use Cmd + scroll to zoom the map" %}</p>
                     </div>
                 </div>
             </div>
@@ -336,50 +315,38 @@
 (function() {
     'use strict';
 
-    // Map overlay activation
-    const mapPickerContainer = document.querySelector('.map-picker-container');
-    const mapOverlay = document.getElementById('map-overlay');
-    const searchContainer = document.querySelector('.map-search-container');
-    let isMapActive = false;
-
-    // Add inactive class initially
-    mapPickerContainer.classList.add('inactive');
-
-    // Activate map on click
-    mapOverlay.addEventListener('click', function() {
-        isMapActive = true;
-        mapOverlay.classList.add('hidden');
-        mapPickerContainer.classList.remove('inactive');
-    });
-
-    // Deactivate map when clicking outside (but not on search elements)
-    document.addEventListener('click', function(e) {
-        if (isMapActive &&
-            !mapPickerContainer.contains(e.target) &&
-            !searchContainer.contains(e.target)) {
-            isMapActive = false;
-            mapOverlay.classList.remove('hidden');
-            mapPickerContainer.classList.add('inactive');
-        }
-    });
-
-    // Deactivate map when pressing Escape
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && isMapActive) {
-            isMapActive = false;
-            mapOverlay.classList.remove('hidden');
-            mapPickerContainer.classList.add('inactive');
-        }
-    });
-
     // Get form fields
     const latField = document.getElementById('id_latitude');
     const lonField = document.getElementById('id_longitude');
 
-    // Initialize map
+    // Initialize map with scroll wheel zoom disabled by default
     const defaultLat = latField.value || 59.0;
     const defaultLon = lonField.value || 25.0;
-    const map = L.map('map-picker').setView([defaultLat, defaultLon], 7);
+    const map = L.map('map-picker', {
+        scrollWheelZoom: false
+    }).setView([defaultLat, defaultLon], 7);
+
+    // Get map container element
+    const mapPickerContainer = document.querySelector('.map-picker-container');
+
+    // Hide overlay when interacting with map (dragging, zooming, etc)
+    map.on('mousedown', function() {
+        mapPickerContainer.classList.add('interacting');
+    });
+
+    document.addEventListener('mouseup', function() {
+        mapPickerContainer.classList.remove('interacting');
+    });
+
+    // Enable scroll wheel zoom only when Ctrl (Windows/Linux) or Command (Mac) key is pressed
+    map.on('wheel', function(e) {
+        if (e.originalEvent.ctrlKey || e.originalEvent.metaKey) {
+            e.originalEvent.preventDefault();
+            map.scrollWheelZoom.enable();
+        } else {
+            map.scrollWheelZoom.disable();
+        }
+    });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -410,13 +377,6 @@
         clearTimeout(searchTimeout);
         const query = this.value.trim();
         currentSearchQuery = query;
-
-        // Activate map when user starts typing
-        if (query.length > 0 && !isMapActive) {
-            isMapActive = true;
-            mapOverlay.classList.add('hidden');
-            mapPickerContainer.classList.remove('inactive');
-        }
 
         if (query.length < 3) {
             searchResults.classList.remove('active');

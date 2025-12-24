@@ -56,55 +56,40 @@
     height: 100%;
 }
 
-/* Map overlay for click-to-activate */
+/* Map overlay for scroll instruction */
 .map-overlay {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0);
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
+    pointer-events: none;
     z-index: 1000;
-    transition: opacity 0.3s ease;
-}
-
-.map-overlay:hover {
-    background-color: rgba(0, 0, 0, 0.4);
-}
-
-.map-overlay-content {
-    background-color: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    text-align: center;
-    pointer-events: none;
-}
-
-.map-overlay-content svg {
-    color: var(--color-primary);
-    margin-bottom: 1rem;
-}
-
-.map-overlay-content p {
-    font-size: var(--font-size-lg);
-    font-weight: 500;
-    color: var(--color-text);
-    margin: 0;
-}
-
-.map-overlay.hidden {
+    transition: opacity 0.3s ease, background-color 0.3s ease;
     opacity: 0;
-    pointer-events: none;
 }
 
-/* Disable map interactions when overlay is active */
-.map-container.inactive #map {
-    pointer-events: none;
+.map-container:hover .map-overlay {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Hide overlay when actively interacting with map */
+.map-container.interacting .map-overlay {
+    opacity: 0 !important;
+}
+
+.map-overlay p {
+    color: #ffffff;
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    margin: 0;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* Responsive map height */
@@ -197,7 +182,7 @@
     align-items: center;
     justify-content: center;
     gap: var(--spacing-sm);
-    margin: var(--spacing-xl) 0;
+    margin-bottom: var(--spacing-xl);
     padding: var(--spacing-lg);
     background-color: var(--color-bg-primary);
     border-radius: var(--radius-xl);

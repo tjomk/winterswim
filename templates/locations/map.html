@@ -21,14 +21,8 @@
 {% block content %}
 <div class="map-container">
     <div id="map"></div>
-    <div class="map-overlay" id="map-overlay">
-        <div class="map-overlay-content">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                <circle cx="12" cy="10" r="3"></circle>
-            </svg>
-            <p>{% trans "Click to interact with map" %}</p>
-        </div>
+    <div class="map-overlay">
+        <p>{% trans "Use Cmd + scroll to zoom the map" %}</p>
     </div>
 </div>
 {% endblock %}
@@ -48,41 +42,33 @@
 (function() {
     'use strict';
 
-    // Map overlay activation
+    // Initialize map centered on Estonia with scroll wheel zoom disabled by default
+    const map = L.map('map', {
+        scrollWheelZoom: false
+    }).setView([59.0, 25.0], 7);
+
+    // Get map container and overlay elements
     const mapContainer = document.querySelector('.map-container');
-    const mapOverlay = document.getElementById('map-overlay');
-    let isMapActive = false;
+    const mapOverlay = document.querySelector('.map-overlay');
 
-    // Add inactive class initially
-    mapContainer.classList.add('inactive');
-
-    // Activate map on click
-    mapOverlay.addEventListener('click', function() {
-        isMapActive = true;
-        mapOverlay.classList.add('hidden');
-        mapContainer.classList.remove('inactive');
+    // Hide overlay when interacting with map (dragging, zooming, etc)
+    map.on('mousedown', function() {
+        mapContainer.classList.add('interacting');
     });
 
-    // Optional: Deactivate when clicking outside map
-    document.addEventListener('click', function(e) {
-        if (isMapActive && !mapContainer.contains(e.target)) {
-            isMapActive = false;
-            mapOverlay.classList.remove('hidden');
-            mapContainer.classList.add('inactive');
+    document.addEventListener('mouseup', function() {
+        mapContainer.classList.remove('interacting');
+    });
+
+    // Enable scroll wheel zoom only when Ctrl (Windows/Linux) or Command (Mac) key is pressed
+    map.on('wheel', function(e) {
+        if (e.originalEvent.ctrlKey || e.originalEvent.metaKey) {
+            e.originalEvent.preventDefault();
+            map.scrollWheelZoom.enable();
+        } else {
+            map.scrollWheelZoom.disable();
         }
     });
-
-    // Optional: Press ESC to deactivate
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && isMapActive) {
-            isMapActive = false;
-            mapOverlay.classList.remove('hidden');
-            mapContainer.classList.add('inactive');
-        }
-    });
-
-    // Initialize map centered on Estonia
-    const map = L.map('map').setView([59.0, 25.0], 7);
 
     // Add OpenStreetMap tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
