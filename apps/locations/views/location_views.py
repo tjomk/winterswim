@@ -7,9 +7,14 @@ following the "Functional Core, Imperative Shell" pattern.
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, get_language
 from django.views.generic import ListView, DetailView
 from django.core.serializers import serialize
+from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import D
+from django.contrib.gis.db.models.functions import Distance
+from django.contrib.postgres.search import SearchQuery, SearchRank
+from django.db.models import F
 import json
 
 from apps.locations.models import Location
@@ -60,22 +65,82 @@ class LocationListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        """Get only approved locations."""
+        """Get approved locations with optional search and proximity filters."""
         queryset = Location.objects.filter(is_approved=True)
 
-        # Filter by location type if provided
+        # Get current language for search
+        current_language = get_language() or 'en'
+
+        # SEARCH FILTER
+        search_query = self.request.GET.get('q', '').strip()
+        if search_query and len(search_query) >= 3:
+            # Use the appropriate search vector for current language
+            search_vector_field = f'search_vector_{current_language}'
+
+            # Create search query with language-specific config
+            search_configs = {'en': 'english', 'fi': 'finnish', 'et': 'simple'}
+            search_config = search_configs.get(current_language, 'simple')
+
+            search_q = SearchQuery(search_query, config=search_config)
+
+            # Search in language-specific search vector
+            queryset = queryset.filter(
+                **{f'{search_vector_field}__icontains': search_q}
+            ).annotate(
+                rank=SearchRank(F(search_vector_field), search_q)
+            ).order_by('-rank', '-created_at')
+
+        # PROXIMITY FILTER ("Near Me")
+        lat = self.request.GET.get('lat')
+        lon = self.request.GET.get('lon')
+        radius_km = self.request.GET.get('radius', '50')  # Default 50km
+
+        if lat and lon:
+            try:
+                lat_float = float(lat)
+                lon_float = float(lon)
+                radius_float = float(radius_km)
+
+                # Validate coordinates (basic sanity check)
+                if not (-90 <= lat_float <= 90 and -180 <= lon_float <= 180):
+                    raise ValueError("Invalid coordinates")
+                if not (1 <= radius_float <= 500):  # Max 500km to prevent abuse
+                    radius_float = 50
+
+                user_point = Point(lon_float, lat_float, srid=4326)
+
+                # Filter locations within radius and annotate with distance
+                queryset = queryset.filter(
+                    location__distance_lte=(user_point, D(km=radius_float))
+                ).annotate(
+                    distance=Distance('location', user_point)
+                ).order_by('distance')
+
+            except (ValueError, TypeError):
+                # Invalid coordinates - ignore proximity filter
+                pass
+
+        # LOCATION TYPE FILTER (existing)
         location_type = self.request.GET.get('type')
         if location_type:
             queryset = queryset.filter(location_type=location_type)
 
-        # Filter by facilities if provided
-        # TODO: Implement facility filtering
+        # Default ordering if no proximity or search
+        if not (search_query or (lat and lon)):
+            queryset = queryset.order_by('-created_at')
 
-        return queryset.order_by('-created_at')
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = _('All Locations')
+
+        # Pass search parameters to template for preservation
+        context['search_query'] = self.request.GET.get('q', '')
+        context['filter_lat'] = self.request.GET.get('lat', '')
+        context['filter_lon'] = self.request.GET.get('lon', '')
+        context['filter_radius'] = self.request.GET.get('radius', '50')
+        context['is_proximity_filtered'] = bool(context['filter_lat'] and context['filter_lon'])
 
         # Add breadcrumb navigation
         from django.urls import reverse

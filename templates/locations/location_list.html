@@ -32,6 +32,72 @@
 </div>
 
 <div class="container">
+    {# Search and Filter Controls #}
+    <div class="location-filters">
+        <div class="search-container">
+            <label for="location-search" class="visually-hidden">{% trans 'Search locations' %}</label>
+            <input
+                type="text"
+                id="location-search"
+                class="search-input"
+                placeholder="{% trans 'Search by name or address...' %}"
+                value="{{ search_query }}"
+                maxlength="100"
+                autocomplete="off"
+            >
+            <button type="button" id="clear-search" class="clear-search-btn" aria-label="{% trans 'Clear search' %}" style="display: none;">
+                ×
+            </button>
+        </div>
+
+        <button
+            type="button"
+            id="near-me-btn"
+            class="btn btn-secondary near-me-btn"
+            {% if is_proximity_filtered %}disabled{% endif %}
+        >
+            <span class="btn-icon">📍</span>
+            {% if is_proximity_filtered %}
+                {% trans 'Showing nearby' %}
+            {% else %}
+                {% trans 'Near me' %}
+            {% endif %}
+        </button>
+
+        {% if is_proximity_filtered %}
+        <button type="button" id="clear-proximity" class="btn btn-outline clear-proximity-btn">
+            {% trans 'Show all locations' %}
+        </button>
+        {% endif %}
+    </div>
+
+    {# Results info #}
+    {% if search_query or is_proximity_filtered %}
+    <div class="results-info">
+        <p>
+            {% if search_query and is_proximity_filtered %}
+                {% blocktrans count counter=page_obj.paginator.count with query=search_query radius=filter_radius %}
+                Found {{ counter }} location matching "{{ query }}" within {{ radius }} km
+                {% plural %}
+                Found {{ counter }} locations matching "{{ query }}" within {{ radius }} km
+                {% endblocktrans %}
+            {% elif search_query %}
+                {% blocktrans count counter=page_obj.paginator.count with query=search_query %}
+                Found {{ counter }} location matching "{{ query }}"
+                {% plural %}
+                Found {{ counter }} locations matching "{{ query }}"
+                {% endblocktrans %}
+            {% elif is_proximity_filtered %}
+                {% blocktrans count counter=page_obj.paginator.count with radius=filter_radius %}
+                Found {{ counter }} location within {{ radius }} km
+                {% plural %}
+                Found {{ counter }} locations within {{ radius }} km
+                {% endblocktrans %}
+            {% endif %}
+        </p>
+    </div>
+    {% endif %}
+
     {% if locations %}
         <div class="card-grid">
             {% for location in locations %}
@@ -71,7 +137,7 @@
             <div class="pagination-container">
                 <!-- Previous Button -->
                 {% if page_obj.has_previous %}
-                    <a href="?page={{ page_obj.previous_page_number }}" class="pagination-arrow" aria-label="{% trans 'Previous page' %}">
+                    <a href="?{% if search_query %}q={{ search_query }}&{% endif %}{% if filter_lat %}lat={{ filter_lat }}&lon={{ filter_lon }}&radius={{ filter_radius }}&{% endif %}{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}page={{ page_obj.previous_page_number }}" class="pagination-arrow" aria-label="{% trans 'Previous page' %}">
                         ‹
                     </a>
                 {% else %}
@@ -83,7 +149,7 @@
                     {% if num == page_obj.number %}
                         <span class="pagination-number pagination-current">{{ num }}</span>
                     {% elif num == 1 or num == page_obj.paginator.num_pages or num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
-                        <a href="?page={{ num }}" class="pagination-number">{{ num }}</a>
+                        <a href="?{% if search_query %}q={{ search_query }}&{% endif %}{% if filter_lat %}lat={{ filter_lat }}&lon={{ filter_lon }}&radius={{ filter_radius }}&{% endif %}{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}page={{ num }}" class="pagination-number">{{ num }}</a>
                     {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}
                         <span class="pagination-ellipsis">...</span>
                     {% endif %}
@@ -91,7 +157,7 @@
 
                 <!-- Next Button -->
                 {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}" class="pagination-arrow" aria-label="{% trans 'Next page' %}">
+                    <a href="?{% if search_query %}q={{ search_query }}&{% endif %}{% if filter_lat %}lat={{ filter_lat }}&lon={{ filter_lon }}&radius={{ filter_radius }}&{% endif %}{% if request.GET.type %}type={{ request.GET.type }}&{% endif %}page={{ page_obj.next_page_number }}" class="pagination-arrow" aria-label="{% trans 'Next page' %}">
                         ›
                     </a>
                 {% else %}
@@ -106,4 +172,160 @@
         </div>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    'use strict';
+
+    const searchInput = document.getElementById('location-search');
+    const clearSearchBtn = document.getElementById('clear-search');
+    const nearMeBtn = document.getElementById('near-me-btn');
+    const clearProximityBtn = document.getElementById('clear-proximity');
+
+    let searchTimeout;
+    const DEBOUNCE_DELAY = 500;
+    const MIN_SEARCH_LENGTH = 3;
+
+    // Show/hide clear button
+    function updateClearButton() {
+        if (searchInput.value.length > 0) {
+            clearSearchBtn.style.display = 'block';
+        } else {
+            clearSearchBtn.style.display = 'none';
+        }
+    }
+
+    // Update URL with search parameter
+    function updateURL(params) {
+        const url = new URL(window.location.href);
+
+        // Clear pagination when search/filter changes
+        url.searchParams.delete('page');
+
+        // Update search query
+        if (params.q !== undefined) {
+            if (params.q) {
+                url.searchParams.set('q', params.q);
+            } else {
+                url.searchParams.delete('q');
+            }
+        }
+
+        // Update proximity parameters
+        if (params.lat !== undefined && params.lon !== undefined) {
+            if (params.lat && params.lon) {
+                url.searchParams.set('lat', params.lat);
+                url.searchParams.set('lon', params.lon);
+                url.searchParams.set('radius', params.radius || '50');
+            } else {
+                url.searchParams.delete('lat');
+                url.searchParams.delete('lon');
+                url.searchParams.delete('radius');
+            }
+        }
+
+        // Navigate to new URL
+        window.location.href = url.toString();
+    }
+
+    // Debounced search handler
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        updateClearButton();
+
+        const query = this.value.trim();
+
+        // If cleared completely, update immediately
+        if (query.length === 0) {
+            updateURL({ q: '' });
+            return;
+        }
+
+        // Only search if meets minimum length
+        if (query.length < MIN_SEARCH_LENGTH) {
+            return;
+        }
+
+        // Debounce the search
+        searchTimeout = setTimeout(() => {
+            updateURL({ q: query });
+        }, DEBOUNCE_DELAY);
+    });
+
+    // Clear search button
+    if (clearSearchBtn) {
+        clearSearchBtn.addEventListener('click', function() {
+            searchInput.value = '';
+            updateClearButton();
+            updateURL({ q: '' });
+        });
+    }
+
+    // Near me button - get geolocation
+    if (nearMeBtn && !nearMeBtn.disabled) {
+        nearMeBtn.addEventListener('click', function() {
+            if (!navigator.geolocation) {
+                alert('{% trans "Geolocation is not supported by your browser" %}');
+                return;
+            }
+
+            // Update button state
+            nearMeBtn.disabled = true;
+            nearMeBtn.textContent = '{% trans "Getting location..." %}';
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    console.log('User location:', { lat, lon, accuracy: position.coords.accuracy });
+
+                    // Update URL with proximity parameters
+                    updateURL({
+                        lat: lat.toFixed(6),
+                        lon: lon.toFixed(6),
+                        radius: '50'
+                    });
+                },
+                function(error) {
+                    console.error('Geolocation error:', error);
+                    nearMeBtn.disabled = false;
+                    nearMeBtn.innerHTML = '<span class="btn-icon">📍</span> {% trans "Near me" %}';
+
+                    let errorMessage = '{% trans "Unable to get your location" %}';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage = '{% trans "Location permission denied. Please enable location access in your browser settings." %}';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage = '{% trans "Location information is unavailable." %}';
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage = '{% trans "Location request timed out." %}';
+                            break;
+                    }
+                    alert(errorMessage);
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 300000  // 5 minutes cache
+                }
+            );
+        });
+    }
+
+    // Clear proximity filter
+    if (clearProximityBtn) {
+        clearProximityBtn.addEventListener('click', function() {
+            updateURL({ lat: '', lon: '', radius: '' });
+        });
+    }
+
+    // Initialize clear button visibility
+    updateClearButton();
+})();
+</script>
 {% endblock %}
