@@ -17,7 +17,8 @@
       "Bash(poetry run python:*)",
       "Bash(docker compose ps:*)",
       "Bash(docker compose exec:*)",
-      "mcp__browsermcp__browser_hover"
+      "mcp__browsermcp__browser_hover",
+      "mcp__browsermcp__browser_click"
     ],
     "deny": [],
     "ask": []

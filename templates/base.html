@@ -103,12 +103,15 @@
                     {% get_current_language as LANGUAGE_CODE %}
                     {% get_available_languages as LANGUAGES %}
                     {% for lang_code, lang_name in LANGUAGES %}
-                        {% language lang_code %}
-                            <a href="{% url 'set_language' %}?language={{ lang_code }}&next={{ request.path }}"
-                               class="language-link {% if LANGUAGE_CODE == lang_code %}language-link-active{% endif %}">
+                        <form action="{% url 'set_language' %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <input name="next" type="hidden" value="{{ request.path|slice:'3:' }}" />
+                            <input name="language" type="hidden" value="{{ lang_code }}" />
+                            <button type="submit"
+                                    class="language-link {% if LANGUAGE_CODE == lang_code %}language-link-active{% endif %}">
                                 {{ lang_code }}
-                            </a>
-                        {% endlanguage %}
+                            </button>
+                        </form>
                     {% endfor %}
                 </div>
             </nav>
