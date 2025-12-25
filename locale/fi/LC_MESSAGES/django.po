@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Winter Swimming 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-09 15:24+0000\n"
+"POT-Creation-Date: 2025-12-25 19:19+0000\n"
 "PO-Revision-Date: 2025-12-25 12:00+0000\n"
 "Last-Translator: Winter Swimming Team\n"
 "Language-Team: Finnish\n"
@@ -16,49 +16,93 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: apps/locations/admin.py:69
-msgid "Basic Information"
-msgstr "Perustiedot"
+#: apps/locations/admin.py:24 apps/locations/forms/location_form.py:42
+msgid "Latitude"
+msgstr "Leveysaste"
 
-#: apps/locations/admin.py:76 apps/locations/models/location.py:52
-#: apps/locations/models/location.py:153 apps/locations/models/photo.py:22
-msgid "Location"
-msgstr "Sijainti"
+#: apps/locations/admin.py:25
+msgid "Latitude (e.g., 59.437222)"
+msgstr ""
 
-#: apps/locations/admin.py:84 apps/locations/models/location.py:74
-#: templates/locations/location_detail.html:51
+#: apps/locations/admin.py:31 apps/locations/forms/location_form.py:51
+msgid "Longitude"
+msgstr "Pituusaste"
+
+#: apps/locations/admin.py:32
+msgid "Longitude (e.g., 24.753889)"
+msgstr ""
+
+#: apps/locations/admin.py:38 apps/locations/admin.py:158
+#: apps/locations/models/location.py:85
+#: templates/locations/location_detail.html:120
 msgid "Facilities"
 msgstr "Tilat"
 
-#: apps/locations/admin.py:91
+#: apps/locations/admin.py:39
+#, fuzzy
+#| msgid "Available facilities"
+msgid "Select available facilities"
+msgstr "Saatavilla olevat tilat"
+
+#: apps/locations/admin.py:70
+#, python-format
+msgid "Invalid coordinates: %(error)s"
+msgstr ""
+
+#: apps/locations/admin.py:140
+msgid "Basic Information"
+msgstr "Perustiedot"
+
+#: apps/locations/admin.py:147 apps/locations/models/location.py:63
+#: apps/locations/models/location.py:164 apps/locations/models/photo.py:22
+msgid "Location"
+msgstr "Sijainti"
+
+#: apps/locations/admin.py:156
+msgid ""
+"You can either use the map to set coordinates, or manually enter latitude "
+"and longitude below."
+msgstr ""
+
+#: apps/locations/admin.py:165
 msgid "Contact Information"
 msgstr "Yhteystiedot"
 
-#: apps/locations/admin.py:99
+#: apps/locations/admin.py:173
 msgid "Moderation"
 msgstr "Moderointi"
 
-#: apps/locations/admin.py:107
+#: apps/locations/admin.py:181
 msgid "Timestamps"
 msgstr "Aikaleima"
 
-#: apps/locations/admin.py:129
+#: apps/locations/admin.py:205
 msgid "Status"
 msgstr "Tila"
 
-#: apps/locations/admin.py:141
+#: apps/locations/admin.py:217
 msgid "Map preview"
 msgstr "Kartan esikatselu"
 
-#: apps/locations/admin.py:150
+#: apps/locations/admin.py:224
+#, python-format
+msgid "%(count)d location(s) have been approved."
+msgstr ""
+
+#: apps/locations/admin.py:226
 msgid "Approve selected locations"
 msgstr "Hyväksy valitut sijainnit"
 
-#: apps/locations/admin.py:159
+#: apps/locations/admin.py:233
+#, python-format
+msgid "%(count)d location(s) have been rejected."
+msgstr ""
+
+#: apps/locations/admin.py:235
 msgid "Reject selected locations"
 msgstr "Hylkää valitut sijainnit"
 
-#: apps/locations/admin.py:175
+#: apps/locations/admin.py:251
 msgid "Metadata"
 msgstr "Metatiedot"
 
@@ -75,8 +119,8 @@ msgid "e.g., Pirita Beach"
 msgstr "esim. Piritan ranta"
 
 #: apps/locations/forms/location_form.py:31
-#: apps/locations/models/location.py:45
-#: templates/locations/location_detail.html:37
+#: apps/locations/models/location.py:56
+#: templates/locations/location_detail.html:106
 msgid "Description"
 msgstr "Kuvaus"
 
@@ -88,17 +132,9 @@ msgstr "Kuvaile tätä uintipaikkaa"
 msgid "Tell us about this location..."
 msgstr "Kerro meille tästä paikasta..."
 
-#: apps/locations/forms/location_form.py:42
-msgid "Latitude"
-msgstr "Leveysaste"
-
-#: apps/locations/forms/location_form.py:51
-msgid "Longitude"
-msgstr "Pituusaste"
-
 #: apps/locations/forms/location_form.py:62
-#: apps/locations/models/location.py:59
-#: templates/locations/location_detail.html:41
+#: apps/locations/models/location.py:70
+#: templates/locations/location_detail.html:110
 msgid "Address"
 msgstr "Osoite"
 
@@ -111,7 +147,7 @@ msgid "e.g., Pirita tee 1, Tallinn"
 msgstr "esim. Mannerheimintie 1, Helsinki"
 
 #: apps/locations/forms/location_form.py:74
-#: apps/locations/models/location.py:69
+#: apps/locations/models/location.py:80
 msgid "Location type"
 msgstr "Sijainnin tyyppi"
 
@@ -124,7 +160,7 @@ msgid "Select all that apply"
 msgstr "Valitse kaikki sopivat"
 
 #: apps/locations/forms/location_form.py:88
-#: apps/locations/models/location.py:80
+#: apps/locations/models/location.py:91
 msgid "Access instructions"
 msgstr "Saapumisohjeet"
 
@@ -137,7 +173,7 @@ msgid "e.g., Park at the beach parking lot, walk 200m north..."
 msgstr "esim. Pysäköi rannan parkkipaikalle, kävele 200m pohjoiseen..."
 
 #: apps/locations/forms/location_form.py:100
-#: apps/locations/models/location.py:87
+#: apps/locations/models/location.py:98
 msgid "Website"
 msgstr "Verkkosivusto"
 
@@ -154,14 +190,14 @@ msgid "Phone number"
 msgstr "Puhelinnumero"
 
 #: apps/locations/forms/location_form.py:131
-#: apps/locations/models/location.py:105
-#: templates/locations/location_detail.html:29
-#: templates/locations/location_list.html:38 templates/locations/map.html:76
+#: apps/locations/models/location.py:116
+#: templates/locations/location_detail.html:86
+#: templates/locations/location_list.html:125 templates/locations/map.html:116
 msgid "Free access"
 msgstr "Ilmainen"
 
 #: apps/locations/forms/location_form.py:137
-#: apps/locations/models/location.py:110
+#: apps/locations/models/location.py:121
 msgid "Pricing details"
 msgstr "Hintatiedot"
 
@@ -202,139 +238,147 @@ msgstr "Pituusasteen täytyy olla -180 ja 180 välillä"
 msgid "Please provide pricing details if access is not free"
 msgstr "Anna hintatiedot, jos paikka ei ole ilmainen"
 
-#: apps/locations/models/location.py:11 templates/locations/map.html:110
+#: apps/locations/models/location.py:13 templates/locations/map.html:150
 msgid "Wild spot"
 msgstr "Luonnonpaikka"
 
-#: apps/locations/models/location.py:12 templates/locations/map.html:111
+#: apps/locations/models/location.py:14 templates/locations/map.html:151
 msgid "Commercial facility"
 msgstr "Kaupallinen laitos"
 
-#: apps/locations/models/location.py:13 templates/locations/map.html:112
+#: apps/locations/models/location.py:15 templates/locations/map.html:152
 msgid "Swimming club"
 msgstr "Uintiseura"
 
-#: apps/locations/models/location.py:14 templates/locations/map.html:113
+#: apps/locations/models/location.py:16 templates/locations/map.html:153
 msgid "Public facility"
 msgstr "Julkinen laitos"
 
-#: apps/locations/models/location.py:19
+#: apps/locations/models/location.py:21
 msgid "Sauna"
 msgstr "Sauna"
 
-#: apps/locations/models/location.py:20
+#: apps/locations/models/location.py:22
 msgid "Changing room"
 msgstr "Pukuhuone"
 
-#: apps/locations/models/location.py:21
+#: apps/locations/models/location.py:23
 msgid "Shower"
 msgstr "Suihku"
 
-#: apps/locations/models/location.py:22
+#: apps/locations/models/location.py:24
 msgid "Lockers"
 msgstr "Säilytyslokerot"
 
-#: apps/locations/models/location.py:23
+#: apps/locations/models/location.py:25
 msgid "Parking"
 msgstr "Pysäköinti"
 
-#: apps/locations/models/location.py:24
+#: apps/locations/models/location.py:26
 msgid "Disabled access"
 msgstr "Esteetön kulku"
 
-#: apps/locations/models/location.py:25
+#: apps/locations/models/location.py:27
 msgid "Toilet"
 msgstr "WC"
 
-#: apps/locations/models/location.py:26
+#: apps/locations/models/location.py:28
 msgid "Café"
 msgstr "Kahvila"
 
-#: apps/locations/models/location.py:40
+#: apps/locations/models/location.py:42
 msgid "Name"
 msgstr "Nimi"
 
-#: apps/locations/models/location.py:41
+#: apps/locations/models/location.py:43
 msgid "Name of the swimming location"
 msgstr "Uintipaikan nimi"
 
-#: apps/locations/models/location.py:46
+#: apps/locations/models/location.py:49
+msgid "Slug"
+msgstr ""
+
+#: apps/locations/models/location.py:50
+msgid "SEO-friendly URL slug (auto-generated)"
+msgstr ""
+
+#: apps/locations/models/location.py:57
 msgid "Detailed description of the location"
 msgstr "Yksityiskohtainen kuvaus paikasta"
 
-#: apps/locations/models/location.py:53
+#: apps/locations/models/location.py:64
 msgid "Geographic coordinates"
 msgstr "Maantieteelliset koordinaatit"
 
-#: apps/locations/models/location.py:60
+#: apps/locations/models/location.py:71
 msgid "Human-readable address"
 msgstr "Ihmisluettava osoite"
 
-#: apps/locations/models/location.py:75
+#: apps/locations/models/location.py:86
 msgid "Available facilities (sauna, changing rooms, etc.)"
 msgstr "Saatavilla olevat tilat (sauna, pukuhuoneet, jne.)"
 
-#: apps/locations/models/location.py:81
+#: apps/locations/models/location.py:92
 msgid "How to access this location"
 msgstr "Kuinka päästä tähän paikkaan"
 
-#: apps/locations/models/location.py:92
+#: apps/locations/models/location.py:103
 msgid "Email"
 msgstr "Sähköposti"
 
-#: apps/locations/models/location.py:98
+#: apps/locations/models/location.py:109
 msgid "Phone"
 msgstr "Puhelin"
 
-#: apps/locations/models/location.py:106
+#: apps/locations/models/location.py:117
 msgid "Whether access is free"
 msgstr "Onko pääsy ilmainen"
 
-#: apps/locations/models/location.py:111
+#: apps/locations/models/location.py:122
 msgid "Details about pricing if not free"
 msgstr "Hintatiedot, jos ei ilmainen"
 
-#: apps/locations/models/location.py:118
+#: apps/locations/models/location.py:129
 msgid "Approved"
 msgstr "Hyväksytty"
 
-#: apps/locations/models/location.py:119
+#: apps/locations/models/location.py:130
 msgid "Whether this location has been approved by moderators"
 msgstr "Onko tämä sijainti moderaattorien hyväksymä"
 
-#: apps/locations/models/location.py:124
+#: apps/locations/models/location.py:135
 msgid "Submitted by"
 msgstr "Lähettäjä"
 
-#: apps/locations/models/location.py:125
+#: apps/locations/models/location.py:136
 msgid "Name of person who submitted this location"
 msgstr "Henkilön nimi, joka lähetti tämän sijainnin"
 
-#: apps/locations/models/location.py:130
+#: apps/locations/models/location.py:141
 msgid "Submitter email"
 msgstr "Lähettäjän sähköposti"
 
-#: apps/locations/models/location.py:131
+#: apps/locations/models/location.py:142
 msgid "Email of person who submitted (for follow-up)"
 msgstr "Lähettäjän sähköposti (seurantaa varten)"
 
-#: apps/locations/models/location.py:136
+#: apps/locations/models/location.py:147
 msgid "Moderation notes"
 msgstr "Moderointitiedot"
 
-#: apps/locations/models/location.py:137
+#: apps/locations/models/location.py:148
 msgid "Internal notes for moderators"
 msgstr "Sisäiset muistiinpanot moderaattoreille"
 
-#: apps/locations/models/location.py:144
+#: apps/locations/models/location.py:155
 msgid "Created at"
 msgstr "Luotu"
 
-#: apps/locations/models/location.py:149
+#: apps/locations/models/location.py:160
 msgid "Updated at"
 msgstr "Päivitetty"
 
-#: apps/locations/models/location.py:154 templates/base.html:74
+#: apps/locations/models/location.py:165 templates/base.html:140
 msgid "Locations"
 msgstr "Sijainnit"
 
@@ -370,153 +414,408 @@ msgstr "Sijainnin kuva"
 msgid "Location photos"
 msgstr "Sijainnin kuvat"
 
-#: apps/locations/views/location_views.py:39 templates/base.html:10
-#: templates/locations/location_detail.html:4
+#: apps/locations/views/location_views.py:46
+#: apps/locations/views/location_views.py:148
+#: apps/locations/views/location_views.py:185
+#: apps/locations/views/location_views.py:265
+msgid "Home"
+msgstr ""
+
+#: apps/locations/views/location_views.py:51 templates/base.html:10
+#: templates/base.html:29 templates/base.html:32 templates/base.html:38
+#: templates/base.html:53 templates/base.html:57
+#: templates/locations/location_detail.html:5
 #: templates/locations/location_list.html:4
-#: templates/locations/location_submit.html:4 templates/locations/map.html:5
+#: templates/locations/location_submit.html:5 templates/locations/map.html:6
+#: templates/locations/sitemap_page.html:4
 #: templates/locations/submit_success.html:4
 msgid "Winter Swimming Locations"
 msgstr "Talviuintipaikat"
 
-#: apps/locations/views/location_views.py:70 templates/base.html:33
+#: apps/locations/views/location_views.py:136
+#: apps/locations/views/location_views.py:149
+#: apps/locations/views/location_views.py:186 templates/base.html:96
 #: templates/locations/location_list.html:4
-#: templates/locations/location_list.html:9
+#: templates/locations/location_list.html:29
+#: templates/locations/sitemap_page.html:27
 msgid "All Locations"
 msgstr "Kaikki sijainnit"
 
-#: apps/locations/views/location_views.py:120
+#: apps/locations/views/location_views.py:212
 msgid ""
 "Thank you! Your location has been submitted and will be reviewed by our "
 "moderators."
-msgstr ""
-"Kiitos! Sijaintisi on lähetetty ja moderaattorimme tarkistavat sen."
+msgstr "Kiitos! Sijaintisi on lähetetty ja moderaattorimme tarkistavat sen."
 
-#: apps/locations/views/location_views.py:130
-#: templates/locations/location_submit.html:4
-#: templates/locations/location_submit.html:24
+#: apps/locations/views/location_views.py:222
+#: templates/locations/location_submit.html:5
+#: templates/locations/location_submit.html:217
+#: templates/locations/sitemap_page.html:28
 msgid "Suggest a Location"
 msgstr "Ehdota sijaintia"
 
-#: apps/locations/views/location_views.py:139
+#: apps/locations/views/location_views.py:231
 #: templates/locations/submit_success.html:4
 msgid "Submission Successful"
 msgstr "Lähetys onnistui"
 
-#: templates/base.html:8
-msgid "Discover winter swimming locations around the world"
-msgstr "Löydä talviuintipaikkoja ympäri maailmaa"
+#: apps/locations/views/location_views.py:266
+#: apps/locations/views/location_views.py:270 templates/base.html:142
+#: templates/locations/sitemap_page.html:4
+#: templates/locations/sitemap_page.html:16
+#: templates/locations/sitemap_page.html:29
+#, fuzzy
+#| msgid "View Map"
+msgid "Site Map"
+msgstr "Näytä kartta"
 
-#: templates/base.html:21
+#: templates/base.html:11 templates/base.html:30 templates/base.html:54
+msgid ""
+"Discover winter swimming locations around the world. Find wild spots, "
+"commercial facilities, swimming clubs, and public facilities for cold water "
+"swimming."
+msgstr ""
+
+#: templates/base.html:12
+msgid ""
+"winter swimming, cold water swimming, ice swimming, winter swim locations, "
+"sauna, outdoor swimming"
+msgstr ""
+
+#: templates/base.html:84
 msgid "Winter Swim"
 msgstr "Talviuinti"
 
-#: templates/base.html:24
+#: templates/base.html:87
 msgid "Toggle menu"
 msgstr "Avaa valikko"
 
-#: templates/base.html:30 templates/base.html:73 templates/locations/map.html:5
+#: templates/base.html:93 templates/base.html:139
 msgid "Map"
 msgstr "Kartta"
 
-#: templates/base.html:36 templates/base.html:75
+#: templates/base.html:99 templates/base.html:141
 msgid "Add Location"
 msgstr "Lisää sijainti"
 
-#: templates/base.html:71
+#: templates/base.html:137
 msgid "Winter Swimming Community"
 msgstr "Talviuintiyhteisö"
 
-#: templates/locations/location_detail.html:22
+#: templates/components/breadcrumbs.html:5
+msgid "Breadcrumb"
+msgstr ""
+
+#: templates/locations/location_detail.html:7
+#, fuzzy
+#| msgid "Uploaded at"
+msgid "located at"
+msgstr "Ladattu"
+
+#: templates/locations/location_detail.html:9
+#, fuzzy
+#| msgid "Winter Swim"
+msgid "winter swimming"
+msgstr "Talviuinti"
+
+#: templates/locations/location_detail.html:20
+#: templates/locations/location_detail.html:29
+#, fuzzy
+#| msgid "Winter Swimming Locations"
+msgid "Winter Swimming Location"
+msgstr "Talviuintipaikat"
+
+#: templates/locations/location_detail.html:79
 msgid "Back to list"
 msgstr "Takaisin listaan"
 
-#: templates/locations/location_detail.html:31
-#: templates/locations/location_list.html:40 templates/locations/map.html:76
+#: templates/locations/location_detail.html:88
+#: templates/locations/location_list.html:127 templates/locations/map.html:116
 msgid "Paid"
 msgstr "Maksullinen"
 
-#: templates/locations/location_detail.html:46
+#: templates/locations/location_detail.html:97
+msgid "Photo"
+msgstr ""
+
+#: templates/locations/location_detail.html:115
 msgid "Access Instructions"
 msgstr "Saapumisohjeet"
 
-#: templates/locations/location_detail.html:60
+#: templates/locations/location_detail.html:129
 msgid "Pricing"
 msgstr "Hinnoittelu"
 
-#: templates/locations/location_detail.html:65
+#: templates/locations/location_detail.html:134
 msgid "Contact"
 msgstr "Yhteystiedot"
 
-#: templates/locations/location_detail.html:83
-#: templates/locations/location_submit.html:41
+#: templates/locations/location_detail.html:152
+#: templates/locations/location_submit.html:234
 msgid "Location on Map"
 msgstr "Sijainti kartalla"
 
-#: templates/locations/location_detail.html:89
+#: templates/locations/location_detail.html:158
 msgid "Nearby Locations"
 msgstr "Lähellä olevat sijainnit"
 
-#: templates/locations/location_list.html:10
-msgid "Browse all winter swimming locations"
-msgstr "Selaa kaikkia talviuintipaikkoja"
-
-#: templates/locations/location_list.html:52
-msgid "First"
-msgstr "Ensimmäinen"
-
-#: templates/locations/location_list.html:53
-msgid "Previous"
-msgstr "Edellinen"
-
-#: templates/locations/location_list.html:56
+#: templates/locations/location_list.html:4
+#: templates/locations/location_list.html:6
 msgid "Page"
 msgstr "Sivu"
 
-#: templates/locations/location_list.html:56
-msgid "of"
-msgstr "/"
+#: templates/locations/location_list.html:6
+msgid ""
+"Browse all winter swimming locations worldwide. Find cold water swimming "
+"spots, saunas, and facilities for ice swimming enthusiasts."
+msgstr ""
 
-#: templates/locations/location_list.html:59
-msgid "Next"
+#: templates/locations/location_list.html:8
+msgid ""
+"winter swimming locations, ice swimming spots, cold water swimming, winter "
+"swim directory, outdoor swimming facilities"
+msgstr ""
+
+#: templates/locations/location_list.html:30
+msgid "Browse all winter swimming locations"
+msgstr "Selaa kaikkia talviuintipaikkoja"
+
+#: templates/locations/location_list.html:38
+#, fuzzy
+#| msgid "Nearby Locations"
+msgid "Search locations"
+msgstr "Lähellä olevat sijainnit"
+
+#: templates/locations/location_list.html:43
+msgid "Search by name or address..."
+msgstr ""
+
+#: templates/locations/location_list.html:48
+msgid "Clear search"
+msgstr ""
+
+#: templates/locations/location_list.html:61
+#, fuzzy
+#| msgid "Shower"
+msgid "Showing nearby"
+msgstr "Suihku"
+
+#: templates/locations/location_list.html:63
+#: templates/locations/location_list.html:295
+msgid "Near me"
+msgstr ""
+
+#: templates/locations/location_list.html:69
+#, fuzzy
+#| msgid "All Locations"
+msgid "Show all locations"
+msgstr "Kaikki sijainnit"
+
+#: templates/locations/location_list.html:79
+#, python-format
+msgid ""
+"\n"
+"                Found %(counter)s location matching \"%(query)s\" within "
+"%(radius)s km\n"
+"                "
+msgid_plural ""
+"\n"
+"                Found %(counter)s locations matching \"%(query)s\" within "
+"%(radius)s km\n"
+"                "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/locations/location_list.html:85
+#, python-format
+msgid ""
+"\n"
+"                Found %(counter)s location matching \"%(query)s\"\n"
+"                "
+msgid_plural ""
+"\n"
+"                Found %(counter)s locations matching \"%(query)s\"\n"
+"                "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/locations/location_list.html:91
+#, python-format
+msgid ""
+"\n"
+"                Found %(counter)s location within %(radius)s km\n"
+"                "
+msgid_plural ""
+"\n"
+"                Found %(counter)s locations within %(radius)s km\n"
+"                "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/locations/location_list.html:140
+#, fuzzy
+#| msgid "Previous"
+msgid "Previous page"
+msgstr "Edellinen"
+
+#: templates/locations/location_list.html:160
+#, fuzzy
+#| msgid "Next"
+msgid "Next page"
 msgstr "Seuraava"
 
-#: templates/locations/location_list.html:60
-msgid "Last"
-msgstr "Viimeinen"
-
-#: templates/locations/location_list.html:66
+#: templates/locations/location_list.html:170
 msgid "No locations found yet."
 msgstr "Sijainteja ei vielä löytynyt."
 
-#: templates/locations/location_list.html:67
+#: templates/locations/location_list.html:171
 msgid "Add the first location"
 msgstr "Lisää ensimmäinen sijainti"
 
-#: templates/locations/location_submit.html:25
+#: templates/locations/location_list.html:270
+msgid "Geolocation is not supported by your browser"
+msgstr ""
+
+#: templates/locations/location_list.html:276
+#, fuzzy
+#| msgid "Tell us about this location..."
+msgid "Getting location..."
+msgstr "Kerro meille tästä paikasta..."
+
+#: templates/locations/location_list.html:297
+msgid "Unable to get your location"
+msgstr ""
+
+#: templates/locations/location_list.html:300
+msgid ""
+"Location permission denied. Please enable location access in your browser "
+"settings."
+msgstr ""
+
+#: templates/locations/location_list.html:303
+msgid "Location information is unavailable."
+msgstr ""
+
+#: templates/locations/location_list.html:306
+msgid "Location request timed out."
+msgstr ""
+
+#: templates/locations/location_submit.html:7
+msgid ""
+"Share your favorite winter swimming location with the community. Add cold "
+"water swimming spots, saunas, and facilities to help other ice swimming "
+"enthusiasts."
+msgstr ""
+
+#: templates/locations/location_submit.html:9
+msgid ""
+"add winter swimming location, submit cold water spot, share ice swimming "
+"location, contribute winter swim spot"
+msgstr ""
+
+#: templates/locations/location_submit.html:218
 msgid "Help grow our community by adding a winter swimming location!"
 msgstr "Auta yhteisöämme kasvamaan lisäämällä talviuintipaikka!"
 
-#: templates/locations/location_submit.html:31
+#: templates/locations/location_submit.html:224
 msgid "Note:"
 msgstr "Huomio:"
 
-#: templates/locations/location_submit.html:32
+#: templates/locations/location_submit.html:225
 msgid ""
 "All submissions will be reviewed by our moderators before being published."
 msgstr ""
 "Kaikki lähetykset tarkistetaan moderaattoreidemme toimesta ennen julkaisua."
 
-#: templates/locations/location_submit.html:42
+#: templates/locations/location_submit.html:235
 msgid "Click on the map to set the location coordinates"
 msgstr "Klikkaa karttaa asettaaksesi sijainnin koordinaatit"
 
-#: templates/locations/location_submit.html:81
+#: templates/locations/location_submit.html:242
+msgid "Search for an address or place..."
+msgstr ""
+
+#: templates/locations/location_submit.html:250 templates/locations/map.html:25
+msgid "Use Cmd + scroll to zoom the map"
+msgstr ""
+
+#: templates/locations/location_submit.html:303
 msgid "Submit Location"
 msgstr "Lähetä sijainti"
 
-#: templates/locations/map.html:77
+#: templates/locations/map.html:6
+msgid "Interactive Map"
+msgstr ""
+
+#: templates/locations/map.html:8
+msgid ""
+"Explore winter swimming locations on an interactive map. Discover cold water "
+"swimming spots, wild locations, commercial facilities, and swimming clubs "
+"around the world."
+msgstr ""
+
+#: templates/locations/map.html:10
+msgid ""
+"winter swimming map, ice swimming locations, cold water swimming spots, "
+"interactive map, winter swim finder"
+msgstr ""
+
+#: templates/locations/map.html:117
 msgid "View Details"
 msgstr "Näytä tiedot"
+
+#: templates/locations/sitemap_page.html:6
+msgid ""
+"Browse all pages and winter swimming locations on our site. Complete sitemap "
+"with easy navigation to find cold water swimming spots worldwide."
+msgstr ""
+
+#: templates/locations/sitemap_page.html:8
+msgid ""
+"sitemap, site navigation, winter swimming locations, ice swimming directory"
+msgstr ""
+
+#: templates/locations/sitemap_page.html:17
+#, fuzzy
+#| msgid "Browse all winter swimming locations"
+msgid "Browse all pages and locations on our site"
+msgstr "Selaa kaikkia talviuintipaikkoja"
+
+#: templates/locations/sitemap_page.html:24
+msgid "Main Pages"
+msgstr ""
+
+#: templates/locations/sitemap_page.html:26
+msgid "Home - Interactive Map"
+msgstr ""
+
+#: templates/locations/sitemap_page.html:29
+msgid "(current page)"
+msgstr ""
+
+#: templates/locations/sitemap_page.html:35
+#, fuzzy
+#| msgid "Location type"
+msgid "Locations by Type"
+msgstr "Sijainnin tyyppi"
+
+#: templates/locations/sitemap_page.html:56
+#, fuzzy
+#| msgid "No locations found yet."
+msgid "No locations available yet."
+msgstr "Sijainteja ei vielä löytynyt."
+
+#: templates/locations/sitemap_page.html:62
+#, fuzzy
+#| msgid "Status"
+msgid "Statistics"
+msgstr "Tila"
+
+#: templates/locations/sitemap_page.html:66
+#, fuzzy
+#| msgid "All Locations"
+msgid "Total Locations"
+msgstr "Kaikki sijainnit"
 
 #: templates/locations/submit_success.html:10
 msgid "Thank You!"
@@ -540,7 +839,8 @@ msgstr "Jos hyväksytään, se näkyy kartalla ja sijaintilistassa"
 
 #: templates/locations/submit_success.html:23
 msgid "We may contact you via email if we need more information"
-msgstr "Saatamme ottaa sinuun yhteyttä sähköpostitse, jos tarvitsemme lisätietoja"
+msgstr ""
+"Saatamme ottaa sinuun yhteyttä sähköpostitse, jos tarvitsemme lisätietoja"
 
 #: templates/locations/submit_success.html:29
 msgid "View Map"
@@ -549,3 +849,15 @@ msgstr "Näytä kartta"
 #: templates/locations/submit_success.html:32
 msgid "Submit Another Location"
 msgstr "Lähetä toinen sijainti"
+
+#~ msgid "Discover winter swimming locations around the world"
+#~ msgstr "Löydä talviuintipaikkoja ympäri maailmaa"
+
+#~ msgid "First"
+#~ msgstr "Ensimmäinen"
+
+#~ msgid "of"
+#~ msgstr "/"
+
+#~ msgid "Last"
+#~ msgstr "Viimeinen"
