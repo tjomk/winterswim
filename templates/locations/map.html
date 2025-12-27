@@ -18,12 +18,14 @@
       crossorigin=""/>
 {% endblock %}
 
+{% block extra_head %}
+<!-- Leaflet Gesture Handling Script -->
+<script src="{% static 'js/leaflet-gesture-handling.js' %}"></script>
+{% endblock %}
+
 {% block content %}
 <div class="map-container">
     <div id="map"></div>
-    <div class="map-overlay">
-        <p>{% trans "Use Cmd + scroll to zoom the map" %}</p>
-    </div>
 </div>
 {% endblock %}
 
@@ -44,31 +46,19 @@
 
     // Initialize map centered on Estonia with scroll wheel zoom disabled by default
     const map = L.map('map', {
-        scrollWheelZoom: false
+        scrollWheelZoom: false,
+        dragging: true,
+        tap: true
     }).setView([59.0, 25.0], 7);
 
-    // Get map container and overlay elements
-    const mapContainer = document.querySelector('.map-container');
-    const mapOverlay = document.querySelector('.map-overlay');
+    // Initialize gesture handling
+    const translations = {
+        touch: '{% trans "Use two fingers to move the map" %}',
+        scroll: '{% trans "Use ctrl + scroll to zoom the map" %}',
+        scrollMac: '{% trans "Use ⌘ + scroll to zoom the map" %}'
+    };
 
-    // Hide overlay when interacting with map (dragging, zooming, etc)
-    map.on('mousedown', function() {
-        mapContainer.classList.add('interacting');
-    });
-
-    document.addEventListener('mouseup', function() {
-        mapContainer.classList.remove('interacting');
-    });
-
-    // Enable scroll wheel zoom only when Ctrl (Windows/Linux) or Command (Mac) key is pressed
-    map.on('wheel', function(e) {
-        if (e.originalEvent.ctrlKey || e.originalEvent.metaKey) {
-            e.originalEvent.preventDefault();
-            map.scrollWheelZoom.enable();
-        } else {
-            map.scrollWheelZoom.disable();
-        }
-    });
+    initGestureHandling(map, 'map', translations);
 
     // Add OpenStreetMap tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

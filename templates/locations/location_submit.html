@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load static %}
 {% load form_filters %}
 
 {% block title %}{% trans 'Suggest a Location' %} - {% trans 'Winter Swimming Locations' %}{% endblock %}
@@ -171,44 +172,13 @@
         color: var(--color-text-secondary);
     }
 
-    /* Map overlay for scroll instruction */
-    .map-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        pointer-events: none;
-        z-index: 1000;
-        transition: opacity 0.3s ease, background-color 0.3s ease;
-        opacity: 0;
-        border-radius: var(--radius-lg);
-    }
-
-    .map-picker-container:hover .map-overlay {
-        opacity: 1;
-        background-color: rgba(0, 0, 0, 0.5);
-    }
-
-    /* Hide overlay when actively interacting with map */
-    .map-picker-container.interacting .map-overlay {
-        opacity: 0 !important;
-    }
-
-    .map-overlay p {
-        color: #ffffff;
-        font-size: var(--font-size-lg);
-        font-weight: 700;
-        margin: 0;
-        text-align: center;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    }
 
 </style>
+{% endblock %}
+
+{% block extra_head %}
+<!-- Leaflet Gesture Handling Script -->
+<script src="{% static 'js/leaflet-gesture-handling.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -246,9 +216,6 @@
 
                 <div class="map-picker-container">
                     <div id="map-picker"></div>
-                    <div class="map-overlay">
-                        <p>{% trans "Use Cmd + scroll to zoom the map" %}</p>
-                    </div>
                 </div>
             </div>
 
@@ -323,30 +290,19 @@
     const defaultLat = latField.value || 59.0;
     const defaultLon = lonField.value || 25.0;
     const map = L.map('map-picker', {
-        scrollWheelZoom: false
+        scrollWheelZoom: false,
+        dragging: true,
+        tap: true
     }).setView([defaultLat, defaultLon], 7);
 
-    // Get map container element
-    const mapPickerContainer = document.querySelector('.map-picker-container');
+    // Initialize gesture handling
+    const translations = {
+        touch: '{% trans "Use two fingers to move the map" %}',
+        scroll: '{% trans "Use ctrl + scroll to zoom the map" %}',
+        scrollMac: '{% trans "Use ⌘ + scroll to zoom the map" %}'
+    };
 
-    // Hide overlay when interacting with map (dragging, zooming, etc)
-    map.on('mousedown', function() {
-        mapPickerContainer.classList.add('interacting');
-    });
-
-    document.addEventListener('mouseup', function() {
-        mapPickerContainer.classList.remove('interacting');
-    });
-
-    // Enable scroll wheel zoom only when Ctrl (Windows/Linux) or Command (Mac) key is pressed
-    map.on('wheel', function(e) {
-        if (e.originalEvent.ctrlKey || e.originalEvent.metaKey) {
-            e.originalEvent.preventDefault();
-            map.scrollWheelZoom.enable();
-        } else {
-            map.scrollWheelZoom.disable();
-        }
-    });
+    initGestureHandling(map, 'map-picker', translations);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',

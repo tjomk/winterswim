@@ -20,7 +20,8 @@
       "mcp__browsermcp__browser_hover",
       "mcp__browsermcp__browser_click",
       "Bash(grep:*)",
-      "Bash(poetry install:*)"
+      "Bash(poetry install:*)",
+      "Bash(msgfmt:*)"
     ],
     "deny": [],
     "ask": []

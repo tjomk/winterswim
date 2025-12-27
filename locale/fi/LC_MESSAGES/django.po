@@ -850,6 +850,18 @@ msgstr "Näytä kartta"
 msgid "Submit Another Location"
 msgstr "Lähetä toinen sijainti"
 
+#: templates/locations/location_submit.html:300 templates/locations/map.html:56
+msgid "Use two fingers to move the map"
+msgstr "Käytä kahta sormea kartan liikuttamiseen"
+
+#: templates/locations/location_submit.html:301 templates/locations/map.html:57
+msgid "Use ctrl + scroll to zoom the map"
+msgstr "Käytä ctrl + vieritys kartan zoomaamiseen"
+
+#: templates/locations/location_submit.html:302 templates/locations/map.html:58
+msgid "Use ⌘ + scroll to zoom the map"
+msgstr "Käytä ⌘ + vieritys kartan zoomaamiseen"
+
 #~ msgid "Discover winter swimming locations around the world"
 #~ msgstr "Löydä talviuintipaikkoja ympäri maailmaa"
 

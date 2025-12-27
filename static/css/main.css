@@ -56,40 +56,64 @@
     height: 100%;
 }
 
-/* Map overlay for scroll instruction */
-.map-overlay {
+/* Gesture Handling Styles */
+@keyframes leaflet-gestures-fadein {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes leaflet-gestures-fadeout {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.leaflet-container::after {
+    color: #fff;
+    font-family: var(--font-family-base);
+    font-size: 22px;
+    font-weight: 700;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    padding: 15px;
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 461;
     pointer-events: none;
-    z-index: 1000;
-    transition: opacity 0.3s ease, background-color 0.3s ease;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     opacity: 0;
 }
 
-.map-container:hover .map-overlay {
+.leaflet-gesture-handling-touch-warning::after,
+.leaflet-gesture-handling-scroll-warning::after {
+    animation: leaflet-gestures-fadein 0.3s forwards;
     opacity: 1;
-    background-color: rgba(0, 0, 0, 0.5);
 }
 
-/* Hide overlay when actively interacting with map */
-.map-container.interacting .map-overlay {
-    opacity: 0 !important;
+.leaflet-gesture-handling-touch-warning.fadeout::after,
+.leaflet-gesture-handling-scroll-warning.fadeout::after {
+    animation: leaflet-gestures-fadeout 0.5s forwards;
 }
 
-.map-overlay p {
-    color: #ffffff;
-    font-size: var(--font-size-lg);
-    font-weight: 700;
-    margin: 0;
-    text-align: center;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+.leaflet-gesture-handling-touch-warning::after {
+    content: attr(data-gesture-handling-touch-content);
+}
+
+.leaflet-gesture-handling-scroll-warning::after {
+    content: attr(data-gesture-handling-scroll-content);
 }
 
 /* Responsive map height */

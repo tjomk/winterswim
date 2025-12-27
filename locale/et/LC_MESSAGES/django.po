@@ -22,7 +22,7 @@ msgstr "Laiuskraad"
 
 #: apps/locations/admin.py:25
 msgid "Latitude (e.g., 59.437222)"
-msgstr ""
+msgstr "Laiuskraad (n.t. 59.437222)"
 
 #: apps/locations/admin.py:31 apps/locations/forms/location_form.py:51
 msgid "Longitude"
@@ -30,7 +30,7 @@ msgstr "Pikkuskraad"
 
 #: apps/locations/admin.py:32
 msgid "Longitude (e.g., 24.753889)"
-msgstr ""
+msgstr "Pikkuskraad (n.t. 24.753889)"
 
 #: apps/locations/admin.py:38 apps/locations/admin.py:158
 #: apps/locations/models/location.py:85
@@ -47,7 +47,7 @@ msgstr "Saadaolevad rajatised"
 #: apps/locations/admin.py:70
 #, python-format
 msgid "Invalid coordinates: %(error)s"
-msgstr ""
+msgstr "Valed koordinaadid: %(error)"
 
 #: apps/locations/admin.py:140
 msgid "Basic Information"
@@ -849,6 +849,30 @@ msgstr "Vaata kaarti"
 #: templates/locations/submit_success.html:32
 msgid "Submit Another Location"
 msgstr "Esita teine asukoht"
+
+#: templates/locations/map.html:45
+msgid "Kasuta kaht sõrme kaardi liigutamiseks"
+msgstr "Kasuta kaht sõrme kaardi liigutamiseks"
+
+#: templates/locations/map.html:46
+msgid "Kasuta ctrl + kerimine kaardi suurendamiseks"
+msgstr "Kasuta ctrl + kerimine kaardi suurendamiseks"
+
+#: templates/locations/map.html:47
+msgid "Kasuta ⌘ + kerimine kaardi suurendamiseks"
+msgstr "Kasuta ⌘ + kerimine kaardi suurendamiseks"
+
+#: templates/locations/map.html:49
+msgid "Use two fingers to move the map"
+msgstr "Kasuta kaht sõrme kaardi liigutamiseks"
+
+#: templates/locations/map.html:50
+msgid "Use ctrl + scroll to zoom the map"
+msgstr "Kasuta ctrl + kerimine kaardi suurendamiseks"
+
+#: templates/locations/map.html:51
+msgid "Use ⌘ + scroll to zoom the map"
+msgstr "Kasuta ⌘ + kerimine kaardi suurendamiseks"
 
 #~ msgid "Discover winter swimming locations around the world"
 #~ msgstr "Avasta taliujumise kohti üle maailma"

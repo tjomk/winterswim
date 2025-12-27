@@ -30,7 +30,7 @@
     <meta property="og:description" content="{% block og_description %}{% trans 'Discover winter swimming locations around the world. Find wild spots, commercial facilities, swimming clubs, and public facilities for cold water swimming.' %}{% endblock %}">
     <meta property="og:url" content="{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}">
     <meta property="og:site_name" content="{% trans 'Winter Swimming Locations' %}">
-    <meta property="og:locale" content="{% if LANGUAGE_CODE == 'en' %}en_US{% elif LANGUAGE_CODE == 'fi' %}fi_FI{% elif LANGUAGE_CODE == 'et' %}et_EE{% else %}en_US{% endif %}">
+    <meta property="og:locale" content="{% if LANGUAGE_CODE == 'en' %}en_US{% else %}{{ LANGUAGE_CODE }}_{{ LANGUAGE_CODE|upper }}{% endif %}">
     {% block og_image %}
     <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/og-default.jpg' %}">
     <meta property="og:image:width" content="1200">
@@ -139,7 +139,8 @@
                 <a href="{% url 'locations:map' %}">{% trans 'Map' %}</a> |
                 <a href="{% url 'locations:list' %}">{% trans 'Locations' %}</a> |
                 <a href="{% url 'locations:submit' %}">{% trans 'Add Location' %}</a> |
-                <a href="{% url 'locations:sitemap_page' %}">{% trans 'Site Map' %}</a>
+                <a href="{% url 'locations:sitemap_page' %}">{% trans 'Site Map' %}</a> |
+                <a href="https://www.reddit.com/r/winterwimming" target="_blank" rel="noopener noreferrer">Reddit</a>
             </p>
         </div>
     </footer>
