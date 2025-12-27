@@ -266,8 +266,20 @@
     // Near me button - get geolocation
     if (nearMeBtn && !nearMeBtn.disabled) {
         nearMeBtn.addEventListener('click', function() {
+            // Check if geolocation is supported
             if (!navigator.geolocation) {
                 alert('{% trans "Geolocation is not supported by your browser" %}');
+                return;
+            }
+
+            // Check if site is accessed over HTTP (not HTTPS or localhost)
+            const isLocalhost = window.location.hostname === 'localhost' ||
+                              window.location.hostname === '127.0.0.1' ||
+                              window.location.hostname === '[::1]';
+            const isSecure = window.location.protocol === 'https:';
+
+            if (!isSecure && !isLocalhost) {
+                alert('{% trans "Geolocation requires HTTPS. Please access the site via https:// or use localhost for testing." %}');
                 return;
             }
 
@@ -298,6 +310,9 @@
                     switch(error.code) {
                         case error.PERMISSION_DENIED:
                             errorMessage = '{% trans "Location permission denied. Please enable location access in your browser settings." %}';
+                            if (!isSecure && !isLocalhost) {
+                                errorMessage += '\n\n{% trans "Note: Geolocation requires HTTPS. Please access the site via https://" %}';
+                            }
                             break;
                         case error.POSITION_UNAVAILABLE:
                             errorMessage = '{% trans "Location information is unavailable." %}';

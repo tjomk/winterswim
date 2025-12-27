@@ -14,6 +14,7 @@ from modeltranslation.admin import TranslationAdmin
 
 from .models import Location, LocationPhoto
 from .models.location import Facility
+from .repositories import bulk_approve_locations, bulk_reject_locations
 
 
 class LocationAdminForm(forms.ModelForm):
@@ -218,7 +219,8 @@ class LocationAdmin(gis_admin.GISModelAdmin, TranslationAdmin):
 
     def approve_locations(self, request, queryset):
         """Bulk action to approve selected locations."""
-        updated = queryset.update(is_approved=True)
+        location_ids = list(queryset.values_list('pk', flat=True))
+        updated = bulk_approve_locations(location_ids)
         self.message_user(
             request,
             _('%(count)d location(s) have been approved.') % {'count': updated}
@@ -227,7 +229,8 @@ class LocationAdmin(gis_admin.GISModelAdmin, TranslationAdmin):
 
     def reject_locations(self, request, queryset):
         """Bulk action to reject (un-approve) selected locations."""
-        updated = queryset.update(is_approved=False)
+        location_ids = list(queryset.values_list('pk', flat=True))
+        updated = bulk_reject_locations(location_ids)
         self.message_user(
             request,
             _('%(count)d location(s) have been rejected.') % {'count': updated}

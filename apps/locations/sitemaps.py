@@ -7,7 +7,7 @@ discover and index all pages on the site.
 
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
-from apps.locations.models import Location
+from apps.locations.repositories import get_locations_for_sitemap
 
 
 class LocationSitemap(Sitemap):
@@ -21,7 +21,7 @@ class LocationSitemap(Sitemap):
 
     def items(self):
         """Return all approved locations."""
-        return Location.objects.filter(is_approved=True).order_by('-updated_at')
+        return get_locations_for_sitemap()
 
     def lastmod(self, obj):
         """Return the last modification date of the location."""

@@ -596,10 +596,8 @@ msgid "Clear search"
 msgstr "Tühista"
 
 #: templates/locations/location_list.html:61
-#, fuzzy
-#| msgid "Shower"
 msgid "Showing nearby"
-msgstr "Dušš"
+msgstr "Läheduses"
 
 #: templates/locations/location_list.html:63
 #: templates/locations/location_list.html:295
@@ -607,10 +605,8 @@ msgid "Near me"
 msgstr "Lähedal"
 
 #: templates/locations/location_list.html:69
-#, fuzzy
-#| msgid "All Locations"
 msgid "Show all locations"
-msgstr "Kõik asukohad"
+msgstr "Näita kõiki asukohti"
 
 #: templates/locations/location_list.html:79
 #, python-format

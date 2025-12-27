@@ -76,52 +76,94 @@
         shadowSize: [41, 41]
     });
 
-    // Fetch and display locations
-    fetch('{% url "locations:api_locations" %}')
-        .then(response => response.json())
-        .then(data => {
-            if (!data.features || data.features.length === 0) {
-                console.log('No locations found');
-                return;
-            }
+    // Function to load and display locations
+    function loadLocations(latitude, longitude) {
+        // Build API URL with optional location parameters
+        let apiUrl = '{% url "locations:api_locations" %}';
+        if (latitude && longitude) {
+            apiUrl += `?lat=${latitude}&lon=${longitude}&radius=50`;
+        }
 
-            // Create bounds to fit all markers
-            const bounds = [];
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (!data.features || data.features.length === 0) {
+                    console.log('No locations found');
+                    return;
+                }
 
-            // Add markers for each location
-            data.features.forEach(feature => {
-                const coords = feature.geometry.coordinates;
-                const props = feature.properties;
+                // Create bounds to fit all markers
+                const bounds = [];
 
-                // Leaflet uses [lat, lon], GeoJSON uses [lon, lat]
-                const latLng = [coords[1], coords[0]];
-                bounds.push(latLng);
+                // Add markers for each location
+                data.features.forEach(feature => {
+                    const coords = feature.geometry.coordinates;
+                    const props = feature.properties;
 
-                // Create popup content
-                const popupContent = `
-                    <div class="location-marker-popup">
-                        <h3>${escapeHtml(props.name)}</h3>
-                        <p><strong>${escapeHtml(getLocationTypeLabel(props.location_type))}</strong></p>
-                        ${props.description ? `<p>${escapeHtml(truncate(props.description, 100))}</p>` : ''}
-                        ${props.is_free ? '<p>✓ {% trans "Free access" %}</p>' : '<p>💰 {% trans "Paid" %}</p>'}
-                        <a href="${props.detail_url}" class="btn btn-primary btn-sm">{% trans "View Details" %}</a>
-                    </div>
-                `;
+                    // Leaflet uses [lat, lon], GeoJSON uses [lon, lat]
+                    const latLng = [coords[1], coords[0]];
+                    bounds.push(latLng);
 
-                // Add marker
-                L.marker(latLng, { icon: locationIcon })
-                    .bindPopup(popupContent)
-                    .addTo(map);
+                    // Create popup content
+                    const popupContent = `
+                        <div class="location-marker-popup">
+                            <h3>${escapeHtml(props.name)}</h3>
+                            <p><strong>${escapeHtml(getLocationTypeLabel(props.location_type))}</strong></p>
+                            ${props.description ? `<p>${escapeHtml(truncate(props.description, 100))}</p>` : ''}
+                            ${props.is_free ? '<p>✓ {% trans "Free access" %}</p>' : '<p>💰 {% trans "Paid" %}</p>'}
+                            <a href="${props.detail_url}" class="btn btn-primary btn-sm">{% trans "View Details" %}</a>
+                        </div>
+                    `;
+
+                    // Add marker
+                    L.marker(latLng, { icon: locationIcon })
+                        .bindPopup(popupContent)
+                        .addTo(map);
+                });
+
+                // Fit map to show all markers or center on user location
+                if (bounds.length > 0) {
+                    if (latitude && longitude) {
+                        // Center on user location and fit bounds
+                        map.fitBounds(bounds, { padding: [50, 50] });
+                    } else {
+                        // No user location - just fit all markers
+                        map.fitBounds(bounds, { padding: [50, 50] });
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error loading locations:', error);
             });
+    }
 
-            // Fit map to show all markers
-            if (bounds.length > 0) {
-                map.fitBounds(bounds, { padding: [50, 50] });
+    // Try to get user's location
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            // Success callback
+            function(position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                console.log('User location obtained:', latitude, longitude);
+                loadLocations(latitude, longitude);
+            },
+            // Error callback
+            function(error) {
+                console.log('Geolocation error or denied:', error.message);
+                // Load random locations as fallback
+                loadLocations(null, null);
+            },
+            // Options
+            {
+                timeout: 5000,
+                maximumAge: 300000  // Accept cached position up to 5 minutes old
             }
-        })
-        .catch(error => {
-            console.error('Error loading locations:', error);
-        });
+        );
+    } else {
+        console.log('Geolocation not supported');
+        // Load random locations as fallback
+        loadLocations(null, null);
+    }
 
     // Helper functions
     function escapeHtml(text) {

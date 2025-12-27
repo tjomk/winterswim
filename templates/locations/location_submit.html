@@ -478,8 +478,24 @@
                     updateLocation(userLocation.lat, userLocation.lon);
                 } else {
                     // Try to get current location
-                    if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(function(position) {
+                    if (!navigator.geolocation) {
+                        alert('{% trans "Geolocation is not supported by your browser" %}');
+                        return;
+                    }
+
+                    // Check if site is accessed over HTTP (not HTTPS or localhost)
+                    const isLocalhost = window.location.hostname === 'localhost' ||
+                                      window.location.hostname === '127.0.0.1' ||
+                                      window.location.hostname === '[::1]';
+                    const isSecure = window.location.protocol === 'https:';
+
+                    if (!isSecure && !isLocalhost) {
+                        alert('{% trans "Geolocation requires HTTPS. Please access the site via https:// or use localhost for testing." %}');
+                        return;
+                    }
+
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
                             const lat = position.coords.latitude;
                             const lon = position.coords.longitude;
                             console.log('User location detected (via Locate Me button):', {
@@ -491,12 +507,32 @@
                             userLocation = { lat: lat, lon: lon };
                             map.setView([lat, lon], 13);
                             updateLocation(lat, lon);
-                        }, function(error) {
-                            alert('Could not get your location: ' + error.message);
-                        });
-                    } else {
-                        alert('Geolocation is not supported by your browser');
-                    }
+                        },
+                        function(error) {
+                            console.error('Geolocation error:', error);
+                            let errorMessage = '{% trans "Unable to get your location" %}';
+                            switch(error.code) {
+                                case error.PERMISSION_DENIED:
+                                    errorMessage = '{% trans "Location permission denied. Please enable location access in your browser settings." %}';
+                                    if (!isSecure && !isLocalhost) {
+                                        errorMessage += '\n\n{% trans "Note: Geolocation requires HTTPS." %}';
+                                    }
+                                    break;
+                                case error.POSITION_UNAVAILABLE:
+                                    errorMessage = '{% trans "Location information is unavailable." %}';
+                                    break;
+                                case error.TIMEOUT:
+                                    errorMessage = '{% trans "Location request timed out." %}';
+                                    break;
+                            }
+                            alert(errorMessage);
+                        },
+                        {
+                            enableHighAccuracy: true,
+                            timeout: 10000,
+                            maximumAge: 300000
+                        }
+                    );
                 }
             });
 
@@ -509,19 +545,39 @@
 
     // Try to get user's location on page load
     if (navigator.geolocation && !latField.value && !lonField.value) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            console.log('User location detected (on page load):', {
-                latitude: lat,
-                longitude: lon,
-                accuracy: position.coords.accuracy,
-                timestamp: new Date(position.timestamp).toISOString()
-            });
-            userLocation = { lat: lat, lon: lon };
-            map.setView([lat, lon], 13);
-            updateLocation(lat, lon);
-        });
+        // Check if site is accessed over HTTP (not HTTPS or localhost)
+        const isLocalhost = window.location.hostname === 'localhost' ||
+                          window.location.hostname === '127.0.0.1' ||
+                          window.location.hostname === '[::1]';
+        const isSecure = window.location.protocol === 'https:';
+
+        // Only attempt automatic geolocation on secure contexts
+        if (isSecure || isLocalhost) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    console.log('User location detected (on page load):', {
+                        latitude: lat,
+                        longitude: lon,
+                        accuracy: position.coords.accuracy,
+                        timestamp: new Date(position.timestamp).toISOString()
+                    });
+                    userLocation = { lat: lat, lon: lon };
+                    map.setView([lat, lon], 13);
+                    updateLocation(lat, lon);
+                },
+                function(error) {
+                    // Silently fail on page load - user can click "Locate Me" button
+                    console.log('Auto-geolocation failed (user can click Locate Me button):', error.code);
+                },
+                {
+                    enableHighAccuracy: false,
+                    timeout: 5000,
+                    maximumAge: 300000
+                }
+            );
+        }
     }
 })();
 </script>

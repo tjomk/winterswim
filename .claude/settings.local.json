@@ -21,7 +21,8 @@
       "mcp__browsermcp__browser_click",
       "Bash(grep:*)",
       "Bash(poetry install:*)",
-      "Bash(msgfmt:*)"
+      "Bash(msgfmt:*)",
+      "Bash(tree:*)"
     ],
     "deny": [],
     "ask": []
