@@ -54,6 +54,7 @@
 #map {
     width: 100%;
     height: 100%;
+    touch-action: pan-y;  /* Allow vertical scrolling on mobile */
 }
 
 /* Gesture Handling Styles */

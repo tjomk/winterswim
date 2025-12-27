@@ -46,12 +46,14 @@ function initGestureHandling(map, mapElementId, translations) {
     // Touch event handling for mobile
     const handleTouchStart = (e) => {
         if (e.touches.length === 1) {
-            // Single finger touch - show warning
+            // Single finger touch - show warning but allow page scrolling
             mapElement.classList.add('leaflet-gesture-handling-touch-warning');
             disableDragging();
-        } else if (e.touches.length === 2) {
-            // Two finger touch - enable dragging
+            // Don't prevent default - allow page to scroll
+        } else if (e.touches.length >= 2) {
+            // Two or more finger touch - enable dragging and prevent page scroll
             e.preventDefault();
+            e.stopPropagation();
             enableDragging();
             mapElement.classList.remove('leaflet-gesture-handling-touch-warning');
         }
@@ -59,12 +61,14 @@ function initGestureHandling(map, mapElementId, translations) {
 
     const handleTouchMove = (e) => {
         if (e.touches.length === 1) {
-            // Single finger - show warning
+            // Single finger - show warning but DON'T interfere with scrolling
             mapElement.classList.add('leaflet-gesture-handling-touch-warning');
             disableDragging();
-        } else if (e.touches.length === 2) {
-            // Two fingers - allow interaction
+            // Explicitly allow default behavior for page scrolling
+        } else if (e.touches.length >= 2) {
+            // Two or more fingers - allow map interaction
             e.preventDefault();
+            e.stopPropagation();
             enableDragging();
             mapElement.classList.remove('leaflet-gesture-handling-touch-warning');
         }
