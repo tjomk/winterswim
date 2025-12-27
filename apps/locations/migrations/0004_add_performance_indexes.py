@@ -11,7 +11,6 @@ This migration adds:
 
 from django.db import migrations, models
 import django.contrib.postgres.indexes as pg_indexes
-import django.contrib.gis.db.models.indexes as gis_indexes
 
 
 class Migration(migrations.Migration):
@@ -22,12 +21,13 @@ class Migration(migrations.Migration):
 
     operations = [
         # Add spatial index on location field for PostGIS distance queries
+        # Django automatically creates a GiST index for spatial fields
         # Used by: get_nearby_locations(), get_locations_with_proximity()
         migrations.AddIndex(
             model_name='location',
-            index=gis_indexes.GistIndex(
+            index=models.Index(
                 fields=['location'],
-                name='location_spatial_gist_idx'
+                name='location_spatial_idx'
             ),
         ),
 
