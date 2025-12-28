@@ -39,25 +39,43 @@ def map_view(request):
 
     This is the home page of the site.
     """
-    # Get all approved locations
-    locations = get_approved_locations()
+    # Get initial locations (20 random) for immediate rendering
+    # This avoids waiting for geolocation or API calls
+    from django.urls import reverse
+    import json
 
-    # Serialize locations for the map
-    locations_geojson = serialize(
+    initial_locations = get_random_locations(limit=20)
+
+    # Serialize initial locations to GeoJSON
+    initial_geojson = serialize(
         'geojson',
-        locations,
+        initial_locations,
         geometry_field='location',
-        fields=('name', 'location_type', 'description')
+        fields=(
+            'pk',
+            'name',
+            'slug',
+            'description',
+            'location_type',
+            'facilities',
+            'is_free',
+            'address',
+        )
+    )
+
+    # Enrich with detail URLs (pass string, returns dict)
+    initial_data = enrich_geojson_with_urls(
+        initial_geojson,
+        url_builder_fn=lambda slug: reverse('locations:detail', kwargs={'slug': slug})
     )
 
     # Add breadcrumb navigation (home page - single item for Schema.org)
-    from django.urls import reverse
     breadcrumb_list = [
         (_('Home'), None),  # Current page - no link
     ]
 
     context = {
-        'locations_geojson': locations_geojson,
+        'initial_locations_json': json.dumps(initial_data),
         'page_title': _('Winter Swimming Locations'),
         'breadcrumb_list': breadcrumb_list,
     }
