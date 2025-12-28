@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load static %}
+{% load blog_filters %}
 
 {% block title %}{{ article.title }} - {% trans 'Blog' %}{% endblock %}
 
@@ -75,8 +76,8 @@
         <footer class="article-footer mt-xl">
             {% if article.meta_keywords %}
             <div class="article-tags">
-                {% for keyword in article.meta_keywords.split:',' %}
-                <span class="tag">{{ keyword|trim }}</span>
+                {% for keyword in article.meta_keywords|split:"," %}
+                <span class="tag">{{ keyword|strip }}</span>
                 {% endfor %}
             </div>
             {% endif %}
