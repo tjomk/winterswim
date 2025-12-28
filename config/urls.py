@@ -22,11 +22,14 @@ from django.conf.urls.i18n import i18n_patterns
 from django.contrib.sitemaps.views import sitemap
 from apps.locations.views.seo_views import robots_txt
 from apps.locations.sitemaps import LocationSitemap, StaticViewSitemap
+from apps.blog.sitemaps import ArticleSitemap, CategorySitemap
 
 # Sitemap configuration
 sitemaps = {
     'locations': LocationSitemap,
     'static': StaticViewSitemap,
+    'articles': ArticleSitemap,
+    'categories': CategorySitemap,
 }
 
 urlpatterns = [
@@ -43,6 +46,9 @@ urlpatterns = [
 
 # Add i18n patterns for translated URLs
 urlpatterns += i18n_patterns(
+    # Blog
+    path('blog/', include('apps.blog.urls')),
+
     # Locations app (main site)
     path('', include('apps.locations.urls')),
 )

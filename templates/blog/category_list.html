@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ page_title }} - {% trans 'Blog' %} - {% trans 'Winter Swimming' %}{% endblock %}
+
+{% block meta_description %}{{ category.description|default:page_title }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/blog.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-xl">
+    {% include 'components/breadcrumbs.html' with breadcrumbs=breadcrumb_list %}
+
+    <div class="blog-header">
+        <h1>{{ category.name }}</h1>
+        {% if category.description %}
+        <p class="lead">{{ category.description }}</p>
+        {% endif %}
+    </div>
+
+    {# Category navigation #}
+    {% if categories %}
+    <nav class="category-nav mb-lg">
+        <a href="{% url 'blog:list' %}" class="category-tag">
+            {% trans 'All' %}
+        </a>
+        {% for cat in categories %}
+        <a href="{% url 'blog:category' category_slug=cat.slug %}"
+           class="category-tag {% if cat.slug == category.slug %}active{% endif %}">
+            {{ cat.name }}
+        </a>
+        {% endfor %}
+    </nav>
+    {% endif %}
+
+    {# Articles grid #}
+    <div class="articles-grid">
+        {% for article in articles %}
+        <article class="article-card">
+            {% if article.featured_image %}
+            <a href="{% url 'blog:detail' category_slug=article.category.slug article_slug=article.slug %}">
+                <img src="{{ article.featured_image.url }}"
+                     alt="{{ article.featured_image_alt|default:article.title }}"
+                     class="article-card-image"
+                     loading="lazy">
+            </a>
+            {% endif %}
+
+            <div class="article-card-body">
+                <div class="article-meta">
+                    <span class="article-type article-type-{{ article.article_type }}">
+                        {{ article.get_article_type_display }}
+                    </span>
+                </div>
+
+                <h2 class="article-title">
+                    <a href="{% url 'blog:detail' category_slug=article.category.slug article_slug=article.slug %}">
+                        {{ article.title }}
+                    </a>
+                </h2>
+
+                <p class="article-excerpt">{{ article.excerpt }}</p>
+
+                <div class="article-footer">
+                    <span class="article-date">
+                        {{ article.published_at|date:"M d, Y" }}
+                    </span>
+                    <span class="article-reading-time">
+                        {{ article.reading_time_minutes }} {% trans 'min read' %}
+                    </span>
+                </div>
+            </div>
+        </article>
+        {% empty %}
+        <p>{% trans 'No articles found in this category.' %}</p>
+        {% endfor %}
+    </div>
+
+    {# Pagination #}
+    {% if is_paginated %}
+    <nav class="pagination-nav mt-xl">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">
+            ← {% trans 'Previous' %}
+        </a>
+        {% endif %}
+
+        <span class="pagination-info">
+            {% trans 'Page' %} {{ page_obj.number }} {% trans 'of' %} {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">
+            {% trans 'Next' %} →
+        </a>
+        {% endif %}
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{ article.title }} - {% trans 'Blog' %}{% endblock %}
+
+{% block meta_description %}{{ article.meta_description|default:article.excerpt }}{% endblock %}
+
+{% block meta_keywords %}{{ article.meta_keywords }}{% endblock %}
+
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ article.title }}{% endblock %}
+{% block og_description %}{{ article.excerpt }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/blog.css' %}">
+{% endblock %}
+
+{% block extra_head %}
+{% if article.featured_image %}
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ article.featured_image.url }}">
+<meta property="og:image:alt" content="{{ article.featured_image_alt|default:article.title }}">
+<meta property="article:published_time" content="{{ article.published_at|date:'c' }}">
+<meta property="article:modified_time" content="{{ article.updated_at|date:'c' }}">
+<meta property="article:author" content="{{ article.author_name }}">
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-xl">
+    {% include 'components/breadcrumbs.html' with breadcrumbs=breadcrumb_list %}
+
+    <article class="article-detail">
+        {# Article header #}
+        <header class="article-header">
+            <div class="article-meta">
+                <span class="article-type article-type-{{ article.article_type }}">
+                    {{ article.get_article_type_display }}
+                </span>
+                <span class="article-category">
+                    <a href="{% url 'blog:category' category_slug=article.category.slug %}">
+                        {{ article.category.name }}
+                    </a>
+                </span>
+            </div>
+
+            <h1 class="article-title">{{ article.title }}</h1>
+
+            <div class="article-byline">
+                <span class="article-author">{% trans 'By' %} {{ article.author_name }}</span>
+                <span class="article-date">{{ article.published_at|date:"F d, Y" }}</span>
+                <span class="article-reading-time">
+                    {{ article.reading_time_minutes }} {% trans 'minute read' %}
+                </span>
+            </div>
+        </header>
+
+        {# Featured image #}
+        {% if article.featured_image %}
+        <figure class="article-featured-image">
+            <img src="{{ article.featured_image.url }}"
+                 alt="{{ article.featured_image_alt|default:article.title }}">
+            {% if article.featured_image_alt %}
+            <figcaption>{{ article.featured_image_alt }}</figcaption>
+            {% endif %}
+        </figure>
+        {% endif %}
+
+        {# Article content #}
+        <div class="article-content">
+            {{ rendered_content }}
+        </div>
+
+        {# Article footer #}
+        <footer class="article-footer mt-xl">
+            {% if article.meta_keywords %}
+            <div class="article-tags">
+                {% for keyword in article.meta_keywords.split:',' %}
+                <span class="tag">{{ keyword|trim }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </footer>
+    </article>
+
+    {# Related articles #}
+    {% if related_articles %}
+    <section class="related-articles mt-xl">
+        <h2>{% trans 'Related Articles' %}</h2>
+        <div class="articles-grid">
+            {% for related in related_articles %}
+            <article class="article-card">
+                {% if related.featured_image %}
+                <a href="{% url 'blog:detail' category_slug=related.category.slug article_slug=related.slug %}">
+                    <img src="{{ related.featured_image.url }}"
+                         alt="{{ related.title }}"
+                         class="article-card-image"
+                         loading="lazy">
+                </a>
+                {% endif %}
+
+                <div class="article-card-body">
+                    <h3 class="article-title">
+                        <a href="{% url 'blog:detail' category_slug=related.category.slug article_slug=related.slug %}">
+                            {{ related.title }}
+                        </a>
+                    </h3>
+                    <p class="article-excerpt">{{ related.excerpt }}</p>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% load blog_seo_tags %}
+{% article_schema article %}
+{% endblock %}
