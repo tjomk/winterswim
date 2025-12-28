@@ -2,7 +2,6 @@
 Category model for blog articles.
 """
 
-import uuid
 from django.db import models
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
@@ -78,7 +77,5 @@ class Category(models.Model):
     def save(self, *args, **kwargs):
         """Generate slug if not exists."""
         if not self.slug:
-            base_slug = slugify(self.name)
-            uuid_part = str(uuid.uuid4()).split('-')[0]
-            self.slug = f"{base_slug}-{uuid_part}"
+            self.slug = slugify(self.name)
         super().save(*args, **kwargs)

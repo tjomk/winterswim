@@ -9,6 +9,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Count
+from django.urls import reverse
 
 from .models import Article, Category
 from .services import render_markdown
@@ -96,6 +97,7 @@ class ArticleAdmin(admin.ModelAdmin):
     )
 
     readonly_fields = (
+        'view_on_site_link',
         'created_at',
         'updated_at',
         'view_count',
@@ -106,6 +108,7 @@ class ArticleAdmin(admin.ModelAdmin):
     fieldsets = (
         (_('Basic Information'), {
             'fields': (
+                'view_on_site_link',
                 'title',
                 'slug',
                 'category',
@@ -187,6 +190,20 @@ class ArticleAdmin(admin.ModelAdmin):
             )
         return '-'
     content_preview.short_description = _('Content Preview')
+
+    def view_on_site_link(self, obj):
+        """Display a clickable link to view the article on the site."""
+        if obj.pk and obj.category:
+            url = reverse('blog:detail', kwargs={
+                'category_slug': obj.category.slug,
+                'article_slug': obj.slug
+            })
+            return format_html(
+                '<a href="{}" target="_blank" style="font-size: 14px; font-weight: bold; color: #417690;">🔗 View article on site</a>',
+                url
+            )
+        return format_html('<span style="color: #999;">Save the article first to view it on the site</span>')
+    view_on_site_link.short_description = _('View on Site')
 
     def publish_articles(self, request, queryset):
         """Bulk action to publish articles."""
