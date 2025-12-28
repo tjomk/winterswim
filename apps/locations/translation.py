@@ -12,7 +12,7 @@ class LocationTranslationOptions(TranslationOptions):
     """
     Define which fields should be translatable for Location model.
     """
-    fields = ('name', 'description', 'access_instructions', 'pricing_details')
+    fields = ('name', 'description', 'city', 'country', 'access_instructions', 'pricing_details')
     required_languages = ('en',)  # English is required
 
 

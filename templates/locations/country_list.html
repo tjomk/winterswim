@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans 'Countries' %} - {% trans 'Winter Swimming Locations' %}{% endblock %}
+
+{% block meta_description %}{% trans 'Browse winter swimming locations by country. Find swimming spots, saunas, and facilities organized by location.' %}{% endblock %}
+
+{% block meta_keywords %}{% trans 'winter swimming countries, winter swimming by location, ice swimming destinations' %}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        {# Breadcrumb navigation #}
+        {% include 'components/breadcrumbs.html' with breadcrumbs=breadcrumb_list %}
+
+        <h1>{% trans 'Browse by Country' %}</h1>
+        <p>{% trans 'Explore winter swimming locations around the world' %}</p>
+    </div>
+</div>
+
+<div class="container" style="padding-bottom: 3rem;">
+    {% if countries %}
+        <div class="countries-grid">
+            {% for country_data in countries %}
+                <a href="{% url 'locations:country_detail' country_slug=country_data.country_slug %}" class="country-card">
+                    <div class="country-card-header">
+                        <h2 class="country-card-title">{{ country_data.country }}</h2>
+                    </div>
+                    <div class="country-card-body">
+                        <p class="country-card-stats">
+                            {% blocktrans count count=country_data.city_count with location_count=country_data.location_count %}
+                                {{ count }} city • {{ location_count }} location
+                            {% plural %}
+                                {{ count }} cities • {{ location_count }} locations
+                            {% endblocktrans %}
+                        </p>
+                    </div>
+                    <div class="country-card-footer">
+                        <span class="country-card-link">{% trans 'Explore cities' %} →</span>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>{% trans 'No countries with locations found yet.' %}</p>
+            <a href="{% url 'locations:submit' %}" class="btn btn-primary">{% trans 'Suggest a location' %}</a>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .countries-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .country-card {
+        background: var(--color-surface, #fff);
+        border: 1px solid var(--color-border, #e0e0e0);
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .country-card:hover {
+        border-color: var(--color-primary, #0066cc);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .country-card-header {
+        margin-bottom: 0.75rem;
+    }
+
+    .country-card-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0;
+        color: var(--color-text, #333);
+    }
+
+    .country-card-body {
+        flex: 1;
+        margin-bottom: 1rem;
+    }
+
+    .country-card-stats {
+        color: var(--color-text-secondary, #666);
+        margin: 0;
+        font-size: 0.95rem;
+    }
+
+    .country-card-footer {
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--color-border, #e0e0e0);
+    }
+
+    .country-card-link {
+        color: var(--color-primary, #0066cc);
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+    }
+
+    .empty-state p {
+        font-size: 1.1rem;
+        color: var(--color-text-secondary, #666);
+        margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .countries-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}

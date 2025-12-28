@@ -108,6 +108,8 @@ class LocationAdmin(gis_admin.GISModelAdmin, TranslationAdmin):
 
     list_display = (
         'name',
+        'city',
+        'country',
         'location_type',
         'is_approved_badge',
         'submitted_by_name',
@@ -118,6 +120,8 @@ class LocationAdmin(gis_admin.GISModelAdmin, TranslationAdmin):
         'is_approved',
         'location_type',
         'is_free',
+        'country',
+        'city',
         'created_at',
     )
 
@@ -125,11 +129,15 @@ class LocationAdmin(gis_admin.GISModelAdmin, TranslationAdmin):
         'name',
         'description',
         'address',
+        'city',
+        'country',
         'submitted_by_name',
         'submitted_by_email',
     )
 
     readonly_fields = (
+        'city_slug',
+        'country_slug',
         'created_at',
         'updated_at',
         'submitted_by_name',
@@ -151,10 +159,14 @@ class LocationAdmin(gis_admin.GISModelAdmin, TranslationAdmin):
                 'latitude',
                 'longitude',
                 'address',
+                'city',
+                'city_slug',
+                'country',
+                'country_slug',
                 'access_instructions',
                 'location_map',
             ),
-            'description': _('You can either use the map to set coordinates, or manually enter latitude and longitude below.')
+            'description': _('You can either use the map to set coordinates, or manually enter latitude and longitude below. City and country slugs are auto-generated.')
         }),
         (_('Facilities'), {
             'fields': (

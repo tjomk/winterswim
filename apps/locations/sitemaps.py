@@ -7,7 +7,11 @@ discover and index all pages on the site.
 
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
-from apps.locations.repositories import get_locations_for_sitemap
+from apps.locations.repositories import (
+    get_locations_for_sitemap,
+    get_all_countries,
+    get_cities_by_country,
+)
 
 
 class LocationSitemap(Sitemap):
@@ -47,3 +51,49 @@ class StaticViewSitemap(Sitemap):
     def location(self, item):
         """Return the URL for the static page."""
         return reverse(item)
+
+
+class CountrySitemap(Sitemap):
+    """
+    Sitemap for country pages.
+
+    Includes all countries that have approved locations.
+    """
+    changefreq = "weekly"
+    priority = 0.7
+
+    def items(self):
+        """Return all countries with locations."""
+        return get_all_countries()
+
+    def location(self, obj):
+        """Return the URL for the country detail page."""
+        return reverse('locations:country_detail', kwargs={'country_slug': obj['country_slug']})
+
+
+class CitySitemap(Sitemap):
+    """
+    Sitemap for city pages.
+
+    Includes all cities that have approved locations.
+    """
+    changefreq = "daily"
+    priority = 0.8
+
+    def items(self):
+        """Return all cities with locations."""
+        # Get all countries first
+        countries = get_all_countries()
+        cities = []
+        # For each country, get all cities
+        for country in countries:
+            country_cities = get_cities_by_country(country['country_slug'])
+            cities.extend(country_cities)
+        return cities
+
+    def location(self, obj):
+        """Return the URL for the city detail page."""
+        return reverse('locations:city_detail', kwargs={
+            'country_slug': obj['country_slug'],
+            'city_slug': obj['city_slug']
+        })

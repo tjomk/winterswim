@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% blocktrans with country=country %}Winter Swimming in {{ country }}{% endblocktrans %} - {% trans 'Winter Swimming Locations' %}{% endblock %}
+
+{% block meta_description %}{% blocktrans count count=location_count with country=country city_count=city_count %}Discover {{ count }} winter swimming spot across {{ city_count }} city in {{ country }}.{% plural %}Discover {{ count }} winter swimming spots across {{ city_count }} cities in {{ country }}.{% endblocktrans %}{% endblock %}
+
+{% block meta_keywords %}{% blocktrans with country=country %}winter swimming {{ country }}, ice swimming {{ country }}, cold water swimming {{ country }}{% endblocktrans %}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        {# Breadcrumb navigation #}
+        {% include 'components/breadcrumbs.html' with breadcrumbs=breadcrumb_list %}
+
+        <h1>{% blocktrans with country=country %}Winter Swimming in {{ country }}{% endblocktrans %}</h1>
+        <p>
+            {% blocktrans count count=location_count with city_count=city_count %}
+                {{ count }} location across {{ city_count }} city
+            {% plural %}
+                {{ count }} locations across {{ city_count }} cities
+            {% endblocktrans %}
+        </p>
+    </div>
+</div>
+
+<div class="container" style="padding-bottom: 3rem;">
+    {% if cities %}
+        <div class="cities-grid">
+            {% for city_data in cities %}
+                <a href="{% url 'locations:city_detail' country_slug=country_slug city_slug=city_data.city_slug %}" class="city-card">
+                    <div class="city-card-header">
+                        <h2 class="city-card-title">{{ city_data.city }}</h2>
+                    </div>
+                    <div class="city-card-body">
+                        <p class="city-card-count">
+                            {% blocktrans count count=city_data.count %}
+                                {{ count }} location
+                            {% plural %}
+                                {{ count }} locations
+                            {% endblocktrans %}
+                        </p>
+                    </div>
+                    <div class="city-card-footer">
+                        <span class="city-card-link">{% trans 'View locations' %} →</span>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>{% blocktrans with country=country %}No locations found in {{ country }} yet.{% endblocktrans %}</p>
+            <a href="{% url 'locations:submit' %}" class="btn btn-primary">{% trans 'Suggest a location' %}</a>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .cities-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .city-card {
+        background: var(--color-surface, #fff);
+        border: 1px solid var(--color-border, #e0e0e0);
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .city-card:hover {
+        border-color: var(--color-primary, #0066cc);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .city-card-header {
+        margin-bottom: 0.75rem;
+    }
+
+    .city-card-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0;
+        color: var(--color-text, #333);
+    }
+
+    .city-card-body {
+        flex: 1;
+        margin-bottom: 1rem;
+    }
+
+    .city-card-count {
+        color: var(--color-text-secondary, #666);
+        margin: 0;
+        font-size: 0.95rem;
+    }
+
+    .city-card-footer {
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--color-border, #e0e0e0);
+    }
+
+    .city-card-link {
+        color: var(--color-primary, #0066cc);
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+    }
+
+    .empty-state p {
+        font-size: 1.1rem;
+        color: var(--color-text-secondary, #666);
+        margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .cities-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}

@@ -16,6 +16,11 @@ from .location_repository import (
     get_locations_grouped_by_type,
     get_locations_count_by_type,
     filter_locations_by_type,
+    get_locations_by_city,
+    get_locations_by_country,
+    get_cities_by_country,
+    get_all_countries,
+    get_city_bounds,
 )
 
 from .search_repository import (
@@ -37,6 +42,13 @@ __all__ = [
     'get_locations_grouped_by_type',
     'get_locations_count_by_type',
     'filter_locations_by_type',
+
+    # City/Country queries
+    'get_locations_by_city',
+    'get_locations_by_country',
+    'get_cities_by_country',
+    'get_all_countries',
+    'get_city_bounds',
 
     # Search queries
     'search_locations',

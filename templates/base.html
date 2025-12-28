@@ -96,6 +96,9 @@
                 <a href="{% url 'locations:list' %}" class="nav-link {% if request.resolver_match.url_name == 'list' %}nav-link-active{% endif %}">
                     {% trans 'All Locations' %}
                 </a>
+                <a href="{% url 'locations:country_list' %}" class="nav-link {% if request.resolver_match.url_name == 'country_list' or request.resolver_match.url_name == 'country_detail' or request.resolver_match.url_name == 'city_detail' %}nav-link-active{% endif %}">
+                    {% trans 'Countries' %}
+                </a>
                 <a href="{% url 'blog:list' %}" class="nav-link {% if request.resolver_match.app_name == 'blog' %}nav-link-active{% endif %}">
                     {% trans 'Blog' %}
                 </a>

@@ -1,0 +1,328 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% blocktrans with city=city country=country %}Winter Swimming in {{ city }}, {{ country }}{% endblocktrans %} - {% trans 'Winter Swimming Locations' %}{% endblock %}
+
+{% block meta_description %}{% blocktrans count count=location_count with city=city country=country %}{{ count }} winter swimming location in {{ city }}, {{ country }}. Find saunas, wild spots, and public facilities with maps and directions.{% plural %}{{ count }} winter swimming locations in {{ city }}, {{ country }}. Find saunas, wild spots, and public facilities with maps and directions.{% endblocktrans %}{% endblock %}
+
+{% block meta_keywords %}{% blocktrans with city=city country=country %}winter swimming {{ city }}, ice swimming {{ city }}, cold water swimming {{ city }}, {{ country }}{% endblocktrans %}{% endblock %}
+
+{% block extra_css %}
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/leaflet/MarkerCluster.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/leaflet/MarkerCluster.Default.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        {# Breadcrumb navigation #}
+        {% include 'components/breadcrumbs.html' with breadcrumbs=breadcrumb_list %}
+
+        <h1>{% blocktrans with city=city country=country %}Winter Swimming in {{ city }}, {{ country }}{% endblocktrans %}</h1>
+        <p>
+            {% blocktrans count count=location_count %}
+                {{ count }} location
+            {% plural %}
+                {{ count }} locations
+            {% endblocktrans %}
+        </p>
+    </div>
+</div>
+
+<div class="container" style="padding-bottom: 3rem;">
+    {% if locations %}
+        <!-- Map showing all locations in city -->
+        <div id="map" class="city-map" style="height: 400px; width: 100%;"></div>
+
+        <!-- Locations list -->
+        <div class="locations-list">
+            <h2>{% trans 'Locations' %}</h2>
+            <div class="locations-grid">
+                {% for location in locations %}
+                    <a href="{% url 'locations:detail' slug=location.slug %}" class="location-card">
+                        <div class="location-card-header">
+                            <h3 class="location-card-title">{{ location.name }}</h3>
+                            <span class="location-type-badge">{{ location.get_location_type_display }}</span>
+                        </div>
+                        <div class="location-card-body">
+                            {% if location.description %}
+                                <p class="location-card-description">{{ location.description|truncatewords:20 }}</p>
+                            {% endif %}
+                            {% if location.address %}
+                                <p class="location-card-address">📍 {{ location.address }}</p>
+                            {% endif %}
+                            <p class="location-card-pricing">
+                                {% if location.is_free %}
+                                    <span class="badge badge-success">{% trans 'Free' %}</span>
+                                {% else %}
+                                    <span class="badge badge-info">{% trans 'Paid' %}</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>{% blocktrans with city=city country=country %}No locations found in {{ city }}, {{ country }} yet.{% endblocktrans %}</p>
+            <a href="{% url 'locations:submit' %}" class="btn btn-primary">{% trans 'Suggest a location' %}</a>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .city-map {
+        height: 400px;
+        width: 100%;
+        margin: 2rem 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .locations-list {
+        margin-top: 3rem;
+    }
+
+    .locations-list h2 {
+        font-size: 1.75rem;
+        margin-bottom: 1.5rem;
+        color: var(--color-text, #333);
+    }
+
+    .locations-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .location-card {
+        background: var(--color-surface, #fff);
+        border: 1px solid var(--color-border, #e0e0e0);
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .location-card:hover {
+        border-color: var(--color-primary, #0066cc);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .location-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.75rem;
+        gap: 1rem;
+    }
+
+    .location-card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0;
+        color: var(--color-text, #333);
+        flex: 1;
+    }
+
+    .location-type-badge {
+        background: var(--color-primary-light, #e3f2fd);
+        color: var(--color-primary, #0066cc);
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .location-card-body {
+        flex: 1;
+    }
+
+    .location-card-description {
+        color: var(--color-text-secondary, #666);
+        margin: 0.5rem 0;
+        line-height: 1.5;
+    }
+
+    .location-card-address {
+        color: var(--color-text-secondary, #666);
+        margin: 0.5rem 0;
+        font-size: 0.9rem;
+    }
+
+    .location-card-pricing {
+        margin-top: 0.75rem;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .badge-success {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .badge-info {
+        background: #e3f2fd;
+        color: #1976d2;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+    }
+
+    .empty-state p {
+        font-size: 1.1rem;
+        color: var(--color-text-secondary, #666);
+        margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .locations-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .city-map {
+            height: 300px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+    <!-- Leaflet JavaScript -->
+    <script src="{% static 'vendor/leaflet/leaflet.js' %}"></script>
+    <script src="{% static 'vendor/leaflet/leaflet.markercluster.js' %}"></script>
+    <script src="{% static 'js/leaflet-gesture-handling.js' %}"></script>
+
+    <script>
+        (function() {
+            'use strict';
+
+            try {
+                // Check if Leaflet is loaded
+                if (typeof L === 'undefined') {
+                    console.error('Leaflet is not loaded!');
+                    return;
+                }
+
+                // Initialize map for city
+                const locationsData = {{ locations_geojson|safe }};
+                const bounds = {{ bounds|safe }};
+
+                console.log('Initializing map...');
+                const mapContainer = document.getElementById('map');
+                console.log('Map container:', mapContainer);
+                console.log('Container height:', mapContainer.offsetHeight);
+                console.log('Container width:', mapContainer.offsetWidth);
+
+                // Create map
+                const map = L.map('map', {
+                    scrollWheelZoom: false,
+                    dragging: true,
+                    tap: true
+                });
+
+                console.log('Map created successfully');
+                console.log('Map size:', map.getSize());
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Create marker cluster group
+        const markers = L.markerClusterGroup({
+            maxClusterRadius: 50,
+            spiderfyOnMaxZoom: true,
+            showCoverageOnHover: false
+        });
+
+        // Custom marker icon (matching main map)
+        const locationIcon = L.icon({
+            iconUrl: '/static/vendor/leaflet/images/marker-icon-blue-2x.png',
+            shadowUrl: '/static/vendor/leaflet/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        // Add markers from GeoJSON
+        const geoJsonLayer = L.geoJSON(locationsData, {
+            pointToLayer: function(feature, latlng) {
+                return L.marker(latlng, { icon: locationIcon });
+            },
+            onEachFeature: function(feature, layer) {
+                if (feature.properties) {
+                    const props = feature.properties;
+                    let popupContent = `
+                        <div class="marker-popup">
+                            <h3><a href="${props.detail_url}">${props.name}</a></h3>
+                            <p class="marker-type">${props.location_type}</p>
+                            ${props.description ? `<p class="marker-description">${props.description.substring(0, 100)}...</p>` : ''}
+                            <p class="marker-price">${props.is_free ? '{% trans "Free" %}' : '{% trans "Paid" %}'}</p>
+                            <a href="${props.detail_url}" class="marker-link">{% trans "View Details" %} →</a>
+                        </div>
+                    `;
+                    layer.bindPopup(popupContent);
+                }
+            }
+        });
+
+        markers.addLayer(geoJsonLayer);
+        map.addLayer(markers);
+
+        // Set map view based on locations
+        if (bounds && bounds.length === 4) {
+            // bounds is [min_lon, min_lat, max_lon, max_lat]
+            const southWest = L.latLng(bounds[1], bounds[0]);
+            const northEast = L.latLng(bounds[3], bounds[2]);
+
+            // Check if bounds represent a single point (one location)
+            if (bounds[0] === bounds[2] && bounds[1] === bounds[3]) {
+                // Single location - center on it with appropriate zoom
+                map.setView([bounds[1], bounds[0]], 13);
+            } else {
+                // Multiple locations - fit bounds
+                const mapBounds = L.latLngBounds(southWest, northEast);
+                map.fitBounds(mapBounds, { padding: [50, 50] });
+            }
+        } else if (locationsData.features && locationsData.features.length > 0) {
+            // Fallback: center on first feature
+            const coords = locationsData.features[0].geometry.coordinates;
+            map.setView([coords[1], coords[0]], 13);
+        } else {
+            // Default center if no locations
+            map.setView([59.0, 25.0], 7);
+        }
+
+        // Force Leaflet to recalculate map size
+        setTimeout(function() {
+            map.invalidateSize();
+        }, 100);
+
+        console.log('Map initialization complete');
+
+            } catch (error) {
+                console.error('Error initializing map:', error);
+            }
+        })();
+    </script>
+{% endblock %}

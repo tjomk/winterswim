@@ -29,6 +29,11 @@ from apps.locations.repositories import (
     get_locations_grouped_by_type,
     get_locations_count_by_type,
     filter_locations_by_type,
+    get_locations_by_city,
+    get_locations_by_country,
+    get_cities_by_country,
+    get_all_countries,
+    get_city_bounds,
 )
 from infrastructure.notifications.telegram import telegram_service
 
@@ -321,3 +326,153 @@ def locations_api_view(request):
     )
 
     return JsonResponse(data)
+
+
+class CountryDetailView(DetailView):
+    """
+    Detail view for a country showing all cities with locations.
+    """
+    model = Location
+    template_name = 'locations/country_detail.html'
+    context_object_name = 'locations'
+
+    def get_object(self, queryset=None):
+        """We don't use a single object, just the country slug."""
+        return None
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        country_slug = self.kwargs['country_slug']
+
+        # Get all cities in this country with location counts
+        cities = get_cities_by_country(country_slug)
+
+        # Get country name from first city (if exists)
+        country = cities[0]['country'] if cities else country_slug.replace('-', ' ').title()
+        country_slug_value = country_slug
+
+        # Calculate totals
+        total_locations = sum(city['count'] for city in cities)
+        total_cities = len(cities)
+
+        context['country'] = country
+        context['country_slug'] = country_slug_value
+        context['cities'] = cities
+        context['location_count'] = total_locations
+        context['city_count'] = total_cities
+        context['page_title'] = _('Winter Swimming in %(country)s') % {'country': country}
+
+        # Add breadcrumb navigation
+        from django.urls import reverse
+        context['breadcrumb_list'] = [
+            (_('Home'), reverse('locations:map')),
+            (country, None),  # Current page - no link
+        ]
+
+        return context
+
+
+class CityDetailView(DetailView):
+    """
+    Detail view for a city showing all locations with map.
+    """
+    model = Location
+    template_name = 'locations/city_detail.html'
+    context_object_name = 'locations'
+
+    def get_object(self, queryset=None):
+        """We don't use a single object, just city/country slugs."""
+        return None
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        country_slug = self.kwargs['country_slug']
+        city_slug = self.kwargs['city_slug']
+
+        # Get all locations in this city
+        locations = get_locations_by_city(country_slug, city_slug)
+
+        # Get city and country names from first location (if exists)
+        first_location = locations.first()
+        city = first_location.city if first_location else city_slug.replace('-', ' ').title()
+        country = first_location.country if first_location else country_slug.replace('-', ' ').title()
+
+        # Get geographic bounds for map
+        bounds = get_city_bounds(country_slug, city_slug)
+
+        # Serialize locations to GeoJSON for map
+        from django.urls import reverse
+        from django.core.serializers import serialize
+        import json
+
+        if locations.exists():
+            geojson = serialize(
+                'geojson',
+                locations,
+                geometry_field='location',
+                fields=(
+                    'pk',
+                    'name',
+                    'slug',
+                    'description',
+                    'location_type',
+                    'facilities',
+                    'is_free',
+                    'address',
+                )
+            )
+            locations_geojson = enrich_geojson_with_urls(
+                geojson,
+                url_builder_fn=lambda slug: reverse('locations:detail', kwargs={'slug': slug})
+            )
+        else:
+            locations_geojson = {'type': 'FeatureCollection', 'features': []}
+
+        context['city'] = city
+        context['country'] = country
+        context['city_slug'] = city_slug
+        context['country_slug'] = country_slug
+        context['locations'] = locations
+        context['location_count'] = locations.count()
+        context['bounds'] = json.dumps(list(bounds) if bounds else None)
+        context['locations_geojson'] = json.dumps(locations_geojson)
+        context['page_title'] = _('Winter Swimming in %(city)s, %(country)s') % {
+            'city': city,
+            'country': country
+        }
+
+        # Add breadcrumb navigation
+        from django.urls import reverse
+        context['breadcrumb_list'] = [
+            (_('Home'), reverse('locations:map')),
+            (country, reverse('locations:country_detail', kwargs={'country_slug': country_slug})),
+            (city, None),  # Current page - no link
+        ]
+
+        return context
+
+
+class CountryListView(ListView):
+    """
+    List view showing all countries with locations.
+    """
+    model = Location
+    template_name = 'locations/country_list.html'
+    context_object_name = 'countries'
+
+    def get_queryset(self):
+        """Return list of all countries with location counts."""
+        return get_all_countries()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = _('Countries')
+
+        # Add breadcrumb navigation
+        from django.urls import reverse
+        context['breadcrumb_list'] = [
+            (_('Home'), reverse('locations:map')),
+            (_('Countries'), None),  # Current page - no link
+        ]
+
+        return context

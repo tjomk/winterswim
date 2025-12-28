@@ -259,3 +259,147 @@ def get_random_locations(limit: int = 20, approved_only: bool = True) -> QuerySe
         qs = qs.filter(is_approved=True)
 
     return qs.order_by('?')[:limit]
+
+
+def get_locations_by_city(country_slug: str, city_slug: str, approved_only: bool = True) -> QuerySet:
+    """
+    Get all locations in a specific city.
+
+    Used by: CityDetailView
+
+    Args:
+        country_slug: Country slug
+        city_slug: City slug
+        approved_only: Whether to filter for approved locations (default: True)
+
+    Returns:
+        QuerySet of Location objects in the specified city
+    """
+    qs = Location.objects.filter(
+        country_slug=country_slug,
+        city_slug=city_slug
+    ).exclude(
+        city_slug=''
+    ).order_by('name')
+
+    if approved_only:
+        qs = qs.filter(is_approved=True)
+
+    return qs
+
+
+def get_locations_by_country(country_slug: str, approved_only: bool = True) -> QuerySet:
+    """
+    Get all locations in a specific country.
+
+    Used by: CountryDetailView
+
+    Args:
+        country_slug: Country slug
+        approved_only: Whether to filter for approved locations (default: True)
+
+    Returns:
+        QuerySet of Location objects in the specified country
+    """
+    qs = Location.objects.filter(
+        country_slug=country_slug
+    ).exclude(
+        country_slug=''
+    ).order_by('city', 'name')
+
+    if approved_only:
+        qs = qs.filter(is_approved=True)
+
+    return qs
+
+
+def get_cities_by_country(country_slug: str) -> List[Dict[str, Any]]:
+    """
+    Get list of cities in a country with location counts.
+
+    Used by: CountryDetailView
+
+    Args:
+        country_slug: Country slug
+
+    Returns:
+        List of dictionaries with city info:
+        [{'city': 'Tallinn', 'city_slug': 'tallinn', 'country': 'Estonia', 'country_slug': 'estonia', 'count': 15}, ...]
+
+    Query optimizations:
+        - Database-level aggregation using values() + annotate()
+        - Excludes locations without city data
+    """
+    cities = Location.objects.filter(
+        country_slug=country_slug,
+        is_approved=True
+    ).exclude(
+        city_slug=''
+    ).values(
+        'city', 'city_slug', 'country', 'country_slug'
+    ).annotate(
+        count=Count('id')
+    ).order_by('city')
+
+    return list(cities)
+
+
+def get_all_countries() -> List[Dict[str, Any]]:
+    """
+    Get list of all countries with city and location counts.
+
+    Used by: CountryListView (optional)
+
+    Returns:
+        List of dictionaries with country info:
+        [{'country': 'Estonia', 'country_slug': 'estonia', 'city_count': 5, 'location_count': 25}, ...]
+
+    Query optimizations:
+        - Uses database-level aggregation
+        - Efficient counting via subqueries
+    """
+    from django.db.models import Count, Q
+
+    countries = Location.objects.filter(
+        is_approved=True
+    ).exclude(
+        country_slug=''
+    ).values(
+        'country', 'country_slug'
+    ).annotate(
+        location_count=Count('id'),
+        city_count=Count('city_slug', distinct=True, filter=Q(city_slug__gt=''))
+    ).order_by('country')
+
+    return list(countries)
+
+
+def get_city_bounds(country_slug: str, city_slug: str) -> Optional[tuple]:
+    """
+    Get geographic bounds (bbox) for all locations in a city.
+
+    Used by: CityDetailView (for centering the map)
+
+    Args:
+        country_slug: Country slug
+        city_slug: City slug
+
+    Returns:
+        Tuple of (min_lon, min_lat, max_lon, max_lat) or None if no locations
+
+    Query optimizations:
+        - Uses PostGIS Extent aggregation for efficient bounds calculation
+    """
+    from django.contrib.gis.db.models import Extent
+
+    extent = Location.objects.filter(
+        country_slug=country_slug,
+        city_slug=city_slug,
+        is_approved=True
+    ).exclude(
+        city_slug=''
+    ).aggregate(
+        extent=Extent('location')
+    )
+
+    return extent['extent']  # Returns (min_lon, min_lat, max_lon, max_lat) or None

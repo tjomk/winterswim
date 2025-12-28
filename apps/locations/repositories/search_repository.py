@@ -5,11 +5,10 @@ Handles complex search logic including full-text search and proximity filtering.
 """
 
 from typing import Optional, Tuple
-from django.db.models import QuerySet, F
+from django.db.models import QuerySet
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
 from django.contrib.gis.db.models.functions import Distance
-from django.contrib.postgres.search import SearchQuery, SearchRank
 
 from apps.locations.models import Location
 
@@ -20,7 +19,7 @@ def search_locations(
     base_queryset: Optional[QuerySet] = None
 ) -> QuerySet:
     """
-    Full-text search on locations using PostgreSQL search vectors.
+    Search locations using icontains on translated fields.
 
     Used by: LocationListView
 
@@ -30,36 +29,34 @@ def search_locations(
         base_queryset: Optional base queryset to search within
 
     Returns:
-        QuerySet of matching locations, annotated with rank and ordered by relevance
+        QuerySet of matching locations ordered by created_at
 
     Query optimizations:
-        - Uses language-specific search vectors
-        - PostgreSQL full-text search with ranking
-        - Efficient database-level filtering
+        - Searches across name, description, address, city, and country fields
+        - Uses language-specific translated fields
+        - Case-insensitive search
     """
+    from django.db.models import Q
+
     if base_queryset is None:
         base_queryset = Location.objects.filter(is_approved=True)
 
-    # Map language to PostgreSQL search config
-    search_configs = {
-        'en': 'english',
-        'fi': 'finnish',
-        'et': 'simple',
-    }
-    search_config = search_configs.get(language, 'simple')
+    # Build language-specific field names
+    name_field = f'name_{language}' if language != 'en' else 'name'
+    description_field = f'description_{language}' if language != 'en' else 'description'
+    city_field = f'city_{language}' if language != 'en' else 'city'
+    country_field = f'country_{language}' if language != 'en' else 'country'
 
-    # Use language-specific search vector
-    search_vector_field = f'search_vector_{language}'
+    # Search across all relevant fields
+    search_filter = (
+        Q(**{f'{name_field}__icontains': query}) |
+        Q(**{f'description_{language}__icontains': query}) |
+        Q(address__icontains=query) |
+        Q(**{f'{city_field}__icontains': query}) |
+        Q(**{f'{country_field}__icontains': query})
+    )
 
-    # Create search query
-    search_q = SearchQuery(query, config=search_config)
-
-    # Filter and rank results
-    return base_queryset.filter(
-        **{f'{search_vector_field}__icontains': search_q}
-    ).annotate(
-        rank=SearchRank(F(search_vector_field), search_q)
-    ).order_by('-rank', '-created_at')
+    return base_queryset.filter(search_filter).order_by('-created_at')
 
 
 def get_locations_with_proximity(

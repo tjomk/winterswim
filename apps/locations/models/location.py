@@ -72,6 +72,36 @@ class Location(models.Model):
         blank=True
     )
 
+    city = models.CharField(
+        max_length=200,
+        verbose_name=_('City'),
+        help_text=_('City where the location is located'),
+        blank=True
+    )
+
+    city_slug = models.SlugField(
+        max_length=220,
+        verbose_name=_('City slug'),
+        help_text=_('SEO-friendly city slug (auto-generated)'),
+        blank=True,
+        db_index=True
+    )
+
+    country = models.CharField(
+        max_length=200,
+        verbose_name=_('Country'),
+        help_text=_('Country where the location is located'),
+        blank=True
+    )
+
+    country_slug = models.SlugField(
+        max_length=220,
+        verbose_name=_('Country slug'),
+        help_text=_('SEO-friendly country slug (auto-generated)'),
+        blank=True,
+        db_index=True
+    )
+
     # Location details
     location_type = models.CharField(
         max_length=20,
@@ -173,12 +203,25 @@ class Location(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        """Generate slug if not exists."""
+        """Generate slug if not exists, and auto-generate city/country slugs."""
         if not self.slug:
             # Generate slug from name + first 8 chars of UUID4
             base_slug = slugify(self.name)
             uuid_part = str(uuid.uuid4()).split('-')[0]
             self.slug = f"{base_slug}-{uuid_part}"
+
+        # Auto-generate city slug from city name
+        if self.city and not self.city_slug:
+            self.city_slug = slugify(self.city)
+        elif not self.city:
+            self.city_slug = ''
+
+        # Auto-generate country slug from country name
+        if self.country and not self.country_slug:
+            self.country_slug = slugify(self.country)
+        elif not self.country:
+            self.country_slug = ''
+
         super().save(*args, **kwargs)
 
     @property

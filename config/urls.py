@@ -21,12 +21,14 @@ from django.conf.urls.static import static
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib.sitemaps.views import sitemap
 from apps.locations.views.seo_views import robots_txt
-from apps.locations.sitemaps import LocationSitemap, StaticViewSitemap
+from apps.locations.sitemaps import LocationSitemap, StaticViewSitemap, CountrySitemap, CitySitemap
 from apps.blog.sitemaps import ArticleSitemap, CategorySitemap
 
 # Sitemap configuration
 sitemaps = {
     'locations': LocationSitemap,
+    'countries': CountrySitemap,
+    'cities': CitySitemap,
     'static': StaticViewSitemap,
     'articles': ArticleSitemap,
     'categories': CategorySitemap,
