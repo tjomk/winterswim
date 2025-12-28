@@ -7,6 +7,7 @@ Provides admin interface for managing categories and articles.
 from django import forms
 from django.contrib import admin
 from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Count
 from django.urls import reverse
@@ -202,7 +203,7 @@ class ArticleAdmin(admin.ModelAdmin):
                 '<a href="{}" target="_blank" style="font-size: 14px; font-weight: bold; color: #417690;">🔗 View article on site</a>',
                 url
             )
-        return format_html('<span style="color: #999;">Save the article first to view it on the site</span>')
+        return mark_safe('<span style="color: #999;">Save the article first to view it on the site</span>')
     view_on_site_link.short_description = _('View on Site')
 
     def publish_articles(self, request, queryset):
