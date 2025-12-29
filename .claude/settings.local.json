@@ -22,7 +22,9 @@
       "Bash(grep:*)",
       "Bash(poetry install:*)",
       "Bash(msgfmt:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "WebSearch",
+      "Bash(docker compose:*)"
     ],
     "deny": [],
     "ask": []

@@ -16,7 +16,6 @@ def robots_txt(request):
     """
     lines = [
         "User-agent: *",
-        "Disallow: /admin/",
         "Disallow: /i18n/",
         "",
         "# Sitemap location",

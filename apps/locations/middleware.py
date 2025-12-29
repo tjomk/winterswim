@@ -30,4 +30,19 @@ class CloudflareProxyMiddleware:
                 pass
 
         response = self.get_response(request)
+
+        # Remove noindex from sitemap and robots.txt to allow search engine crawling
+        # Check both with and without language prefix (e.g., /sitemap.xml and /en/sitemap.xml)
+        path_matches = (
+            request.path in ['/sitemap.xml', '/robots.txt'] or
+            request.path.startswith('/sitemap') or
+            '/sitemap.xml' in request.path or
+            '/robots.txt' in request.path
+        )
+
+        if path_matches:
+            # Remove the X-Robots-Tag header for SEO-critical files
+            if 'X-Robots-Tag' in response.headers:
+                del response['X-Robots-Tag']
+
         return response
