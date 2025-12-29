@@ -53,7 +53,7 @@ function initGestureHandling(map, mapElementId, translations) {
         } else if (e.touches.length >= 2) {
             // Two or more finger touch - enable dragging and prevent page scroll
             e.preventDefault();
-            e.stopPropagation();
+            // Don't stopPropagation - Leaflet needs to receive the events to handle dragging
             enableDragging();
             mapElement.classList.remove('leaflet-gesture-handling-touch-warning');
         }
@@ -68,7 +68,7 @@ function initGestureHandling(map, mapElementId, translations) {
         } else if (e.touches.length >= 2) {
             // Two or more fingers - allow map interaction
             e.preventDefault();
-            e.stopPropagation();
+            // Don't stopPropagation - Leaflet needs to receive the events to handle dragging
             enableDragging();
             mapElement.classList.remove('leaflet-gesture-handling-touch-warning');
         }
