@@ -33,9 +33,6 @@
 {% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin=""/>
 <style>
     .detail-map {
         width: 100%;
@@ -150,7 +147,7 @@
     <!-- Map -->
     {% if location.location %}
         <h2>{% trans "Location on Map" %}</h2>
-        <div id="detail-map" class="detail-map"></div>
+        {% include 'locations/map_component.html' with map_id='detail-map' map_class='detail-map' %}
     {% endif %}
 
     <!-- Nearby locations -->
@@ -177,24 +174,28 @@
 
 {% if location.location %}
 {% load l10n %}
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-        crossorigin=""></script>
 <script>
 (function() {
-    const lat = {% localize off %}{{ location.latitude }}{% endlocalize %};
-    const lon = {% localize off %}{{ location.longitude }}{% endlocalize %};
+    'use strict';
 
-    const map = L.map('detail-map').setView([lat, lon], 13);
+    // Wait for the map component to be ready
+    function initializeMap() {
+        if (window.winterswimMaps && window.winterswimMaps['detail-map'] && window.winterswimMaps['detail-map'].addSingleMarker) {
+            // Prepare single marker data
+            const lat = {% localize off %}{{ location.latitude }}{% endlocalize %};
+            const lon = {% localize off %}{{ location.longitude }}{% endlocalize %};
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 19,
-    }).addTo(map);
+            // Set map view and add marker
+            window.winterswimMaps['detail-map'].setMapView(lat, lon, 13);
+            window.winterswimMaps['detail-map'].addSingleMarker(lat, lon, '{{ location.name|escapejs }}', '<strong>{{ location.name|escapejs }}</strong>');
+        } else {
+            // Map not ready yet, try again
+            setTimeout(initializeMap, 100);
+        }
+    }
 
-    L.marker([lat, lon]).addTo(map)
-        .bindPopup('<strong>{{ location.name|escapejs }}</strong>')
-        .openPopup();
+    // Start initialization
+    setTimeout(initializeMap, 100);
 })();
 </script>
 {% endif %}

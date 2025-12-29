@@ -1,0 +1,212 @@
+{% load i18n %}
+{% load static %}
+
+<div class="map-container">
+    <div id="{{ map_id }}" class="{{ map_class }}"></div>
+</div>
+
+{% block extra_css %}
+<!-- Leaflet CSS (self-hosted) -->
+<link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}">
+<!-- Leaflet MarkerCluster CSS -->
+<link rel="stylesheet" href="{% static 'vendor/leaflet/MarkerCluster.css' %}">
+<link rel="stylesheet" href="{% static 'vendor/leaflet/MarkerCluster.Default.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<!-- Leaflet JavaScript (self-hosted) -->
+<script src="{% static 'vendor/leaflet/leaflet.js' %}"></script>
+<!-- Leaflet MarkerCluster JavaScript -->
+<script src="{% static 'vendor/leaflet/leaflet.markercluster.js' %}"></script>
+<!-- Leaflet Gesture Handling Script -->
+<script src="{% static 'js/leaflet-gesture-handling.js' %}"></script>
+
+<!-- Map translations -->
+<script>
+    window.MAP_TRANSLATIONS = {
+        touch: '{% trans "Use two fingers to move the map" %}',
+        scroll: '{% trans "Use ctrl + scroll to zoom the map" %}',
+        scrollMac: '{% trans "Use ⌘ + scroll to zoom the map" %}',
+        freeAccess: '{% trans "Free access" %}',
+        paid: '{% trans "Paid" %}',
+        viewDetails: '{% trans "View Details" %}',
+        locationTypes: {
+            'wild': '{% trans "Wild spot" %}',
+            'commercial': '{% trans "Commercial facility" %}',
+            'club': '{% trans "Swimming club" %}',
+            'public': '{% trans "Public facility" %}'
+        }
+    };
+</script>
+
+<!-- Map initialization script -->
+<script>
+(function() {
+    'use strict';
+
+    // Get translations
+    const translations = window.MAP_TRANSLATIONS || {};
+    
+    // Initialize map
+    const map = L.map('{{ map_id }}', {
+        scrollWheelZoom: false,
+        dragging: true,
+        tap: true
+    });
+
+    // Initialize gesture handling
+    if (typeof initGestureHandling === 'function') {
+        initGestureHandling(map, '{{ map_id }}', translations);
+    }
+
+    // Add OpenStreetMap tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+    }).addTo(map);
+
+    // Custom marker icon using self-hosted image
+    const locationIcon = L.icon({
+        iconUrl: '/static/vendor/leaflet/images/marker-icon-blue-2x.png',
+        shadowUrl: '/static/vendor/leaflet/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    // Track marker cluster group
+    let markerClusterGroup = null;
+
+    // Initialize marker cluster group if available
+    if (typeof L.markerClusterGroup === 'function') {
+        markerClusterGroup = L.markerClusterGroup({
+            maxClusterRadius: 50,
+            spiderfyOnMaxZoom: true,
+            showCoverageOnHover: false,
+            zoomToBoundsOnClick: true
+        });
+        map.addLayer(markerClusterGroup);
+    }
+
+    // Helper functions
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function truncate(text, length) {
+        if (text.length <= length) return text;
+        return text.substring(0, length) + '...';
+    }
+
+    function getLocationTypeLabel(type) {
+        const labels = translations.locationTypes || {
+            'wild': 'Wild spot',
+            'commercial': 'Commercial facility',
+            'club': 'Swimming club',
+            'public': 'Public facility'
+        };
+        return labels[type] || type;
+    }
+
+    // Function to clear existing markers
+    function clearMarkers() {
+        if (markerClusterGroup) {
+            markerClusterGroup.clearLayers();
+        }
+    }
+
+    // Function to display locations on the map
+    function displayLocations(data) {
+        if (!data.features || data.features.length === 0) {
+            console.log('No locations found');
+            return;
+        }
+
+        // Clear existing markers
+        clearMarkers();
+
+        // Create bounds to fit all markers
+        const bounds = [];
+
+        // Add markers for each location
+        data.features.forEach(feature => {
+            const coords = feature.geometry.coordinates;
+            const props = feature.properties;
+
+            // Leaflet uses [lat, lon], GeoJSON uses [lon, lat]
+            const latLng = [coords[1], coords[0]];
+            bounds.push(latLng);
+
+            // Create popup content
+            const popupContent = `
+                <div class="location-marker-popup">
+                    <h3>${escapeHtml(props.name)}</h3>
+                    <p><strong>${escapeHtml(getLocationTypeLabel(props.location_type))}</strong></p>
+                    ${props.description ? `<p>${escapeHtml(truncate(props.description, 100))}</p>` : ''}
+                    ${props.is_free ? '<p>✓ ' + (translations.freeAccess || 'Free access') + '</p>' : '<p>💰 ' + (translations.paid || 'Paid') + '</p>'}
+                    <a href="${props.detail_url}" class="btn btn-primary btn-sm">${translations.viewDetails || 'View Details'}</a>
+                </div>
+            `;
+
+            // Add marker
+            const marker = L.marker(latLng, { icon: locationIcon })
+                .bindPopup(popupContent);
+
+            // Add to cluster group if available, otherwise add directly to map
+            if (markerClusterGroup) {
+                markerClusterGroup.addLayer(marker);
+            } else {
+                marker.addTo(map);
+            }
+        });
+
+        // Fit map to show all markers
+        if (bounds.length > 0) {
+            map.fitBounds(bounds, { padding: [50, 50] });
+        }
+    }
+
+    // Function to set map view to specific location
+    function setMapView(lat, lon, zoom) {
+        map.setView([lat, lon], zoom || 13);
+    }
+
+    // Function to add a single marker
+    function addSingleMarker(lat, lon, title, popupContent) {
+        const marker = L.marker([lat, lon], { icon: locationIcon });
+        if (popupContent) {
+            marker.bindPopup(popupContent);
+        } else {
+            marker.bindPopup(`<strong>${escapeHtml(title)}</strong>`);
+        }
+        marker.addTo(map);
+        return marker;
+    }
+
+    // Mobile: adjust map on window resize
+    window.addEventListener('resize', function() {
+        map.invalidateSize();
+    });
+
+    // Expose functions to global scope for external use
+    {% if map_id %}
+    // Store map functions in a global object
+    if (!window.winterswimMaps) {
+        window.winterswimMaps = {};
+    }
+    window.winterswimMaps['{{ map_id }}'] = {
+        displayLocations: displayLocations,
+        setMapView: setMapView,
+        addSingleMarker: addSingleMarker,
+        clearMarkers: clearMarkers
+    };
+    {% endif %}
+
+    // Map is now ready for initialization by parent template
+    console.log('Map component {{ map_id }} initialized and ready');
+})();
+</script>
+{% endblock %}
