@@ -36,7 +36,7 @@ msgstr "Pikkuskraad (n.t. 24.753889)"
 #: apps/locations/models/location.py:85
 #: templates/locations/location_detail.html:120
 msgid "Facilities"
-msgstr "Rajatised"
+msgstr "Mugavused"
 
 #: apps/locations/admin.py:39
 #, fuzzy

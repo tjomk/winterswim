@@ -28,7 +28,7 @@ RUN pip install --no-cache-dir poetry==${POETRY_VERSION}
 WORKDIR /app
 
 # Copy dependency files
-COPY pyproject.toml poetry.lock ./
+COPY pyproject.toml ./
 
 # Install Python dependencies directly to system
 RUN poetry install --no-root --no-directory

@@ -5,7 +5,7 @@ This module contains pure business logic for locations,
 following the "Functional Core, Imperative Shell" pattern.
 """
 
-from typing import Dict, Optional, List
+from typing import Dict, List
 from django.contrib.gis.geos import Point
 
 

@@ -20,7 +20,6 @@ from apps.locations.services import (
     enrich_geojson_with_urls,
 )
 from apps.locations.repositories import (
-    get_approved_locations,
     create_location,
     get_location_by_slug,
     get_nearby_locations,
@@ -30,7 +29,6 @@ from apps.locations.repositories import (
     get_locations_count_by_type,
     filter_locations_by_type,
     get_locations_by_city,
-    get_locations_by_country,
     get_cities_by_country,
     get_all_countries,
     get_city_bounds,

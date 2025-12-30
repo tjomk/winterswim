@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load seo_tags %}
+{% load form_filters %}
 
 {% block title %}{{ location.name }} - {% trans 'Winter Swimming Locations' %}{% endblock %}
 
@@ -117,7 +118,7 @@
                 <h3>{% trans "Facilities" %}</h3>
                 <ul>
                     {% for facility in location.facilities %}
-                        <li>{{ facility }}</li>
+                        <li>{{ facility|get_facility_label }}</li>
                     {% endfor %}
                 </ul>
             {% endif %}
