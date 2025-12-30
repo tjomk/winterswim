@@ -47,7 +47,7 @@ msgstr "Saadaolevad rajatised"
 #: apps/locations/admin.py:70
 #, python-format
 msgid "Invalid coordinates: %(error)s"
-msgstr "Valed koordinaadid: %(error)"
+msgstr "Valed koordinaadid: %(error)s"
 
 #: apps/locations/admin.py:140
 msgid "Basic Information"
