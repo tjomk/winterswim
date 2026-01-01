@@ -1004,7 +1004,6 @@ msgstr[1] ""
 "                            "
 
 #: templates/locations/country_detail.html:45
-#, fuzzy
 #| msgid "Nearby Locations"
 msgid "View locations"
 msgstr "Vaata asukohti"
