@@ -1009,8 +1009,6 @@ msgid "Browse by Country"
 msgstr ""
 
 #: templates/locations/country_list.html:17
-#, fuzzy
-#| msgid "Discover winter swimming locations around the world"
 msgid "Explore winter swimming locations around the world"
 msgstr "Löydä talviuintipaikkoja ympäri maailmaa"
 

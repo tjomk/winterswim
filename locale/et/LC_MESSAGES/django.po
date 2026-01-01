@@ -774,7 +774,7 @@ msgstr "Taliujumise kohad"
 #: apps/locations/views/location_views.py:473 templates/base.html:94
 #: templates/base.html:142 templates/locations/country_list.html:4
 msgid "Countries"
-msgstr ""
+msgstr "Riigid"
 
 #: templates/base.html:11 templates/base.html:30 templates/base.html:54
 msgid ""
@@ -1007,11 +1007,9 @@ msgstr ""
 
 #: templates/locations/country_list.html:16
 msgid "Browse by Country"
-msgstr ""
+msgstr "Sirvi riigi järgi"
 
 #: templates/locations/country_list.html:17
-#, fuzzy
-#| msgid "Discover winter swimming locations around the world"
 msgid "Explore winter swimming locations around the world"
 msgstr "Avasta taliujumise kohti üle maailma"
 
