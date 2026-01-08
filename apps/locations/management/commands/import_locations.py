@@ -77,14 +77,14 @@ class Command(BaseCommand):
                     location_type=data.get('location_type', LocationType.WILD),
                     facilities=data.get('facilities', []),
                     access_instructions=data.get('access_instructions', ''),
-                    website=data.get('website', ''),
-                    email=data.get('email', ''),
-                    phone=data.get('phone', ''),
+                    website=data.get('website') or None,
+                    email=data.get('email') or None,
+                    phone=data.get('phone') or None,
                     is_free=data.get('is_free', True),
                     pricing_details=data.get('pricing_details', ''),
                     is_approved=data.get('is_approved', False),
                     submitted_by_name=data.get('submitted_by_name', ''),
-                    submitted_by_email=data.get('submitted_by_email', '')
+                    submitted_by_email=data.get('submitted_by_email') or None
                 )
                 location.save()
                 self.stdout.write(self.style.SUCCESS(f"Successfully added location: {location.name}"))

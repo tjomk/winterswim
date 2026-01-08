@@ -126,18 +126,21 @@ class Location(models.Model):
     # Contact and web presence
     website = models.URLField(
         verbose_name=_('Website'),
-        blank=True
+        blank=True,
+        null=True
     )
 
     email = models.EmailField(
         verbose_name=_('Email'),
-        blank=True
+        blank=True,
+        null=True
     )
 
     phone = models.CharField(
         max_length=50,
         verbose_name=_('Phone'),
-        blank=True
+        blank=True,
+        null=True
     )
 
     # Pricing
@@ -170,7 +173,8 @@ class Location(models.Model):
     submitted_by_email = models.EmailField(
         verbose_name=_('Submitter email'),
         help_text=_('Email of person who submitted (for follow-up)'),
-        blank=True
+        blank=True,
+        null=True
     )
 
     moderation_notes = models.TextField(
