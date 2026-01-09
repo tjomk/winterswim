@@ -26,8 +26,8 @@
 
     <!-- Open Graph Meta Tags -->
     <meta property="og:type" content="{% block og_type %}website{% endblock %}">
-    <meta property="og:title" content="{% block meta_og_title %}{% block title %}{% trans 'Winter Swimming Locations' %}{% endblock %}{% endblock %}">
-    <meta property="og:description" content="{% block meta_og_description %}{% block meta_description %}{% trans 'Discover winter swimming locations around the world. Find wild spots, commercial facilities, swimming clubs, and public facilities for cold water swimming.' %}{% endblock %}{% endblock %}">
+    <meta property="og:title" content="{% block meta_og_title %}{% trans 'Winter Swimming Locations' %}{% endblock %}">
+    <meta property="og:description" content="{% block meta_og_description %}{% trans 'Discover winter swimming locations around the world. Find wild spots, commercial facilities, swimming clubs, and public facilities for cold water swimming.' %}{% endblock %}">
     <meta property="og:url" content="{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}">
     <meta property="og:site_name" content="{% trans 'Winter Swimming Locations' %}">
     <meta property="og:locale" content="{% if LANGUAGE_CODE == 'en' %}en_US{% else %}{{ LANGUAGE_CODE }}_{{ LANGUAGE_CODE|upper }}{% endif %}">
@@ -50,8 +50,8 @@
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="{% block twitter_card %}summary_large_image{% endblock %}">
-    <meta name="twitter:title" content="{% block meta_twitter_title %}{% block title %}{% trans 'Winter Swimming Locations' %}{% endblock %}{% endblock %}">
-    <meta name="twitter:description" content="{% block meta_twitter_description %}{% block meta_description %}{% trans 'Discover winter swimming locations around the world. Find wild spots, commercial facilities, swimming clubs, and public facilities for cold water swimming.' %}{% endblock %}{% endblock %}">
+    <meta name="twitter:title" content="{% block meta_twitter_title %}{% trans 'Winter Swimming Locations' %}{% endblock %}">
+    <meta name="twitter:description" content="{% block meta_twitter_description %}{% trans 'Discover winter swimming locations around the world. Find wild spots, commercial facilities, swimming clubs, and public facilities for cold water swimming.' %}{% endblock %}">
     {% block twitter_image %}
     <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'images/og-default.jpg' %}">
     <meta name="twitter:image:alt" content="{% trans 'Winter Swimming Locations' %}">
