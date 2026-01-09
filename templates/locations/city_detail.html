@@ -2,11 +2,17 @@
 {% load i18n %}
 {% load static %}
 
-{% block title %}{% blocktrans with city=city country=country %}Winter Swimming in {{ city }}, {{ country }}{% endblocktrans %} - {% trans 'Winter Swimming Locations' %}{% endblock %}
+{% block title %}{% blocktrans with city=city country=country %}Winter Swimming in {{ city }}, {{ country }}{% endblocktrans %} - {% trans 'Find Locations' %}{% endblock %}
 
-{% block meta_description %}{% blocktrans count count=location_count with city=city country=country %}{{ count }} winter swimming location in {{ city }}, {{ country }}. Find saunas, wild spots, and public facilities with maps and directions.{% plural %}{{ count }} winter swimming locations in {{ city }}, {{ country }}. Find saunas, wild spots, and public facilities with maps and directions.{% endblocktrans %}{% endblock %}
+{% block meta_description %}{% blocktrans with city=city country=country %}Find winter swimming locations in {{ city }}, {{ country }}. View maps and details for saunas, wild swimming spots, and public pools. Plan your visit to the best cold water swimming places in {{ city }}.{% endblocktrans %}{% endblock %}
 
-{% block meta_keywords %}{% blocktrans with city=city country=country %}winter swimming {{ city }}, ice swimming {{ city }}, cold water swimming {{ city }}, {{ country }}{% endblocktrans %}{% endblock %}
+{% block meta_keywords %}{% blocktrans with city=city country=country %}winter swimming {{ city }}, cold water swimming {{ city }}, ice swimming {{ city }}, {{ city }} swimming spots, {{ country }} winter swimming{% endblocktrans %}{% endblock %}
+
+{% block meta_og_title %}{% blocktrans with city=city country=country %}Winter Swimming Locations in {{ city }}, {{ country }}{% endblocktrans %}{% endblock %}
+{% block meta_og_description %}{% blocktrans with city=city country=country %}Explore the best spots for winter swimming in {{ city }}. Find saunas, wild swimming locations, and more in {{ country }}.{% endblocktrans %}{% endblock %}
+
+{% block meta_twitter_title %}{% blocktrans with city=city country=country %}Winter Swimming in {{ city }}, {{ country }}{% endblocktrans %}{% endblock %}
+{% block meta_twitter_description %}{% blocktrans with city=city country=country %}Discover {{ location_count }} winter swimming spots in {{ city }}. Your guide to cold water and ice swimming in {{ country }}.{% endblocktrans %}{% endblock %}
 
 {% block extra_css %}
 {% endblock %}

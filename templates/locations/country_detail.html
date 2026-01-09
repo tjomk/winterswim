@@ -1,11 +1,17 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}{% blocktrans with country=country %}Winter Swimming in {{ country }}{% endblocktrans %} - {% trans 'Winter Swimming Locations' %}{% endblock %}
+{% block title %}{% blocktrans with country=country %}Winter Swimming in {{ country }}{% endblocktrans %} - {% trans 'Discover Locations' %}{% endblock %}
 
-{% block meta_description %}{% blocktrans count count=location_count with country=country city_count=city_count %}Discover {{ count }} winter swimming spot across {{ city_count }} city in {{ country }}.{% plural %}Discover {{ count }} winter swimming spots across {{ city_count }} cities in {{ country }}.{% endblocktrans %}{% endblock %}
+{% block meta_description %}{% blocktrans count count=location_count with country=country city_count=city_count %}Explore {{ count }} winter swimming location across {{ city_count }} city in {{ country }}. Find maps, details, and everything you need for your next cold water adventure in {{ country }}.{% plural %}Explore {{ count }} winter swimming locations across {{ city_count }} cities in {{ country }}. Find maps, details, and everything you need for your next cold water adventure in {{ country }}.{% endblocktrans %}{% endblock %}
 
-{% block meta_keywords %}{% blocktrans with country=country %}winter swimming {{ country }}, ice swimming {{ country }}, cold water swimming {{ country }}{% endblocktrans %}{% endblock %}
+{% block meta_keywords %}{% blocktrans with country=country %}winter swimming in {{ country }}, cold water swimming {{ country }}, ice swimming spots {{ country }}, outdoor swimming {{ country }}, wild swimming {{ country }}{% endblocktrans %}{% endblock %}
+
+{% block meta_og_title %}{% blocktrans with country=country %}Winter Swimming Locations in {{ country }}{% endblocktrans %}{% endblock %}
+{% block meta_og_description %}{% blocktrans count count=location_count with country=country city_count=city_count %}Discover {{ count }} spot and {{ city_count }} city for winter swimming in {{ country }}.{% plural %}Discover {{ count }} spots and {{ city_count }} cities for winter swimming in {{ country }}.{% endblocktrans %}{% endblock %}
+
+{% block meta_twitter_title %}{% blocktrans with country=country %}Winter Swimming in {{ country }}{% endblocktrans %}{% endblock %}
+{% block meta_twitter_description %}{% blocktrans count count=location_count with country=country city_count=city_count %}Looking for places to go winter swimming in {{ country }}? We have a list of {{ count }} spots in {{ city_count }} cities.{% plural %}Looking for places to go winter swimming in {{ country }}? We have a list of {{ count }} spots in {{ city_count }} cities.{% endblocktrans %}{% endblock %}
 
 {% block content %}
 <div class="page-header">

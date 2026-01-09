@@ -3,15 +3,18 @@
 {% load seo_tags %}
 {% load form_filters %}
 
-{% block title %}{{ location.name }} - {% trans 'Winter Swimming Locations' %}{% endblock %}
+{% block title %}{{ location.name }} - {% trans 'Winter Swimming in' %} {{ location.city }}, {{ location.country }}{% endblock %}
 
-{% block meta_description %}{{ location.name }} - {{ location.get_location_type_display }}{% if location.address %} {% trans 'located at' %} {{ location.address }}{% endif %}. {{ location.description|truncatewords:30|striptags }}{% endblock %}
+{% block meta_description %}{% blocktrans with name=location.name type=location.get_location_type_display city=location.city country=location.country %}{{ name }} is a {{ type }} for winter swimming in {{ city }}, {{ country }}. Find details, photos, and map for this location.{% endblocktrans %}{% endblock %}
 
-{% block meta_keywords %}{{ location.name }}, {% trans 'winter swimming' %}, {{ location.get_location_type_display }}, {% if location.address %}{{ location.address }}, {% endif %}{% for facility in location.facilities|slice:":5" %}{{ facility }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endblock %}
+{% block meta_keywords %}{{ location.name }}, {% trans 'winter swimming' %}, {{ location.get_location_type_display }}, {{ location.city }}, {{ location.country }}, {% for facility in location.facilities|slice:":5" %}{{ facility }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endblock %}
 
 {% block og_type %}place{% endblock %}
-{% block og_title %}{{ location.name }}{% endblock %}
-{% block og_description %}{{ location.get_location_type_display }}{% if location.address %} - {{ location.address }}{% endif %}. {{ location.description|truncatewords:40|striptags }}{% endblock %}
+{% block meta_og_title %}{{ location.name }} - {% trans 'Winter Swimming in' %} {{ location.city }}{% endblock %}
+{% block meta_og_description %}{% blocktrans with type=location.get_location_type_display city=location.city %A {{ type }} for winter swimming in {{ city }}.{% endblocktrans %} {{ location.description|truncatewords:25|striptags }}{% endblock %}
+
+{% block twitter_title %}{{ location.name }} - {% trans 'Winter Swimming in' %} {{ location.city }}{% endblock %}
+{% block twitter_description %}{% blocktrans with type=location.get_location_type_display city=location.city %A {{ type }} for winter swimming in {{ city }}.{% endblocktrans %} {{ location.description|truncatewords:20|striptags }}{% endblock %}
 
 {% block og_image %}
 {% if location.photos.first %}
