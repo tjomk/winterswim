@@ -11,10 +11,10 @@
 
 {% block og_type %}place{% endblock %}
 {% block meta_og_title %}{{ location.name }} - {% trans 'Winter Swimming in' %} {{ location.city }}{% endblock %}
-{% block meta_og_description %}{% blocktrans with type=location.get_location_type_display city=location.city %A {{ type }} for winter swimming in {{ city }}.{% endblocktrans %} {{ location.description|truncatewords:25|striptags }}{% endblock %}
+{% block meta_og_description %}{% blocktrans with article="A" type=location.get_location_type_display city=location.city %}{{ article }} {{ type }} for winter swimming in {{ city }}.{% endblocktrans %} {{ location.description|truncatewords:25|striptags }}{% endblock %}
 
 {% block twitter_title %}{{ location.name }} - {% trans 'Winter Swimming in' %} {{ location.city }}{% endblock %}
-{% block twitter_description %}{% blocktrans with type=location.get_location_type_display city=location.city %A {{ type }} for winter swimming in {{ city }}.{% endblocktrans %} {{ location.description|truncatewords:20|striptags }}{% endblock %}
+{% block twitter_description %}{% blocktrans with article="A" type=location.get_location_type_display city=location.city %}{{ article }} {{ type }} for winter swimming in {{ city }}.{% endblocktrans %} {{ location.description|truncatewords:20|striptags }}{% endblock %}
 
 {% block og_image %}
 {% if location.photos.first %}
@@ -94,10 +94,18 @@
     {% if location.photos.exists %}
         <div class="photo-gallery mb-lg">
             {% for photo in location.photos.all %}
-                <img src="{{ photo.image.url }}"
-                     alt="{% if photo.caption %}{{ photo.caption }}{% else %}{{ location.name }} - {% trans 'Photo' %} {{ forloop.counter }}{% endif %}"
-                     loading="lazy"
-                     class="photo-gallery-image">
+                {% if photo.caption %}
+                    <img src="{{ photo.image.url }}"
+                         alt="{{ photo.caption }}"
+                         loading="lazy"
+                         class="photo-gallery-image">
+                {% else %}
+                    {% trans "Photo" as photo_string %}
+                    <img src="{{ photo.image.url }}"
+                         alt="{{ location.name }} - {{ photo_string }} {{ forloop.counter }}"
+                         loading="lazy"
+                         class="photo-gallery-image">
+                {% endif %}
             {% endfor %}
         </div>
     {% endif %}
