@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     # Local apps
     'apps.locations',
     'apps.blog',
+    'apps.plunge_tracker',
 ]
 
 MIDDLEWARE = [

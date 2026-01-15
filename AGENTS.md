@@ -5,3 +5,4 @@
     - All of the database code should live in repositories
     - All business logic should stay in the services
 - Apply functional core, imperative shell approach
+- Application is run inside the docker compose. To test it, add new migrations, run python code, you first need to start the compose and then execute commands inside the container

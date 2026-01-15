@@ -1,0 +1,78 @@
+.statistics-bar {
+    display: flex;
+    justify-content: space-around;
+    padding: 1rem;
+    background-color: #f0f8ff;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+.stat {
+    text-align: center;
+}
+
+.plunge-list-container {
+    margin-top: 1.5rem;
+}
+
+.plunge-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #fff;
+    position: relative;
+}
+
+.plunge-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.plunge-card h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.delete-plunge-btn {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 0.5rem;
+    line-height: 1;
+}
+
+.delete-plunge-btn:hover {
+    color: #d9534f;
+}
+
+.add-plunge-form {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+
+.add-plunge-form h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.button-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 0.5rem;
+}

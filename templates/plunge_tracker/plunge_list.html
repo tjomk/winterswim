@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Winter Swimming Plunge Tracker" %}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/plunge_tracker.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div id="js-translations" style="display: none;"
+         data-no-plunges-recorded="{% trans "No plunges recorded yet." %}"
+         data-geolocation-not-supported="{% trans "Geolocation is not supported by your browser." %}"
+         data-unable-to-retrieve-location="{% trans "Unable to retrieve your location." %}"
+         data-confirm-delete-plunge="{% trans "Are you sure you want to delete this plunge?" %}"
+         data-no-plunges-to-export="{% trans "No plunges to export." %}"
+         data-invalid-import-format-array="{% trans "Invalid format: The file should contain an array of plunges." %}"
+         data-invalid-import-format-id="{% trans "Invalid format: Plunge objects should have an 'id' property." %}"
+         data-confirm-override-data="{% trans "Are you sure you want to override all current data with the imported file?" %}"
+         data-error-importing-file="{% trans "Error importing file: " %}"
+         data-duration="{% trans "Duration" %}"
+         data-location="{% trans "Location" %}"
+         data-water-temp="{% trans "Water Temp" %}"
+         data-air-temp="{% trans "Air Temp" %}"
+         data-wind="{% trans "Wind" %}"
+         data-not-available="{% trans "N/A" %}"
+    ></div>
+
+    <h1>{% trans "My Winter Swims" %}</h1>
+
+    <div class="button-group">
+        <button id="add-plunge-toggle-btn" class="button-primary">{% trans "Add New Plunge" %}</button>
+        <button id="import-plunges-btn" class="button-secondary">{% trans "Import" %}</button>
+        <button id="export-plunges-btn" class="button-secondary">{% trans "Export" %}</button>
+        <input type="file" id="import-file-input" style="display: none;" accept="application/json">
+    </div>
+
+    <form id="add-plunge-form" class="add-plunge-form" style="display: none;">
+        <h3>{% trans "Record a New Plunge" %}</h3>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="plunge-date">{% trans "Date" %}</label>
+                <input type="datetime-local" id="plunge-date" required>
+            </div>
+            <div class="form-group">
+                <label for="duration-minutes">{% trans "Duration (Minutes)" %}</label>
+                <input type="number" id="duration-minutes" min="0" placeholder="e.g., 2">
+            </div>
+            <div class="form-group">
+                <label for="duration-seconds">{% trans "Duration (Seconds)" %}</label>
+                <input type="number" id="duration-seconds" min="0" max="59" placeholder="e.g., 30">
+            </div>
+            <div class="form-group">
+                <label for="water-temp">{% trans "Water Temperature (°C)" %}</label>
+                <input type="number" id="water-temp" step="0.1" placeholder="e.g., 1.5">
+            </div>
+            <div class="form-group">
+                <label for="air-temp">{% trans "Air Temperature (°C)" %}</label>
+                <input type="number" id="air-temp" step="0.1" placeholder="e.g., -5">
+            </div>
+            <div class="form-group">
+                <label for="wind-speed">{% trans "Wind Speed (m/s)" %}</label>
+                <input type="number" id="wind-speed" min="0" step="0.1" placeholder="e.g., 4.2">
+            </div>
+            <div class="form-group">
+                <label for="wind-direction">{% trans "Wind Direction" %}</label>
+                <input type="text" id="wind-direction" placeholder="e.g., NW">
+            </div>
+            <div class="form-group">
+                <label for="latitude">{% trans "Latitude" %}</label>
+                <input type="number" id="latitude" step="any" placeholder="e.g., 59.4370">
+            </div>
+            <div class="form-group">
+                <label for="longitude">{% trans "Longitude" %}</label>
+                <input type="number" id="longitude" step="any" placeholder="e.g., 24.7536">
+            </div>
+        </div>
+        <button type="button" id="get-location-btn" class="button-secondary">{% trans "Get Current Location" %}</button>
+        <button type="submit" class="button-primary">{% trans "Save Plunge" %}</button>
+    </form>
+
+    <div class="statistics-bar">
+        <div class="stat">
+            <strong>{% trans "Total Sessions:" %}</strong>
+            <span id="stats-sessions">0</span>
+        </div>
+        <div class="stat">
+            <strong>{% trans "Total Time in Water:" %}</strong>
+            <span id="stats-total-time">0m 0s</span>
+        </div>
+    </div>
+
+    <div id="plunge-list" class="plunge-list-container">
+        <p>Loading plunges...</p>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/plunge_tracker.js' %}"></script>
+{% endblock %}
