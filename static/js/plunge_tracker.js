@@ -1,10 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements
-    const addPlungeToggleBtn = document.getElementById('add-plunge-toggle-btn');
-    const addPlungeForm = document.getElementById('add-plunge-form');
+    const swimForm = document.getElementById('swim-form');
     const getLocationBtn = document.getElementById('get-location-btn');
-    const statsSessions = document.getElementById('stats-sessions');
-    const statsTotalTime = document.getElementById('stats-total-time');
+    const totalSessions = document.getElementById('total-sessions');
+    const totalTime = document.getElementById('total-time');
     const plungeList = document.getElementById('plunge-list');
     const exportBtn = document.getElementById('export-plunges-btn');
     const importBtn = document.getElementById('import-plunges-btn');
@@ -13,9 +12,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Translations
     const translations = translationsElem.dataset;
+    
+    // Weather loading indicator
+    const weatherLoadingIndicator = document.createElement('div');
+    weatherLoadingIndicator.className = 'weather-loading';
+    weatherLoadingIndicator.textContent = translations.fetchingWeather || 'Fetching weather...';
+    weatherLoadingIndicator.style.display = 'none';
+    getLocationBtn.parentNode.insertBefore(weatherLoadingIndicator, getLocationBtn.nextSibling);
 
     // Form Inputs
-    const plungeDateInput = document.getElementById('plunge-date');
+    const dateTimeInput = document.getElementById('date-time');
     const durationMinutesInput = document.getElementById('duration-minutes');
     const durationSecondsInput = document.getElementById('duration-seconds');
     const waterTempInput = document.getElementById('water-temp');
@@ -38,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         plungeList.innerHTML = '';
 
         if (plunges.length === 0) {
-            plungeList.innerHTML = `<p>${translations.noPlungesRecorded}</p>`;
+            plungeList.innerHTML = `<div class="empty-state">${translations.noPlungesRecorded}</div>`;
             return;
         }
 
@@ -46,19 +52,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         plunges.forEach(plunge => {
             const plungeItem = document.createElement('div');
-            plungeItem.className = 'plunge-card';
+            plungeItem.className = 'plunge-item';
             plungeItem.setAttribute('data-id', plunge.id);
             const notAvailable = translations.notAvailable || 'N/A';
+            
+            // Format date for display
+            const plungeDateTime = new Date(plunge.date);
+            const formattedDate = plungeDateTime.toLocaleDateString();
+            const formattedTime = plungeDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
             plungeItem.innerHTML = `
-                <div class="plunge-card-header">
-                    <h3>${new Date(plunge.date).toLocaleString()}</h3>
-                    <button class="delete-plunge-btn">&times;</button>
-                </div>
-                <p><strong>${translations.duration}:</strong> ${plunge.durationMinutes || 0}m ${plunge.durationSeconds || 0}s</p>
-                <p><strong>${translations.location}:</strong> ${plunge.latitude || notAvailable}, ${plunge.longitude || notAvailable}</p>
-                <p><strong>${translations.waterTemp}:</strong> ${plunge.waterTemp !== '' ? plunge.waterTemp + '°C' : notAvailable}</p>
-                <p><strong>${translations.airTemp}:</strong> ${plunge.airTemp !== '' ? plunge.airTemp + '°C' : notAvailable}</p>
-                <p><strong>${translations.wind}:</strong> ${plunge.windSpeed ? plunge.windSpeed + ' m/s' : notAvailable}, ${plunge.windDirection || notAvailable}</p>
+                <div class="date-time">${formattedDate} ${formattedTime}</div>
+                <div>${plunge.durationMinutes || 0}m ${plunge.durationSeconds || 0}s</div>
+                <div>${plunge.waterTemp !== '' ? plunge.waterTemp + '°C' : notAvailable} / ${plunge.airTemp !== '' ? plunge.airTemp + '°C' : notAvailable}</div>
+                <div>${plunge.windSpeed ? plunge.windSpeed + ' m/s' : notAvailable} ${plunge.windDirection || ''}</div>
+                <div><button class="delete-btn" aria-label="Delete plunge">&times;</button></div>
             `;
             plungeList.appendChild(plungeItem);
         });
@@ -75,8 +83,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalMinutes = Math.floor(totalTimeInSeconds / 60);
         const remainingSeconds = totalTimeInSeconds % 60;
 
-        statsSessions.textContent = totalSessions;
-        statsTotalTime.textContent = `${totalMinutes}m ${remainingSeconds}s`;
+        totalSessions.textContent = totalSessions;
+        totalTime.textContent = `${totalMinutes}m ${remainingSeconds}s`;
     }
 
     function render() {
@@ -96,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const newPlunge = {
             id: Date.now(),
-            date: plungeDateInput.value,
+            date: dateTimeInput.value,
             durationMinutes: durationMinutesInput.value,
             durationSeconds: durationSecondsInput.value,
             waterTemp: waterTempInput.value,
@@ -109,32 +117,89 @@ document.addEventListener('DOMContentLoaded', () => {
         plunges.push(newPlunge);
         savePlunges();
         render();
-        addPlungeForm.reset();
-        addPlungeForm.style.display = 'none';
+        swimForm.reset();
 
-        // Reset date to now in YYYY-MM-DD HH:MM:SS format
+        // Reset date to now in YYYY-MM-DDThh:mm format for datetime-local
         const now = new Date();
         const year = now.getFullYear();
         const month = (now.getMonth() + 1).toString().padStart(2, '0');
         const day = now.getDate().toString().padStart(2, '0');
         const hours = now.getHours().toString().padStart(2, '0');
         const minutes = now.getMinutes().toString().padStart(2, '0');
-        const seconds = now.getSeconds().toString().padStart(2, '0');
-        plungeDateInput.value = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        dateTimeInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
     }
 
+    function fetchWeatherData(latitude, longitude) {
+        return new Promise((resolve, reject) => {
+            const url = `/plunge-tracker/api/weather/?latitude=${latitude}&longitude=${longitude}`;
+            
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success && data.data) {
+                        resolve(data.data);
+                    } else {
+                        reject(new Error(data.error || translations.unableToFetchWeather));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching weather data:', error);
+                    reject(error);
+                });
+        });
+    }
+    
     function handleGetLocation() {
         if (!navigator.geolocation) {
             alert(translations.geolocationNotSupported);
             return;
         }
+        
+        // Show loading indicator
+        weatherLoadingIndicator.style.display = 'inline-block';
+        getLocationBtn.disabled = true;
+        
         navigator.geolocation.getCurrentPosition(
-            (position) => {
-                latitudeInput.value = position.coords.latitude.toFixed(6);
-                longitudeInput.value = position.coords.longitude.toFixed(6);
+            async (position) => {
+                try {
+                    latitudeInput.value = position.coords.latitude.toFixed(6);
+                    longitudeInput.value = position.coords.longitude.toFixed(6);
+                    
+                    // Fetch weather data for this location
+                    const weatherData = await fetchWeatherData(
+                        position.coords.latitude,
+                        position.coords.longitude
+                    );
+                    
+                    // Fill in weather data
+                    if (weatherData.temperature !== undefined) {
+                        airTempInput.value = weatherData.temperature;
+                    }
+                    if (weatherData.windspeed !== undefined) {
+                        windSpeedInput.value = weatherData.windspeed;
+                    }
+                    if (weatherData.winddirection) {
+                        windDirectionInput.value = weatherData.winddirection;
+                    }
+                    
+                } catch (error) {
+                    console.error('Weather fetch failed:', error);
+                    // Don't show error to user as it's not critical
+                } finally {
+                    // Hide loading indicator
+                    weatherLoadingIndicator.style.display = 'none';
+                    getLocationBtn.disabled = false;
+                }
             },
-            () => {
+            (error) => {
                 alert(translations.unableToRetrieveLocation);
+                weatherLoadingIndicator.style.display = 'none';
+                getLocationBtn.disabled = false;
             }
         );
     }
@@ -189,13 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- Event Listeners ---
-
-    addPlungeToggleBtn.addEventListener('click', () => {
-        const isVisible = addPlungeForm.style.display === 'block';
-        addPlungeForm.style.display = isVisible ? 'none' : 'block';
-    });
-
-    addPlungeForm.addEventListener('submit', handleAddPlunge);
+    swimForm.addEventListener('submit', handleAddPlunge);
 
     getLocationBtn.addEventListener('click', handleGetLocation);
 
@@ -206,9 +265,9 @@ document.addEventListener('DOMContentLoaded', () => {
     importFileInput.addEventListener('change', handleImportPlunges);
 
     plungeList.addEventListener('click', (e) => {
-        if (e.target.classList.contains('delete-plunge-btn')) {
-            const card = e.target.closest('.plunge-card');
-            const plungeId = parseInt(card.dataset.id, 10);
+        if (e.target.classList.contains('delete-btn')) {
+            const plungeItem = e.target.closest('.plunge-item');
+            const plungeId = parseInt(plungeItem.dataset.id, 10);
             handleDeletePlunge(plungeId);
         }
     });
@@ -216,15 +275,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Initialisation ---
 
-    // Set default date to now in YYYY-MM-DD HH:MM:SS format
+    // Set default date to now in YYYY-MM-DDThh:mm format for datetime-local
     const now = new Date();
     const year = now.getFullYear();
     const month = (now.getMonth() + 1).toString().padStart(2, '0');
     const day = now.getDate().toString().padStart(2, '0');
     const hours = now.getHours().toString().padStart(2, '0');
     const minutes = now.getMinutes().toString().padStart(2, '0');
-    const seconds = now.getSeconds().toString().padStart(2, '0');
-    plungeDateInput.value = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    dateTimeInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
     render();
 });
 

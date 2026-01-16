@@ -1,9 +1,9 @@
 /**
  * Main Stylesheet - Winterswim
- * 
+ *
  * This file contains all CSS for the website, organized into logical sections.
  * The structure is designed to support easy theming (including dark mode).
- * 
+ *
  * Organization:
  * 1. Theme Variables (light/dark mode support)
  * 2. CSS Reset and Base Styles
@@ -51,6 +51,15 @@
     --color-warning: #f39c12;
     --color-error: #e74c3c;
     --color-info: #3498db;
+
+    /* Winter Swim Theme Variables */
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --primary-blue: #1e293b; /* Dark navy from the site */
+    --accent-blue: #38bdf8;
+    --border-color: #e2e8f0;
+    --text-main: #1e293b;
+    --font-mono: 'JetBrains Mono', 'Courier New', monospace;
 
     /* Typography */
     --font-family-base: 'JetBrains Mono', monospace;
@@ -200,12 +209,11 @@ html {
 }
 
 body {
-    font-family: var(--font-family-base);
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-normal);
-    line-height: var(--line-height-normal);
-    color: var(--color-text-primary);
-    background-color: var(--color-bg-primary);
+    background-color: var(--bg-color);
+    font-family: var(--font-mono);
+    color: var(--text-main);
+    margin: 0;
+    padding: 20px;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -1851,5 +1859,284 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
     .map-container {
         height: 40vh;
         min-height: 300px;
+    }
+}
+
+/* Tracker Specific Styles */
+.tracker-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Header & Stats */
+.tracker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2rem 0;
+}
+
+.stats-bar {
+    display: flex;
+    gap: 20px;
+    background: var(--primary-blue);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.stat-item .label {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    display: block;
+}
+
+.stat-item .value {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Form Card */
+.plunge-form-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    margin-bottom: 2rem;
+}
+
+.plunge-form-card h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: var(--text-main);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-main);
+}
+
+.plunge-form-card input[type="number"],
+.plunge-form-card input[type="text"],
+.plunge-form-card input[type="datetime-local"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    box-sizing: border-box;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+}
+
+.inline-group {
+    display: flex;
+    gap: 10px;
+}
+
+/* Buttons */
+.plunge-form-card button,
+.tracker-header .actions button {
+    cursor: pointer;
+    font-family: var(--font-mono);
+    transition: all 0.2s;
+    border-radius: 4px;
+    padding: 10px 20px;
+    border: 1px solid var(--primary-blue);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background: var(--primary-blue);
+    color: white;
+    border-color: var(--primary-blue);
+}
+
+.btn-primary:hover {
+    background: #334155;
+    border-color: #334155;
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--primary-blue);
+    padding: 5px 15px;
+    border-color: var(--primary-blue);
+}
+
+.btn-secondary:hover {
+    background: rgba(30, 41, 59, 0.05);
+}
+
+.btn-location {
+    background: #f1f5f9;
+    border-color: var(--border-color);
+    color: var(--primary-blue);
+}
+
+.btn-location:hover {
+    background: #e2e8f0;
+}
+
+.weather-loading {
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    margin-left: 10px;
+    font-style: italic;
+}
+
+.form-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 20px;
+    margin-top: 20px;
+}
+
+/* List Styling */
+.history-section {
+    margin: 2rem 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.history-section h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: var(--text-main);
+}
+
+.plunge-list {
+    display: grid;
+    gap: 10px;
+}
+
+.plunge-item {
+    background: var(--bg-color);
+    border-left: 4px solid var(--accent-blue);
+    padding: 15px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto; /* Added auto for delete button */
+    align-items: center;
+    border-radius: 0 4px 4px 0;
+    border: 1px solid var(--border-color);
+    border-left-width: 4px;
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+.plunge-item div {
+    padding: 0 5px;
+}
+
+.plunge-item .date-time {
+    font-weight: bold;
+}
+
+.plunge-item .delete-btn {
+    background: none;
+    border: none;
+    color: var(--color-error); /* Using existing error color variable */
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 5px;
+    transition: color 0.2s;
+}
+
+.plunge-item .delete-btn:hover {
+    color: #ef4444; /* A slightly darker red for hover */
+}
+
+.empty-state {
+    text-align: center;
+    color: var(--color-text-secondary);
+    padding: 20px;
+    font-style: italic;
+}
+
+/* Overriding some general styles for specific elements */
+.container {
+    max-width: none; /* Remove max-width from general container for tracker-container to take over */
+    padding: 0; /* Remove padding from general container */
+}
+
+body {
+    padding: 0; /* Remove body padding, tracker-container handles it */
+}
+
+h1 {
+    font-size: 2.25rem; /* Adjust h1 size for tracker header */
+    margin-bottom: 0;
+}
+
+/* Mobile responsiveness for tracker */
+@media (max-width: 768px) {
+    .tracker-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .tracker-header .actions {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        gap: 10px;
+    }
+
+    .tracker-header .actions button {
+        flex: 1;
+    }
+
+    .stats-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
+    }
+
+    .plunge-item {
+        grid-template-columns: 1fr; /* Stack items vertically on small screens */
+        gap: 5px;
+        border-left: none;
+        border-top: 4px solid var(--accent-blue);
+        border-radius: 4px;
+    }
+
+    .plunge-item div {
+        padding: 0;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr; /* Stack form inputs vertically */
+    }
+
+    .form-footer {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .form-footer button {
+        width: 100%;
     }
 }
