@@ -44,34 +44,28 @@
         <form id="swim-form">
             <div class="form-grid">
                 <div class="form-group">
-                    <label for="date-time">{% trans "Date & Time" %}</label>
+                    <label><i data-lucide="calendar"></i> {% trans "Date & Time" %}</label>
                     <input type="datetime-local" id="date-time" required>
                 </div>
 
-                <div class="form-group inline-group">
-                    <div>
-                        <label for="duration-minutes">{% trans "Min" %}</label>
-                        <input type="number" id="duration-minutes" placeholder="2">
-                    </div>
-                    <div>
-                        <label for="duration-seconds">{% trans "Sec" %}</label>
-                        <input type="number" id="duration-seconds" placeholder="30">
-                    </div>
-                </div>
-
-                <div class="form-group inline-group">
-                    <div>
-                        <label for="water-temp">{% trans "Water °C" %}</label>
-                        <input type="number" id="water-temp" step="0.1" placeholder="1.5">
-                    </div>
-                    <div>
-                        <label for="air-temp">{% trans "Air °C" %}</label>
-                        <input type="number" id="air-temp" step="0.1" placeholder="-5">
+                <div class="form-group">
+                    <label><i data-lucide="timer"></i> {% trans "Duration" %}</label>
+                    <div class="inline-group">
+                        <input type="number" id="duration-minutes" placeholder="{% trans 'Min' %}">
+                        <input type="number" id="duration-seconds" placeholder="{% trans 'Sec' %}">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>{% trans "Wind (m/s & Dir)" %}</label>
+                    <label><i data-lucide="thermometer"></i> {% trans "Temps (°C)" %}</label>
+                    <div class="inline-group">
+                        <input type="number" id="water-temp" step="0.1" placeholder="{% trans 'Water' %}">
+                        <input type="number" id="air-temp" step="0.1" placeholder="{% trans 'Air' %}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i data-lucide="wind"></i> {% trans "Wind (m/s & Dir)" %}</label>
                     <div class="inline-group">
                         <input type="number" id="wind-speed" placeholder="4.2">
                         <input type="text" id="wind-direction" placeholder="NW">
@@ -79,17 +73,18 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="latitude">{% trans "Latitude" %}</label>
-                    <input type="number" id="latitude" step="any" placeholder="e.g., 59.4370">
-                </div>
-                <div class="form-group">
-                    <label for="longitude">{% trans "Longitude" %}</label>
-                    <input type="number" id="longitude" step="any" placeholder="e.g., 24.7536">
+                    <label><i data-lucide="map-pin"></i> {% trans "Coordinates" %}</label>
+                    <div class="inline-group">
+                        <input type="number" id="latitude" step="any" placeholder="{% trans 'Lat' %}">
+                        <input type="number" id="longitude" step="any" placeholder="{% trans 'Lng' %}">
+                    </div>
                 </div>
             </div>
 
             <div class="form-footer">
-                <button type="button" id="get-location-btn" class="btn-location">{% trans "Get Current Location" %}</button>
+                <button type="button" id="get-location-btn" class="btn-location">
+                    <i data-lucide="navigation"></i> {% trans "Get Current Location" %}
+                </button>
                 <button type="submit" class="btn-primary">{% trans "Save Plunge" %}</button>
             </div>
         </form>
@@ -118,4 +113,12 @@
 
 {% block extra_js %}
     <script src="{% static 'js/plunge_tracker.js' %}"></script>
+    <script>
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
 {% endblock %}

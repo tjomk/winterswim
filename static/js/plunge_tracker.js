@@ -62,11 +62,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const formattedTime = plungeDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
             plungeItem.innerHTML = `
-                <div class="date-time">${formattedDate} ${formattedTime}</div>
-                <div>${plunge.durationMinutes || 0}m ${plunge.durationSeconds || 0}s</div>
-                <div>${plunge.waterTemp !== '' ? plunge.waterTemp + '°C' : notAvailable} / ${plunge.airTemp !== '' ? plunge.airTemp + '°C' : notAvailable}</div>
-                <div>${plunge.windSpeed ? plunge.windSpeed + ' m/s' : notAvailable} ${plunge.windDirection || ''}</div>
-                <div><button class="delete-btn" aria-label="Delete plunge">&times;</button></div>
+                <div class="item-date">${formattedDate} ${formattedTime}</div>
+                <div class="item-details">
+                    <div>${plunge.durationMinutes || 0}m ${plunge.durationSeconds || 0}s</div>
+                    <div>${plunge.waterTemp !== '' ? plunge.waterTemp + '°C' : notAvailable} / ${plunge.airTemp !== '' ? plunge.airTemp + '°C' : notAvailable}</div>
+                    <div>${plunge.windSpeed ? plunge.windSpeed + ' m/s' : notAvailable} ${plunge.windDirection || ''}</div>
+                    <div>${notAvailable}</div>
+                </div>
+                <button class="delete-btn" aria-label="Delete plunge">&times;</button>
             `;
             plungeList.appendChild(plungeItem);
         });

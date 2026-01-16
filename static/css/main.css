@@ -55,10 +55,13 @@
     /* Winter Swim Theme Variables */
     --bg-color: #f8fafc;
     --card-bg: #ffffff;
+    --navy-dark: #1e293b; /* Dark navy from the site */
+    --navy-light: #334155;
     --primary-blue: #1e293b; /* Dark navy from the site */
     --accent-blue: #38bdf8;
     --border-color: #e2e8f0;
     --text-main: #1e293b;
+    --text-muted: #64748b;
     --font-mono: 'JetBrains Mono', 'Courier New', monospace;
 
     /* Typography */
@@ -1876,24 +1879,33 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
     margin: 2rem 0;
 }
 
+/* 4. PLUNGE TRACKER SPECIFIC STYLES */
+
+/* Dashboard Stats (Always side-by-side) */
 .stats-bar {
     display: flex;
-    gap: 20px;
-    background: var(--primary-blue);
+    background: var(--navy-dark);
     color: white;
-    padding: 15px 25px;
-    border-radius: 8px;
-    margin-bottom: 2rem;
+    padding: 16px;
+    border-radius: 4px;
+    margin-bottom: 24px;
+    gap: 20px;
+}
+
+.stat-item {
+    flex: 1;
 }
 
 .stat-item .label {
-    font-size: 0.8rem;
-    opacity: 0.8;
     display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    opacity: 0.7;
+    letter-spacing: 0.05em;
 }
 
 .stat-item .value {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: bold;
 }
 
@@ -1901,52 +1913,71 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
 .plunge-form-card {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-    margin-bottom: 2rem;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 24px;
 }
 
 .plunge-form-card h2 {
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-    font-size: 1.5rem;
-    color: var(--text-main);
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    text-transform: capitalize;
 }
 
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin-bottom: 20px;
+.form-group {
+    margin-bottom: 20px; /* Crucial for mobile density */
 }
 
 .form-group label {
-    display: block;
-    font-size: 0.85rem;
-    margin-bottom: 8px;
-    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-main);
+    margin-bottom: 8px;
+    color: var(--text-muted);
 }
 
+/* Form Inputs */
 .plunge-form-card input[type="number"],
 .plunge-form-card input[type="text"],
 .plunge-form-card input[type="datetime-local"] {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid var(--border-color);
     border-radius: 4px;
     font-family: var(--font-mono);
-    box-sizing: border-box;
-    background-color: var(--bg-color);
-    color: var(--text-main);
+    background-color: #fdfdfd;
+    font-size: 1rem;
+}
+
+.plunge-form-card input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.1);
 }
 
 .inline-group {
     display: flex;
-    gap: 10px;
+    gap: 12px;
+}
+
+/* Form Grid - Mobile first */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+/* Form Footer - Mobile first */
+.form-footer {
+    display: flex;
+    flex-direction: column; /* Stacked on mobile */
+    gap: 12px;
+    margin-top: 10px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
 }
 
 /* Buttons */
@@ -1988,10 +2019,26 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
     background: #f1f5f9;
     border-color: var(--border-color);
     color: var(--primary-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .btn-location:hover {
     background: #e2e8f0;
+}
+
+.btn-location i {
+    width: 14px;
+    height: 14px;
+}
+
+.form-group label i {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2px;
+    color: var(--accent-blue);
 }
 
 .weather-loading {
@@ -2001,13 +2048,97 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
     font-style: italic;
 }
 
-.form-footer {
+/* Header Actions */
+.actions {
     display: flex;
-    justify-content: flex-end;
     gap: 10px;
-    border-top: 1px solid var(--border-color);
-    padding-top: 20px;
-    margin-top: 20px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.actions button {
+    flex: 1; /* Make them equal width on mobile */
+}
+
+/* History Section */
+.history-section h3 {
+    font-size: 1.25rem;
+    margin-bottom: 16px;
+}
+
+.plunge-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.plunge-item {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--accent-blue);
+    padding: 16px;
+    border-radius: 4px;
+    position: relative;
+}
+
+.item-date {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 4px;
+}
+
+.item-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    font-size: 0.85rem;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    color: #ef4444;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+/* 7. DESKTOP REFINEMENTS (768px and up) */
+@media (min-width: 768px) {
+    body {
+        padding: 40px;
+    }
+
+    .actions {
+        width: auto;
+    }
+
+    .btn-secondary {
+        width: 100px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+
+    .form-footer {
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+
+    .btn-location, .btn-primary {
+        width: auto;
+        padding: 10px 24px;
+    }
+
+    .item-details {
+        grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    }
 }
 
 /* List Styling */
