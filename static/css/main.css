@@ -530,21 +530,21 @@ img {
  * ============================================
  */
 
-/* Buttons */
+/* Buttons - Updated to match Plunge Tracker style */
 .btn {
-    display: inline-block;
-    padding: var(--spacing-sm) var(--spacing-lg);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
     font-family: var(--font-family-base);
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-medium);
-    line-height: var(--line-height-tight);
-    text-align: center;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
     text-decoration: none;
     border: 1px solid transparent;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    transition: all var(--transition-base);
-    user-select: none;
 }
 
 .btn:focus {
@@ -557,40 +557,39 @@ img {
     cursor: not-allowed;
 }
 
-/* Button variants */
+/* Button variants - Plunge Tracker style */
 .btn-primary {
+    background: var(--primary-blue);
     color: white;
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
+    border-color: var(--primary-blue);
 }
 
 .btn-primary:hover:not(:disabled) {
-    background-color: var(--color-primary-dark);
-    border-color: var(--color-primary-dark);
-    text-decoration: none;
+    background: #334155;
+    border-color: #334155;
 }
 
 .btn-secondary {
-    color: var(--color-text-primary);
-    background-color: var(--color-bg-secondary);
-    border-color: var(--color-border);
+    background: transparent;
+    color: var(--primary-blue);
+    border-color: var(--primary-blue);
+    padding: 5px 15px;
 }
 
 .btn-secondary:hover:not(:disabled) {
-    background-color: var(--color-border);
-    text-decoration: none;
+    background: rgba(30, 41, 59, 0.05);
 }
 
 .btn-outline {
-    color: var(--color-primary);
-    background-color: transparent;
-    border-color: var(--color-primary);
+    background: white;
+    border: 1px solid var(--navy-dark, #1e293b);
+    color: var(--navy-dark, #1e293b);
 }
 
 .btn-outline:hover:not(:disabled) {
-    color: white;
-    background-color: var(--color-primary);
-    text-decoration: none;
+    background: #f8fafc;
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
 }
 
 .btn-success {
@@ -605,15 +604,30 @@ img {
     border-color: var(--color-error);
 }
 
+.btn-location {
+    background: #f1f5f9;
+    border-color: var(--border-color);
+    color: var(--primary-blue);
+}
+
+.btn-location:hover:not(:disabled) {
+    background: #e2e8f0;
+}
+
+.btn-location i {
+    width: 14px;
+    height: 14px;
+}
+
 /* Button sizes */
 .btn-sm {
-    padding: var(--spacing-xs) var(--spacing-md);
-    font-size: var(--font-size-sm);
+    padding: 6px 12px;
+    font-size: 0.875rem;
 }
 
 .btn-lg {
-    padding: var(--spacing-md) var(--spacing-xl);
-    font-size: var(--font-size-lg);
+    padding: 12px 24px;
+    font-size: 1.125rem;
 }
 
 /* Button block */
@@ -2149,66 +2163,7 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
 }
 
 /* Professional Import/Export Buttons */
-.btn-outline {
-    background: white;
-    border: 1px solid var(--navy-dark, #1e293b);
-    color: var(--navy-dark, #1e293b);
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-family: var(--font-mono);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.2s;
-}
 
-.btn-outline:hover {
-    background: #f8fafc;
-    border-color: var(--accent-blue);
-    color: var(--accent-blue);
-}
-
-.btn-primary {
-    background: var(--primary-blue);
-    color: white;
-    border-color: var(--primary-blue);
-}
-
-.btn-primary:hover {
-    background: #334155;
-    border-color: #334155;
-}
-
-.btn-secondary {
-    background: transparent;
-    color: var(--primary-blue);
-    padding: 5px 15px;
-    border-color: var(--primary-blue);
-}
-
-.btn-secondary:hover {
-    background: rgba(30, 41, 59, 0.05);
-}
-
-.btn-location {
-    background: #f1f5f9;
-    border-color: var(--border-color);
-    color: var(--primary-blue);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.btn-location:hover {
-    background: #e2e8f0;
-}
-
-.btn-location i {
-    width: 14px;
-    height: 14px;
-}
 
 .form-group label i {
     width: 16px;
@@ -2285,10 +2240,7 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
         justify-content: flex-end;
     }
 
-    .btn-location, .btn-primary {
-        width: auto;
-        padding: 10px 24px;
-    }
+
 
 
 }
@@ -2331,20 +2283,7 @@ h1 {
         gap: 1rem;
     }
 
-    .tracker-header .actions {
-        width: 100%;
-        display: flex;
-        justify-content: space-around;
-        gap: 10px;
-    }
 
-    .tracker-header .actions button {
-        flex: 1;
-    }
-
-    .tracker-header .actions .btn-outline {
-        flex: 1;
-    }
 
     .stats-bar {
         flex-direction: column;
@@ -2373,11 +2312,5 @@ h1 {
         gap: 10px;
     }
 
-    .form-footer button {
-        width: 100%;
-    }
 
-    .form-footer .btn-outline {
-        width: 100%;
-    }
 }
