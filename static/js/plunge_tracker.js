@@ -41,6 +41,44 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('plunges', JSON.stringify(plunges));
     }
 
+    function getWindDirectionClass(windDirection) {
+        if (!windDirection) return '';
+        
+        const direction = windDirection.toLowerCase();
+        const directionMap = {
+            'n': 'direction-n',
+            'ne': 'direction-ne',
+            'e': 'direction-e',
+            'se': 'direction-se',
+            's': 'direction-s',
+            'sw': 'direction-sw',
+            'w': 'direction-w',
+            'nw': 'direction-nw'
+        };
+        
+        return directionMap[direction] || '';
+    }
+
+    function formatDuration(minutes, seconds) {
+        const min = parseInt(minutes, 10) || 0;
+        const sec = parseInt(seconds, 10) || 0;
+        return `${min}m ${sec}s`;
+    }
+
+    function formatTemperature(temp) {
+        return temp !== '' && temp !== undefined && temp !== null ? temp + '°C' : 'N/A';
+    }
+
+    function formatWind(windSpeed, windDirection) {
+        if (!windSpeed) return 'N/A';
+        return windSpeed + ' m/s';
+    }
+
+    function formatCoordinates(latitude, longitude) {
+        if (!latitude || !longitude) return 'N/A';
+        return `${latitude}, ${longitude}`;
+    }
+
     function renderPlunges() {
         plungeList.innerHTML = '';
 
@@ -59,17 +97,53 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Format date for display
             const plungeDateTime = new Date(plunge.date);
-            const formattedDate = plungeDateTime.toLocaleDateString();
+            const formattedDate = plungeDateTime.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
             const formattedTime = plungeDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
+            // Format data
+            const duration = formatDuration(plunge.durationMinutes, plunge.durationSeconds);
+            const waterTemp = formatTemperature(plunge.waterTemp);
+            const airTemp = formatTemperature(plunge.airTemp);
+            const windSpeed = formatWind(plunge.windSpeed, plunge.windDirection);
+            const coordinates = formatCoordinates(plunge.latitude, plunge.longitude);
+            const windDirectionClass = getWindDirectionClass(plunge.windDirection);
+
             plungeItem.innerHTML = `
-                <div class="item-date">${formattedDate} ${formattedTime}</div>
-                <div class="item-details">
-                    <div>${plunge.durationMinutes || 0}m ${plunge.durationSeconds || 0}s</div>
-                    <div>${plunge.waterTemp !== '' ? plunge.waterTemp + '°C' : notAvailable} / ${plunge.airTemp !== '' ? plunge.airTemp + '°C' : notAvailable}</div>
-                    <div>${plunge.windSpeed ? (plunge.windSpeed + ' m/s' + (plunge.windDirection ? ' ' + plunge.windDirection : '')) : notAvailable}</div>
+                <div class="item-header">
+                    <span class="item-date">${formattedDate} • ${formattedTime}</span>
+                    <button class="delete-btn" title="Delete session">
+                        <i data-lucide="trash-2"></i>
+                    </button>
                 </div>
-                <button class="delete-btn" aria-label="Delete plunge">&times;</button>
+                
+                <div class="item-data-grid">
+                    <div class="data-chip" title="Duration">
+                        <i data-lucide="timer"></i>
+                        <span class="value">${duration}</span>
+                    </div>
+
+                    <div class="data-chip" title="Water / Air Temp">
+                        <i data-lucide="thermometer"></i>
+                        <span class="value">${waterTemp} <span class="divider">/</span> ${airTemp}</span>
+                    </div>
+
+                    <div class="data-chip" title="Wind speed and direction">
+                        <i data-lucide="wind"></i>
+                        <span class="value">
+                            ${windSpeed}
+                            ${plunge.windDirection ? `<i data-lucide="arrow-up" class="wind-arrow ${windDirectionClass}"></i>` : ''}
+                        </span>
+                    </div>
+
+                    <div class="data-chip" title="Coordinates">
+                        <i data-lucide="map-pin"></i>
+                        <span class="value">${coordinates}</span>
+                    </div>
+                </div>
             `;
             plungeList.appendChild(plungeItem);
         });

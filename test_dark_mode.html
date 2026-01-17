@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Mode Test</title>
+    <link rel="stylesheet" href="static/css/main.css">
+    <style>
+        body {
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+        .test-section {
+            background-color: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            padding: 2rem;
+            margin: 1rem 0;
+            border-radius: var(--radius-md);
+        }
+        .test-button {
+            margin: 1rem 0;
+        }
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle">
+        <button id="themeToggle" class="btn btn-primary">Toggle Dark Mode</button>
+    </div>
+    
+    <h1>Dark Mode Test Page</h1>
+    <p>This page tests the new consolidated CSS with dark mode support.</p>
+    
+    <div class="test-section">
+        <h2>Test Section</h2>
+        <p>This section uses CSS variables for theming.</p>
+        <p>Background: var(--color-bg-secondary)</p>
+        <p>Text: var(--color-text-primary)</p>
+        <p>Border: var(--color-border)</p>
+    </div>
+    
+    <div class="test-button">
+        <button class="btn btn-primary">Primary Button</button>
+        <button class="btn btn-secondary">Secondary Button</button>
+        <button class="btn btn-outline">Outline Button</button>
+    </div>
+    
+    <div class="card test-section">
+        <div class="card-header">
+            <h3>Card Component</h3>
+        </div>
+        <div class="card-body">
+            <p>This is a card component that should adapt to dark mode.</p>
+        </div>
+    </div>
+    
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        themeToggle.addEventListener('click', function() {
+            body.classList.toggle('dark-mode');
+            const isDark = body.classList.contains('dark-mode');
+            themeToggle.textContent = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+        });
+    </script>
+</body>
+</html>

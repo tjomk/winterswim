@@ -1616,6 +1616,101 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
     gap: 0.5rem;
 }
 
+/* Session Card Container */
+.plunge-item {
+    background: white;
+    border: 1px solid var(--color-border, #e2e8f0);
+    border-left: 5px solid var(--color-primary, #0077be); /* Signature blue stripe */
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: transform 0.2s ease;
+}
+
+.plunge-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Header with Date and Delete */
+.item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.item-date {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--color-text-primary);
+}
+
+/* Data Grid Configuration */
+.item-data-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2x2 on mobile */
+    gap: 15px;
+}
+
+@media (min-width: 768px) {
+    .item-data-grid {
+        grid-template-columns: repeat(4, 1fr); /* 4 columns on desktop */
+    }
+}
+
+/* Individual Data Chips */
+.data-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.data-chip i {
+    width: 18px;
+    height: 18px;
+    color: var(--color-primary); /* Use the deep ocean blue */
+    flex-shrink: 0;
+}
+
+.data-chip .value {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+}
+
+/* Wind Arrow Logic */
+.wind-arrow {
+    display: inline-block;
+    width: 14px !important;
+    height: 14px !important;
+    margin-left: 4px;
+    transition: transform 0.3s ease;
+}
+
+/* Rotation Classes for Wind */
+.direction-n  { transform: rotate(0deg); }
+.direction-ne { transform: rotate(45deg); }
+.direction-e  { transform: rotate(90deg); }
+.direction-se { transform: rotate(135deg); }
+.direction-s  { transform: rotate(180deg); }
+.direction-sw { transform: rotate(225deg); }
+.direction-w  { transform: rotate(270deg); }
+.direction-nw { transform: rotate(315deg); }
+
+.delete-btn {
+    background: transparent;
+    border: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    padding: 5px;
+}
+
+.delete-btn:hover {
+    color: var(--color-accent); /* Red for delete */
+}
+
 /**
  * ============================================
  * 7. UTILITIES AND HELPERS
@@ -2163,40 +2258,6 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
     gap: 12px;
 }
 
-.plunge-item {
-    background: white;
-    border: 1px solid var(--border-color);
-    border-left: 4px solid var(--accent-blue);
-    padding: 20px;
-    border-radius: 4px;
-    position: relative;
-}
-
-.item-date {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 8px;
-    border-bottom: 1px solid #f1f5f9;
-    padding-bottom: 4px;
-}
-
-.item-details {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    font-size: 0.85rem;
-}
-
-.delete-btn {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    color: #ef4444;
-    cursor: pointer;
-    background: none;
-    border: none;
-}
-
 /* 7. DESKTOP REFINEMENTS (768px and up) */
 @media (min-width: 768px) {
     .tracker-header {
@@ -2229,9 +2290,7 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
         padding: 10px 24px;
     }
 
-    .item-details {
-        grid-template-columns: 1.5fr 1fr 1fr 1fr;
-    }
+
 }
 
 /* List Styling */
@@ -2245,42 +2304,6 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
 .plunge-list {
     display: grid;
     gap: 10px;
-}
-
-.plunge-item {
-    background: var(--bg-color);
-    border-left: 4px solid var(--accent-blue);
-    padding: 20px;
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr auto; /* Added auto for delete button */
-    align-items: center;
-    border-radius: 0 4px 4px 0;
-    border: 1px solid var(--border-color);
-    border-left-width: 4px;
-    font-size: 0.9rem;
-    color: var(--text-main);
-}
-
-.plunge-item div {
-    padding: 0 5px;
-}
-
-.plunge-item .date-time {
-    font-weight: bold;
-}
-
-.plunge-item .delete-btn {
-    background: none;
-    border: none;
-    color: var(--color-error); /* Using existing error color variable */
-    cursor: pointer;
-    font-size: 1.2rem;
-    padding: 5px;
-    transition: color 0.2s;
-}
-
-.plunge-item .delete-btn:hover {
-    color: #ef4444; /* A slightly darker red for hover */
 }
 
 .empty-state {
