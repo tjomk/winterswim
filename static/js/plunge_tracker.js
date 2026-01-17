@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="item-details">
                     <div>${plunge.durationMinutes || 0}m ${plunge.durationSeconds || 0}s</div>
                     <div>${plunge.waterTemp !== '' ? plunge.waterTemp + '°C' : notAvailable} / ${plunge.airTemp !== '' ? plunge.airTemp + '°C' : notAvailable}</div>
-                    <div>${plunge.windSpeed ? plunge.windSpeed + ' m/s' : notAvailable} ${plunge.windDirection || ''}</div>
+                    <div>${plunge.windSpeed ? (plunge.windSpeed + ' m/s' + (plunge.windDirection ? ' ' + plunge.windDirection : '')) : notAvailable}</div>
                 </div>
                 <button class="delete-btn" aria-label="Delete plunge">&times;</button>
             `;

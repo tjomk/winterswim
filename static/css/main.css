@@ -216,7 +216,7 @@ body {
     font-family: var(--font-mono);
     color: var(--text-main);
     margin: 0;
-    padding: 20px;
+    padding: 20px 16px;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -1869,14 +1869,16 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
 .tracker-container {
     max-width: 900px;
     margin: 0 auto;
+    width: 100%;
 }
 
 /* Header & Stats */
 .tracker-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 2rem 0;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 4px;
+    margin-bottom: 2rem;
 }
 
 /* 4. PLUNGE TRACKER SPECIFIC STYLES */
@@ -1888,7 +1890,7 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
     color: white;
     padding: 16px;
     border-radius: 4px;
-    margin-bottom: 24px;
+    margin: 0 0 24px 0;
     gap: 20px;
 }
 
@@ -1913,8 +1915,8 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
 .plunge-form-card {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    padding: 20px;
     border-radius: 8px;
+    padding: 24px 20px;
     margin-bottom: 24px;
 }
 
@@ -1950,6 +1952,7 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
     font-family: var(--font-mono);
     background-color: #fdfdfd;
     font-size: 1rem;
+    box-sizing: border-box;
 }
 
 .plunge-form-card input:focus {
@@ -2076,7 +2079,7 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
     background: white;
     border: 1px solid var(--border-color);
     border-left: 4px solid var(--accent-blue);
-    padding: 16px;
+    padding: 20px;
     border-radius: 4px;
     position: relative;
 }
@@ -2112,6 +2115,12 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
         padding: 40px;
     }
 
+    .tracker-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
     .actions {
         width: auto;
     }
@@ -2143,12 +2152,11 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
 
 /* List Styling */
 .history-section {
-    margin: 2rem 0;
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    border-radius: 8px;
+    padding: 24px 20px;
+    margin-bottom: 24px;
 }
 
 .history-section h3 {
@@ -2166,7 +2174,7 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
 .plunge-item {
     background: var(--bg-color);
     border-left: 4px solid var(--accent-blue);
-    padding: 15px;
+    padding: 20px;
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr auto; /* Added auto for delete button */
     align-items: center;
