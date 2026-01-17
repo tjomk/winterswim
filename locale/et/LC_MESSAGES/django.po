@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Winter Swimming 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-17 06:29+0000\n"
+"POT-Creation-Date: 2026-01-17 12:26+0000\n"
 "PO-Revision-Date: 2025-12-25 12:00+0000\n"
 "Last-Translator: Winter Swimming Team\n"
 "Language-Team: Estonian\n"
@@ -1615,19 +1615,19 @@ msgstr "Sinu asukohta ei õnnestunud hankida"
 
 #: templates/plunge_tracker/plunge_list.html:16
 msgid "Are you sure you want to delete this plunge?"
-msgstr ""
+msgstr "Oled kindel, et tahad kustutada seda kirjet?"
 
 #: templates/plunge_tracker/plunge_list.html:17
 msgid "No plunges to export."
-msgstr ""
+msgstr "Ei ole ühtegi kirjet"
 
 #: templates/plunge_tracker/plunge_list.html:18
 msgid "Invalid format: The file should contain an array of plunges."
-msgstr ""
+msgstr "Vale formaat: faili sees peab olema kirjete nimekiri"
 
 #: templates/plunge_tracker/plunge_list.html:19
 msgid "Invalid format: Plunge objects should have an 'id' property."
-msgstr ""
+msgstr "Value formaat: kirje sees peab olema ID"
 
 #: templates/plunge_tracker/plunge_list.html:20
 msgid ""
@@ -1639,7 +1639,7 @@ msgid "Error importing file: "
 msgstr ""
 
 #: templates/plunge_tracker/plunge_list.html:22
-#: templates/plunge_tracker/plunge_list.html:54
+#: templates/plunge_tracker/plunge_list.html:72
 #, fuzzy
 #| msgid "Moderation"
 msgid "Duration"
@@ -1647,15 +1647,15 @@ msgstr "Modereerimine"
 
 #: templates/plunge_tracker/plunge_list.html:24
 msgid "Water Temp"
-msgstr ""
+msgstr "Veetemperatuur"
 
 #: templates/plunge_tracker/plunge_list.html:25
 msgid "Air Temp"
-msgstr ""
+msgstr "Õhutemperatuur"
 
 #: templates/plunge_tracker/plunge_list.html:26
 msgid "Wind"
-msgstr ""
+msgstr "Tuul"
 
 #: templates/plunge_tracker/plunge_list.html:27
 #: templates/plunge_tracker/plunge_list.html:30
@@ -1664,7 +1664,7 @@ msgstr "Puudub"
 
 #: templates/plunge_tracker/plunge_list.html:28
 msgid "Fetching weather data..."
-msgstr ""
+msgstr "Tõmban ilmateadet..."
 
 #: templates/plunge_tracker/plunge_list.html:29
 #, fuzzy
@@ -1673,95 +1673,126 @@ msgid "Unable to fetch weather data."
 msgstr "Sinu asukohta ei õnnestunud hankida"
 
 #: templates/plunge_tracker/plunge_list.html:31
-#: templates/plunge_tracker/plunge_list.html:109
+#: templates/plunge_tracker/plunge_list.html:131
 msgid "No plunges recorded yet."
-msgstr ""
+msgstr "Ei ole ühtegi kirjet."
 
-#: templates/plunge_tracker/plunge_list.html:36
-#, fuzzy
+#: templates/plunge_tracker/plunge_list.html:32
+#: templates/plunge_tracker/plunge_list.html:123
+#| msgid "Moderation"
+msgid "Avg Duration"
+msgstr "Keskmine kestus"
+
+#: templates/plunge_tracker/plunge_list.html:37
 #| msgid "Winter Swim"
 msgid "My Winter Swims"
-msgstr "Taliujumine"
-
-#: templates/plunge_tracker/plunge_list.html:38
-msgid "Import"
-msgstr ""
+msgstr "Minu ujumised"
 
 #: templates/plunge_tracker/plunge_list.html:39
+#: templates/plunge_tracker/plunge_list.html:55
+msgid "Import"
+msgstr "Impordi"
+
+#: templates/plunge_tracker/plunge_list.html:40
+#: templates/plunge_tracker/plunge_list.html:51
 msgid "Export"
-msgstr ""
+msgstr "Expordi"
 
-#: templates/plunge_tracker/plunge_list.html:45
-msgid "Record a New Plunge"
-msgstr ""
+#: templates/plunge_tracker/plunge_list.html:47
+msgid "Privacy & Data Guide"
+msgstr "Privaatsus- ja andmejuhend"
 
-#: templates/plunge_tracker/plunge_list.html:49
-msgid "Date & Time"
-msgstr ""
+#: templates/plunge_tracker/plunge_list.html:48
+msgid "This tracker uses your"
+msgstr "See tracker kasutab sinu"
+
+#: templates/plunge_tracker/plunge_list.html:48
+msgid "browser's local storage"
+msgstr "browseri kohaliku mälu"
+
+#: templates/plunge_tracker/plunge_list.html:48
+msgid "Your data is private and never leaves this device."
+msgstr "Sinu andmeid salvestatakse kohalikus mälus"
+
+#: templates/plunge_tracker/plunge_list.html:52
+msgid "Download a"
+msgstr "Laadi alla"
+
+#: templates/plunge_tracker/plunge_list.html:52
+msgid "file to backup your swim history."
+msgstr "kõik enda kirjed"
 
 #: templates/plunge_tracker/plunge_list.html:56
+msgid "Upload your saved backup file if you use a new browser or device."
+msgstr ""
+
+#: templates/plunge_tracker/plunge_list.html:63
+msgid "Record a New Plunge"
+msgstr "Salvesta uus ujumine"
+
+#: templates/plunge_tracker/plunge_list.html:67
+msgid "Date & Time"
+msgstr "Kuupäev ja aeg"
+
+#: templates/plunge_tracker/plunge_list.html:74
 msgid "Min"
-msgstr ""
+msgstr "Min"
 
-#: templates/plunge_tracker/plunge_list.html:57
+#: templates/plunge_tracker/plunge_list.html:75
 msgid "Sec"
-msgstr ""
-
-#: templates/plunge_tracker/plunge_list.html:62
-msgid "Temps (°C)"
-msgstr ""
-
-#: templates/plunge_tracker/plunge_list.html:64
-msgid "Water"
-msgstr ""
-
-#: templates/plunge_tracker/plunge_list.html:65
-msgid "Air"
-msgstr ""
-
-#: templates/plunge_tracker/plunge_list.html:70
-msgid "Wind (m/s & Dir)"
-msgstr ""
-
-#: templates/plunge_tracker/plunge_list.html:78
-#, fuzzy
-#| msgid "Geographic coordinates"
-msgid "Coordinates"
-msgstr "Geograafilised koordinaadid"
+msgstr "Sec"
 
 #: templates/plunge_tracker/plunge_list.html:80
-#, fuzzy
-#| msgid "Last"
-msgid "Lat"
-msgstr "Viimane"
+msgid "Temps (°C)"
+msgstr "Temperatuur (°C)"
 
-#: templates/plunge_tracker/plunge_list.html:81
-msgid "Lng"
-msgstr ""
+#: templates/plunge_tracker/plunge_list.html:82
+msgid "Water"
+msgstr "Vesi"
+
+#: templates/plunge_tracker/plunge_list.html:83
+msgid "Air"
+msgstr "Õhk"
 
 #: templates/plunge_tracker/plunge_list.html:88
-#, fuzzy
+msgid "Wind (m/s & Dir)"
+msgstr "Tuul (m/s & suund)"
+
+#: templates/plunge_tracker/plunge_list.html:96
+#| msgid "Geographic coordinates"
+msgid "Coordinates"
+msgstr "Koordinaadid"
+
+#: templates/plunge_tracker/plunge_list.html:98
+#| msgid "Last"
+msgid "Lat"
+msgstr "Laiuskraad"
+
+#: templates/plunge_tracker/plunge_list.html:99
+msgid "Lng"
+msgstr "Pikkuskraad"
+
+#: templates/plunge_tracker/plunge_list.html:106
 #| msgid "Suggest a Location"
 msgid "Get Current Location"
 msgstr "Soovita asukohta"
 
-#: templates/plunge_tracker/plunge_list.html:90
+#: templates/plunge_tracker/plunge_list.html:108
 msgid "Save Plunge"
-msgstr ""
+msgstr "Salvesta"
 
-#: templates/plunge_tracker/plunge_list.html:97
-#, fuzzy
+#: templates/plunge_tracker/plunge_list.html:115
 #| msgid "All Locations"
 msgid "Total Sessions"
 msgstr "Asukohti kokku"
 
-#: templates/plunge_tracker/plunge_list.html:101
+#: templates/plunge_tracker/plunge_list.html:119
 msgid "Total Time"
-msgstr ""
+msgstr "Aeg Kokku"
 
-#: templates/plunge_tracker/plunge_list.html:107
+#: templates/plunge_tracker/plunge_list.html:129
 msgid "Recent Plunges"
-msgstr ""
+msgstr "Viimased ujumised"
 
 #, fuzzy
 #~| msgid "Moderation notes"
