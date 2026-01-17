@@ -1867,9 +1867,13 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
 
 /* Tracker Specific Styles */
 .tracker-container {
-    max-width: 900px;
+    max-width: 850px;
     margin: 0 auto;
     width: 100%;
+    /* This creates the 'gutter' on the sides so nothing touches the edge */
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
 }
 
 /* Header & Stats */
@@ -1915,9 +1919,12 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
 .plunge-form-card {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 24px 20px;
-    margin-bottom: 24px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    /* Matches the subtle shadow from the 'Browse by Country' page */
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
 .plunge-form-card h2 {
@@ -1926,8 +1933,9 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
     text-transform: capitalize;
 }
 
-.form-group {
-    margin-bottom: 20px; /* Crucial for mobile density */
+/* Increase internal padding for a professional feel */
+.plunge-form-card {
+    padding: 24px 20px;
 }
 
 .form-group label {
@@ -1953,6 +1961,11 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
     background-color: #fdfdfd;
     font-size: 1rem;
     box-sizing: border-box;
+}
+
+/* Ensure inputs and labels have vertical separation */
+.form-group {
+    margin-bottom: 24px; /* More space between rows */
 }
 
 .plunge-form-card input:focus {
@@ -1994,6 +2007,52 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
     border: 1px solid var(--primary-blue);
     font-size: 0.9rem;
     font-weight: 500;
+}
+
+/* Help Card Styling */
+.help-card {
+    background-color: #f1f5f9; /* Light blue-gray to distinguish from form */
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.help-card h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: var(--navy-dark);
+}
+
+.help-card code {
+    background: #e2e8f0;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+}
+
+/* Updated Button Styles */
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--navy-dark);
+    color: var(--navy-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.btn-outline:hover {
+    background: var(--navy-dark);
+    color: white;
 }
 
 .btn-primary {
@@ -2064,6 +2123,16 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
 }
 
 /* History Section */
+.history-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px 20px;
+    margin-bottom: 20px;
+    /* Matches the subtle shadow from the 'Browse by Country' page */
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
 .history-section h3 {
     font-size: 1.25rem;
     margin-bottom: 16px;
@@ -2125,8 +2194,8 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
         width: auto;
     }
 
-    .btn-secondary {
-        width: 100px;
+    .btn-outline {
+        width: auto;
     }
 
     .form-grid {
@@ -2151,14 +2220,6 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
 }
 
 /* List Styling */
-.history-section {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 24px 20px;
-    margin-bottom: 24px;
-}
-
 .history-section h3 {
     margin-top: 0;
     margin-bottom: 1.5rem;
@@ -2216,16 +2277,16 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
 
 /* Overriding some general styles for specific elements */
 .container {
-    max-width: none; /* Remove max-width from general container for tracker-container to take over */
-    padding: 0; /* Remove padding from general container */
+    max-width: none;
+    padding: 0;
 }
 
 body {
-    padding: 0; /* Remove body padding, tracker-container handles it */
+    padding: 0;
 }
 
 h1 {
-    font-size: 2.25rem; /* Adjust h1 size for tracker header */
+    font-size: 2.25rem;
     margin-bottom: 0;
 }
 
@@ -2245,6 +2306,10 @@ h1 {
     }
 
     .tracker-header .actions button {
+        flex: 1;
+    }
+
+    .tracker-header .actions .btn-outline {
         flex: 1;
     }
 
@@ -2276,6 +2341,10 @@ h1 {
     }
 
     .form-footer button {
+        width: 100%;
+    }
+
+    .form-footer .btn-outline {
         width: 100%;
     }
 }
