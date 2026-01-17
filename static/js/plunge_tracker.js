@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const getLocationBtn = document.getElementById('get-location-btn');
     const totalSessions = document.getElementById('total-sessions');
     const totalTime = document.getElementById('total-time');
+    const avgDuration = document.getElementById('avg-duration');
     const plungeList = document.getElementById('plunge-list');
     const exportBtn = document.getElementById('export-plunges-btn');
     const importBtn = document.getElementById('import-plunges-btn');
@@ -85,8 +86,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalMinutes = Math.floor(totalTimeInSeconds / 60);
         const remainingSeconds = totalTimeInSeconds % 60;
 
+        // Calculate average duration
+        let avgDurationText = '0m 0s';
+        if (totalSessions > 0) {
+            const avgTimeInSeconds = totalTimeInSeconds / totalSessions;
+            const avgMinutes = Math.floor(avgTimeInSeconds / 60);
+            const avgSeconds = Math.round(avgTimeInSeconds % 60);
+            avgDurationText = `${avgMinutes}m ${avgSeconds}s`;
+        }
+
         totalSessions.textContent = totalSessions;
         totalTime.textContent = `${totalMinutes}m ${remainingSeconds}s`;
+        avgDuration.textContent = avgDurationText;
     }
 
     function render() {

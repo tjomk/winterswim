@@ -29,6 +29,7 @@
          data-unable-to-fetch-weather="{% trans "Unable to fetch weather data." %}"
          data-not-available="{% trans "N/A" %}"
          data-no-plunges-recorded="{% trans "No plunges recorded yet." %}"
+         data-avg-duration="{% trans "Avg Duration" %}"
     ></div>
 
 <div class="tracker-container">
@@ -41,15 +42,21 @@
         </div>
     </header>
 
-    <section class="help-card">
-        <h3><i data-lucide="info"></i> {% trans "Privacy & Data" %}</h3>
-        <p>
-            {% trans "This tracker is" %} <strong>{% trans "privacy-first" %}</strong>. {% trans "All your swim data is stored locally in your browser" %} (<code>LocalStorage</code>). {% trans "It never leaves your device." %}
-        </p>
-        <p style="margin-top: 8px;">
-            {% trans "Use" %} <strong>{% trans "Export" %}</strong> {% trans "to save a backup file of your logs. Use" %} <strong>{% trans "Import" %}</strong>
-            {% trans "if you switch browsers or want to restore your data from a backup." %}
-        </p>
+    <section class="help-section">
+        <div class="help-card">
+            <h3><i data-lucide="shield-check"></i> {% trans "Privacy & Data Guide" %}</h3>
+            <p>{% trans "This tracker uses your" %} <strong>{% trans "browser's local storage" %}</strong>. {% trans "Your data is private and never leaves this device." %}</p>
+            <div class="help-grid">
+                <div class="help-item">
+                    <strong><i data-lucide="download"></i> {% trans "Export" %}:</strong>
+                    {% trans "Download a" %} <code>.json</code> {% trans "file to backup your swim history." %}
+                </div>
+                <div class="help-item">
+                    <strong><i data-lucide="upload"></i> {% trans "Import" %}:</strong>
+                    {% trans "Upload your saved backup file if you use a new browser or device." %}
+                </div>
+            </div>
+        </div>
     </section>
 
     <section class="plunge-form-card">
@@ -111,6 +118,10 @@
         <div class="stat-item">
             <span class="label">{% trans "Total Time" %}</span>
             <span class="value" id="total-time">0m 0s</span>
+        </div>
+        <div class="stat-item">
+            <span class="label">{% trans "Avg Duration" %}</span>
+            <span class="value" id="avg-duration">0m 0s</span>
         </div>
     </div>
 
