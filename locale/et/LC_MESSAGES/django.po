@@ -1278,7 +1278,7 @@ msgid "Wind"
 msgstr ""
 
 msgid "N/A"
-msgstr ""
+msgstr "Puudub"
 
 #, fuzzy
 #| msgid "Winter Swim"

@@ -67,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div>${plunge.durationMinutes || 0}m ${plunge.durationSeconds || 0}s</div>
                     <div>${plunge.waterTemp !== '' ? plunge.waterTemp + '°C' : notAvailable} / ${plunge.airTemp !== '' ? plunge.airTemp + '°C' : notAvailable}</div>
                     <div>${plunge.windSpeed ? plunge.windSpeed + ' m/s' : notAvailable} ${plunge.windDirection || ''}</div>
-                    <div>${notAvailable}</div>
                 </div>
                 <button class="delete-btn" aria-label="Delete plunge">&times;</button>
             `;
@@ -122,13 +121,18 @@ document.addEventListener('DOMContentLoaded', () => {
         render();
         swimForm.reset();
 
-        // Reset date to now in YYYY-MM-DDThh:mm format for datetime-local
+        // Reset date to now - datetime-local format is always YYYY-MM-DDThh:mm
         const now = new Date();
-        const year = now.getFullYear();
-        const month = (now.getMonth() + 1).toString().padStart(2, '0');
-        const day = now.getDate().toString().padStart(2, '0');
-        const hours = now.getHours().toString().padStart(2, '0');
-        const minutes = now.getMinutes().toString().padStart(2, '0');
+        // Adjust for timezone to get correct local time
+        const timeZoneOffset = now.getTimezoneOffset() * 60000; // offset in milliseconds
+        const localTime = new Date(now - timeZoneOffset);
+        
+        const year = localTime.getUTCFullYear();
+        const month = (localTime.getUTCMonth() + 1).toString().padStart(2, '0');
+        const day = localTime.getUTCDate().toString().padStart(2, '0');
+        const hours = localTime.getUTCHours().toString().padStart(2, '0');
+        const minutes = localTime.getUTCMinutes().toString().padStart(2, '0');
+        
         dateTimeInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
     }
 
@@ -278,13 +282,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Initialisation ---
 
-    // Set default date to now in YYYY-MM-DDThh:mm format for datetime-local
+    // Set default date to now - datetime-local format is always YYYY-MM-DDThh:mm
     const now = new Date();
-    const year = now.getFullYear();
-    const month = (now.getMonth() + 1).toString().padStart(2, '0');
-    const day = now.getDate().toString().padStart(2, '0');
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
+    // Adjust for timezone to get correct local time
+    const timeZoneOffset = now.getTimezoneOffset() * 60000; // offset in milliseconds
+    const localTime = new Date(now - timeZoneOffset);
+    
+    const year = localTime.getUTCFullYear();
+    const month = (localTime.getUTCMonth() + 1).toString().padStart(2, '0');
+    const day = localTime.getUTCDate().toString().padStart(2, '0');
+    const hours = localTime.getUTCHours().toString().padStart(2, '0');
+    const minutes = localTime.getUTCMinutes().toString().padStart(2, '0');
+    
     dateTimeInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
     render();
 });
