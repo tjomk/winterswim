@@ -2065,6 +2065,11 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
 
 /* Medium screens (≥ 768px to < 992px) - Tablet adjustments */
 @media (min-width: 768px) and (max-width: 991px) {
+    /* Hide logo text on medium screens */
+    .site-logo-text {
+        display: none;
+    }
+
     .location-filters {
         gap: var(--spacing-sm);
     }

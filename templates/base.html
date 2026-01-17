@@ -79,7 +79,8 @@
     <header class="site-header">
         <div class="container">
             <a href="{% url 'locations:map' %}" class="site-logo">
-                ❄️ {% trans 'Winter Swim' %}
+                <span class="site-logo-icon">❄️</span>
+                <span class="site-logo-text">{% trans 'Winter Swim' %}</span>
             </a>
 
             <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="{% trans 'Toggle menu' %}">
