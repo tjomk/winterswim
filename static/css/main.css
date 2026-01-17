@@ -133,10 +133,11 @@
     --footer-height: 200px;
 
     /* Breakpoints (for JavaScript) */
-    --breakpoint-sm: 640px;
-    --breakpoint-md: 768px;
-    --breakpoint-lg: 1024px;
-    --breakpoint-xl: 1280px;
+    --breakpoint-xs: 576px;
+    --breakpoint-sm: 768px;
+    --breakpoint-md: 992px;
+    --breakpoint-lg: 1200px;
+    --breakpoint-xl: 1400px;
 }
 
 /* Dark mode variables */
@@ -1773,8 +1774,8 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
  * ============================================
  */
 
-/* Mobile responsiveness */
-@media (max-width: 768px) {
+/* X-Small screens (< 576px) - Smallest screens with hamburger menu only */
+@media (max-width: 575px) {
     html {
         font-size: 14px;
     }
@@ -1789,8 +1790,19 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
     }
 
     /* Header */
+    .site-header .container {
+        justify-content: space-between;
+    }
+
     .mobile-menu-toggle {
         display: block;
+        position: relative;
+        z-index: var(--z-sticky);
+    }
+
+    /* Ensure logo stays on the left on x-small screens */
+    .site-logo {
+        margin-right: auto;
     }
 
     .site-nav {
@@ -1960,8 +1972,99 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
     }
 }
 
-/* Tablet adjustments */
-@media (min-width: 769px) and (max-width: 1024px) {
+/* Small screens (≥ 576px to < 768px) - Show Tracker link, keep rest in hamburger */
+@media (min-width: 576px) and (max-width: 767px) {
+    .mobile-menu-toggle {
+        display: block;
+    }
+
+    /* Header layout adjustments */
+    .site-header .container {
+        justify-content: space-between;
+    }
+
+    /* Main navigation container - visible for tracker link */
+    .site-nav {
+        position: static;
+        transform: none;
+        opacity: 1;
+        visibility: visible;
+        box-shadow: none;
+        padding: 0;
+        background-color: transparent;
+        border-bottom: none;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-lg);
+    }
+
+    /* Mobile menu dropdown (when opened) */
+    .site-nav.mobile-menu-open {
+        position: fixed;
+        top: var(--header-height);
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        background-color: var(--color-bg-primary);
+        border-bottom: 1px solid var(--color-border);
+        box-shadow: var(--shadow-lg);
+        padding: var(--spacing-md);
+        z-index: var(--z-modal);
+    }
+
+    /* Tracker link - always visible */
+    .nav-link-tracker {
+        display: inline-block !important;
+        padding: var(--spacing-sm) var(--spacing-md);
+        border-bottom: none;
+    }
+
+    /* Other navigation links - hidden by default */
+    .nav-link:not(.nav-link-tracker) {
+        display: none;
+    }
+
+    /* Show all links when mobile menu is open */
+    .site-nav.mobile-menu-open .nav-link {
+        display: block;
+        padding: var(--spacing-md);
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .language-switcher {
+        display: none;
+    }
+
+    /* Position hamburger menu on the right */
+    .mobile-menu-toggle {
+        margin-left: var(--spacing-sm);
+        position: relative;
+        z-index: var(--z-sticky);
+        order: 3; /* Hamburger comes after nav */
+    }
+
+    /* Ensure logo stays on the left */
+    .site-logo {
+        order: 1; /* Logo comes first */
+        margin-right: auto; /* Push logo to the left */
+    }
+
+    /* Navigation comes between logo and hamburger */
+    .site-nav {
+        order: 2; /* Nav comes after logo, before hamburger */
+    }
+
+    /* Mobile menu open state */
+    .site-nav.mobile-menu-open.is-open {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+/* Medium screens (≥ 768px to < 992px) - Tablet adjustments */
+@media (min-width: 768px) and (max-width: 991px) {
     .location-filters {
         gap: var(--spacing-sm);
     }
@@ -1972,7 +2075,7 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
 }
 
 /* Responsive map height */
-@media (max-width: 480px) {
+@media (max-width: 575px) {
     .map-container {
         height: 40vh;
         min-height: 300px;
@@ -2149,7 +2252,7 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
     margin-top: 10px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 575px) {
     .help-grid {
         grid-template-columns: 1fr; /* Stack on mobile */
     }
@@ -2271,7 +2374,7 @@ h1 {
 }
 
 /* Mobile responsiveness for tracker */
-@media (max-width: 768px) {
+@media (max-width: 575px) {
     .site-header .container {
         padding-left: var(--spacing-md);
         padding-right: var(--spacing-md);
@@ -2313,4 +2416,28 @@ h1 {
     }
 
 
+}
+
+/* Small screens (576px to 767px) - Tracker adjustments */
+@media (min-width: 576px) and (max-width: 767px) {
+    .tracker-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .stats-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr; /* Stack form inputs vertically */
+    }
+
+    .form-footer {
+        flex-direction: column;
+        gap: 10px;
+    }
 }

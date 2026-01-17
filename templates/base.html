@@ -96,6 +96,9 @@
                 <a href="{% url 'blog:list' %}" class="nav-link {% if request.resolver_match.app_name == 'blog' %}nav-link-active{% endif %}">
                     {% trans 'Blog' %}
                 </a>
+                <a href="{% url 'plunge_tracker:plunge_list' %}" class="nav-link nav-link-tracker {% if request.resolver_match.app_name == 'plunge_tracker' %}nav-link-active{% endif %}">
+                    Tracker
+                </a>
                 <a href="{% url 'locations:submit' %}" class="nav-link {% if request.resolver_match.url_name == 'submit' %}nav-link-active{% endif %}">
                     {% trans 'Add Location' %}
                 </a>
@@ -141,6 +144,7 @@
                 <a href="{% url 'locations:country_list' %}" {% if request.resolver_match.url_name == 'country_list' or request.resolver_match.url_name == 'country_detail' or request.resolver_match.url_name == 'city_detail' %}nav-link-active{% endif %}">
                     {% trans 'Countries' %}
                 </a> |
+                <a href="{% url 'plunge_tracker:plunge_list' %}">Tracker</a> |
                 <a href="{% url 'locations:submit' %}">{% trans 'Add Location' %}</a> |
                 <a href="https://www.reddit.com/r/winterwimming" target="_blank" rel="noopener noreferrer">Reddit</a> |
                 <a href="{% url 'locations:sitemap_page' %}">{% trans 'Site Map' %}</a>
