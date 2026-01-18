@@ -147,6 +147,11 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             plungeList.appendChild(plungeItem);
         });
+        
+        // Re-initialize Lucide icons after rendering plunges
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
     }
 
     function renderStatistics() {

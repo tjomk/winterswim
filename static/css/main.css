@@ -1042,6 +1042,16 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
     color: white !important;
 }
 
+/* Fix for mobile horizontal scrolling issue */
+html {
+    overflow-x: hidden;
+}
+
+body {
+    overflow-x: hidden;
+    min-width: 100%;
+}
+
 /* Page headers */
 .page-header {
     padding: var(--spacing-xl) 0;
@@ -2195,6 +2205,12 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
 .inline-group {
     display: flex;
     gap: 12px;
+    flex-wrap: wrap;
+}
+
+.inline-group input {
+    flex: 1;
+    min-width: 80px;
 }
 
 /* Form Grid - Mobile first */
@@ -2387,7 +2403,11 @@ h1 {
         gap: 1rem;
     }
 
-
+    .tracker-container {
+        padding-left: 0;
+        padding-right: 0;
+        overflow-x: hidden;
+    }
 
     .stats-bar {
         flex-direction: column;
@@ -2416,7 +2436,34 @@ h1 {
         gap: 10px;
     }
 
+    /* Fix inline inputs on mobile */
+    .inline-group {
+        flex-direction: column;
+        gap: 8px;
+    }
 
+    .inline-group input {
+        width: 100% !important;
+        flex: none;
+    }
+
+    /* Ensure form inputs don't cause horizontal overflow */
+    .plunge-form-card input[type="number"],
+    .plunge-form-card input[type="text"],
+    .plunge-form-card input[type="datetime-local"] {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Fix button layout on mobile */
+    .actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .actions button {
+        width: 100%;
+    }
 }
 
 /* Small screens (576px to 767px) - Tracker adjustments */
