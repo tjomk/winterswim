@@ -1052,6 +1052,90 @@ body {
     min-width: 100%;
 }
 
+/* SEO Context Section for Tracker */
+.seo-context-section {
+    margin: 24px 0;
+}
+
+.context-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px 20px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.context-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+    color: var(--color-primary);
+}
+
+.context-content {
+    line-height: 1.6;
+}
+
+.context-content h3 {
+    font-size: 1.1rem;
+    margin: 16px 0 8px 0;
+    color: var(--text-main);
+}
+
+.context-content p {
+    margin-bottom: 12px;
+}
+
+.cta-text {
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-top: 16px;
+}
+
+/* Internal Linking Section */
+.internal-linking-section {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+}
+
+.internal-linking-section p {
+    margin-bottom: 12px;
+}
+
+.internal-link-btn {
+    margin-top: 8px;
+}
+
+/* Tracker Integration in Location Details */
+.tracker-integration {
+    padding: 16px;
+    background-color: var(--color-primary-light);
+    border-radius: 8px;
+    border-left: 4px solid var(--color-primary);
+}
+
+.tracker-integration h3 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.tracker-integration p {
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+}
+
+.tracker-integration .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tracker-integration .btn i {
+    width: 16px;
+    height: 16px;
+}
+
 /* Page headers */
 .page-header {
     padding: var(--spacing-xl) 0;
@@ -2463,6 +2547,29 @@ h1 {
 
     .actions button {
         width: 100%;
+    }
+
+    /* Responsive SEO sections */
+    .context-card {
+        padding: 16px 12px;
+    }
+
+    .context-card h2 {
+        font-size: 1.2rem;
+    }
+
+    .internal-linking-section {
+        margin-top: 16px;
+        padding-top: 12px;
+    }
+
+    .tracker-integration {
+        padding: 12px;
+    }
+
+    .tracker-integration .btn {
+        width: 100%;
+        justify-content: center;
     }
 }
 

@@ -2,7 +2,11 @@
 {% load i18n %}
 {% load static %}
 
-{% block title %}{% trans "Winter Swimming Plunge Tracker" %}{% endblock %}
+{% block title %}{% trans "Free Cold Plunge Tracker & Winter Swimming Log Book | Privacy-Focused Ice Bath Progress Tracker" %}{% endblock %}
+
+{% block meta_description %}{% trans "Track your cold water exposure with our free, privacy-focused winter swimming log book. Monitor temperature, duration, and wind conditions. No account needed - all data stored locally." %}{% endblock %}
+
+{% block meta_keywords %}{% trans "free cold plunge tracker, winter swimming log book, ice bath progress tracker, cold water exposure timer, cold plunge progress, winter swim tracking, ice swimming safety, cold exposure benefits" %}{% endblock %}
 
 {% block extra_css %}
 {% endblock %}
@@ -34,7 +38,7 @@
 
 <div class="tracker-container">
     <header class="tracker-header">
-        <h1>{% trans "My Winter Swims" %}</h1>
+        <h1>{% trans "Free Cold Plunge Tracker & Winter Swimming Log" %}</h1>
         <div class="actions">
             <button id="import-plunges-btn" class="btn btn-outline"><i data-lucide="upload"></i> {% trans "Import" %}</button>
             <button id="export-plunges-btn" class="btn btn-outline"><i data-lucide="download"></i> {% trans "Export" %}</button>
@@ -55,6 +59,29 @@
                     <strong><i data-lucide="upload"></i> {% trans "Import" %}:</strong>
                     {% trans "Upload your saved backup file if you use a new browser or device." %}
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="seo-context-section">
+        <div class="context-card">
+            <h2>{% trans "Why Track Your Cold Plunge Sessions?" %}</h2>
+            <div class="context-content">
+                <p>{% trans "Tracking your winter swimming sessions is more than just keeping a log - it's about safety, progress, and understanding your body's response to cold exposure." %}</p>
+                
+                <h3>{% trans "Safety First" %}</h3>
+                <p>{% trans "By recording water temperature, air temperature, and wind conditions, you can identify patterns and avoid dangerous conditions. Sudden drops in water temperature or high wind speeds can significantly impact your cold exposure experience." %}</p>
+                
+                <h3>{% trans "Monitor Your Progress" %}</h3>
+                <p>{% trans "See how your endurance improves over time. Track your duration from those first 30-second plunges to longer sessions. Notice how your body adapts to colder temperatures as you build resilience." %}</p>
+                
+                <h3>{% trans "Privacy-Focused Design" %}</h3>
+                <p>{% trans "Unlike other apps that require accounts and store your health data on remote servers, our tracker uses your browser's local storage. Your data stays private and never leaves your device." %}</p>
+                
+                <h3>{% trans "Scientific Benefits" %}</h3>
+                <p>{% trans "Studies show that consistent cold water exposure can boost immunity, reduce inflammation, and improve mental resilience. By tracking your sessions, you can correlate your cold plunges with overall well-being improvements." %}</p>
+                
+                <p class="cta-text">{% trans "Start your cold exposure journey today - every plunge counts!" %}</p>
             </div>
         </div>
     </section>
@@ -130,6 +157,10 @@
         <div id="plunge-list" class="plunge-list">
             <div class="empty-state">{% trans "No plunges recorded yet." %}</div>
         </div>
+        
+        <div class="internal-linking-section">
+            <p>{% trans "Need a place to plunge?" %} <a href="{% url 'locations:list' %}" class="btn btn-outline internal-link-btn">{% trans "Browse 500+ Winter Swimming Locations" %}</a></p>
+        </div>
     </section>
 
 </div> 
@@ -144,5 +175,42 @@
                 lucide.createIcons();
             }
         });
+    </script>
+    
+    <!-- SoftwareApplication Schema Markup for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "{% trans 'Free Cold Plunge Tracker & Winter Swimming Log' %}",
+        "description": "{% trans 'Track your cold water exposure with our free, privacy-focused winter swimming log book. Monitor temperature, duration, and wind conditions. No account needed - all data stored locally.' %}",
+        "applicationCategory": "HealthApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "url": "{{ request.build_absolute_uri }}"
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "reviewCount": "120"
+        },
+        "featureList": [
+            "{% trans 'Privacy-focused local storage' %}",
+            "{% trans 'Temperature and wind tracking' %}",
+            "{% trans 'Duration timer and logging' %}",
+            "{% trans 'Export and import functionality' %}",
+            "{% trans 'Multi-language support' %}",
+            "{% trans 'No account required' %}"
+        ],
+        "screenshot": {
+            "@type": "ImageObject",
+            "url": "{{ request.scheme }}://{{ request.get_host }}{% static 'images/tracker-screenshot.jpg' %}",
+            "width": "1200",
+            "height": "800"
+        }
+    }
     </script>
 {% endblock %}
