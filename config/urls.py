@@ -53,7 +53,7 @@ urlpatterns += i18n_patterns(
     path('blog/', include('apps.blog.urls')),
 
     # Plunge Tracker app
-    path('plunge-tracker/', include('apps.plunge_tracker.urls')),
+    path('tracker/', include('apps.plunge_tracker.urls')),
 
     # Locations app (main site)
     path('', include('apps.locations.urls')),
