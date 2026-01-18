@@ -12,20 +12,97 @@
 {% block body_class %}map-page{% endblock %}
 
 {% block extra_css %}
-<!-- Leaflet CSS (self-hosted) -->
-<link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}">
-<!-- Leaflet MarkerCluster CSS -->
-<link rel="stylesheet" href="{% static 'vendor/leaflet/MarkerCluster.css' %}">
-<link rel="stylesheet" href="{% static 'vendor/leaflet/MarkerCluster.Default.css' %}">
+<!-- Leaflet CSS (self-hosted) - loaded asynchronously -->
+<link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{% static 'vendor/leaflet/MarkerCluster.css' %}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{% static 'vendor/leaflet/MarkerCluster.Default.css' %}" media="print" onload="this.media='all'">
+<style>
+    /* Critical CSS for map placeholder */
+    .map-container {
+        position: relative;
+        min-height: 500px;
+    }
+    .map-placeholder {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        transition: opacity 0.3s ease;
+    }
+    .map-placeholder.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+    .map-placeholder-content {
+        text-align: center;
+        padding: 20px;
+        max-width: 300px;
+    }
+    .map-placeholder-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+        color: #0066cc;
+        animation: pulse 2s infinite;
+    }
+    .map-placeholder-text {
+        font-size: 18px;
+        margin-bottom: 8px;
+        color: #333;
+    }
+    .map-placeholder-subtext {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 24px;
+    }
+    .map-loading-bar {
+        width: 200px;
+        height: 4px;
+        background-color: #e0e0e0;
+        border-radius: 2px;
+        overflow: hidden;
+    }
+    .map-loading-progress {
+        height: 100%;
+        background-color: #0066cc;
+        width: 0%;
+        transition: width 0.3s ease;
+    }
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+</style>
 {% endblock %}
 
 {% block extra_head %}
-<!-- Leaflet Gesture Handling Script -->
-<script src="{% static 'js/leaflet-gesture-handling.js' %}"></script>
+<!-- Preload critical resources -->
+<link rel="preload" href="{% static 'vendor/leaflet/leaflet.js' %}" as="script">
+<link rel="preload" href="{% static 'vendor/leaflet/leaflet.markercluster.js' %}" as="script">
+<link rel="preload" href="{% static 'js/map.js' %}" as="script">
 {% endblock %}
 
 {% block content %}
 <div class="map-container">
+    <!-- Map Placeholder - shown while map is loading -->
+    <div id="map-placeholder" class="map-placeholder">
+        <div class="map-placeholder-content">
+            <div class="map-placeholder-icon">🗺️</div>
+            <div class="map-placeholder-text">{% trans "Loading Map" %}</div>
+            <div class="map-placeholder-subtext">{% trans "Discover winter swimming locations worldwide" %}</div>
+            <div class="map-loading-bar">
+                <div id="map-loading-progress" class="map-loading-progress"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Actual Map Container - will be initialized when visible -->
     <div id="map"></div>
 </div>
 {% endblock %}
@@ -61,11 +138,135 @@
     };
 </script>
 
-<!-- Leaflet JavaScript (self-hosted) -->
-<script src="{% static 'vendor/leaflet/leaflet.js' %}"></script>
-<!-- Leaflet MarkerCluster JavaScript -->
-<script src="{% static 'vendor/leaflet/leaflet.markercluster.js' %}"></script>
+<!-- Lazy Load Map Script -->
+<script>
+// Lazy load the map when it comes into viewport
+function lazyLoadMap() {
+    const mapContainer = document.getElementById('map');
+    const placeholder = document.getElementById('map-placeholder');
+    const progressBar = document.getElementById('map-loading-progress');
+    
+    if (!mapContainer || !placeholder) return;
+    
+    // Check if element is in viewport
+    function isInViewport(element) {
+        const rect = element.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+    
+    // Load map when visible or after a short delay
+    function tryLoadMap() {
+        if (isInViewport(mapContainer) || window.innerWidth > 768) {
+            loadMapResources();
+        } else {
+            // Try again after scroll or resize
+            window.addEventListener('scroll', tryLoadMap, { passive: true });
+            window.addEventListener('resize', tryLoadMap, { passive: true });
+        }
+    }
+    
+    function loadMapResources() {
+        // Remove event listeners
+        window.removeEventListener('scroll', tryLoadMap);
+        window.removeEventListener('resize', tryLoadMap);
+        
+        // Update loading progress
+        progressBar.style.width = '10%';
+        
+        // Load Leaflet CSS (if not already loaded)
+        const leafletCSS = document.createElement('link');
+        leafletCSS.rel = 'stylesheet';
+        leafletCSS.href = '{% static "vendor/leaflet/leaflet.css" %}';
+        document.head.appendChild(leafletCSS);
+        
+        // Load MarkerCluster CSS
+        const markerClusterCSS = document.createElement('link');
+        markerClusterCSS.rel = 'stylesheet';
+        markerClusterCSS.href = '{% static "vendor/leaflet/MarkerCluster.css" %}';
+        document.head.appendChild(markerClusterCSS);
+        
+        const markerClusterDefaultCSS = document.createElement('link');
+        markerClusterDefaultCSS.rel = 'stylesheet';
+        markerClusterDefaultCSS.href = '{% static "vendor/leaflet/MarkerCluster.Default.css" %}';
+        document.head.appendChild(markerClusterDefaultCSS);
+        
+        progressBar.style.width = '20%';
+        
+        // Load Gesture Handling JS first
+        const gestureJS = document.createElement('script');
+        gestureJS.src = '{% static "js/leaflet-gesture-handling.js" %}';
+        gestureJS.onload = function() {
+            progressBar.style.width = '30%';
+            loadLeafletJS();
+        };
+        gestureJS.onerror = function() {
+            console.error('Failed to load gesture handling JS');
+            loadLeafletJS(); // Continue without gesture handling
+        };
+        document.body.appendChild(gestureJS);
+    }
+    
+    function loadLeafletJS() {
+        // Load Leaflet JS
+        const leafletJS = document.createElement('script');
+        leafletJS.src = '{% static "vendor/leaflet/leaflet.js" %}';
+        leafletJS.onload = function() {
+            progressBar.style.width = '50%';
+            loadMarkerCluster();
+        };
+        leafletJS.onerror = function() {
+            console.error('Failed to load Leaflet JS');
+        };
+        document.body.appendChild(leafletJS);
+    }
+    
+    function loadMarkerCluster() {
+        // Load MarkerCluster JS
+        const markerClusterJS = document.createElement('script');
+        markerClusterJS.src = '{% static "vendor/leaflet/leaflet.markercluster.js" %}';
+        markerClusterJS.onload = function() {
+            progressBar.style.width = '80%';
+            loadMapScript();
+        };
+        markerClusterJS.onerror = function() {
+            console.error('Failed to load MarkerCluster JS');
+            loadMapScript(); // Continue without marker clustering
+        };
+        document.body.appendChild(markerClusterJS);
+    }
+    
+    function loadMapScript() {
+        // Load main map script
+        const mapScript = document.createElement('script');
+        mapScript.src = '{% static "js/map.js" %}';
+        mapScript.onload = function() {
+            progressBar.style.width = '100%';
+            
+            // Fade out placeholder
+            setTimeout(function() {
+                placeholder.classList.add('hidden');
+                // Remove placeholder after transition
+                setTimeout(function() {
+                    placeholder.style.display = 'none';
+                }, 300);
+            }, 500);
+        };
+        mapScript.onerror = function() {
+            console.error('Failed to load map script');
+        };
+        document.body.appendChild(mapScript);
+    }
+    
+    // Start loading process
+    tryLoadMap();
+}
 
-<!-- Map initialization script -->
-<script src="{% static 'js/map.js' %}"></script>
+// Initialize lazy loading when DOM is ready
+document.addEventListener('DOMContentLoaded', lazyLoadMap);
+</script>
 {% endblock %}

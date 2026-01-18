@@ -11,6 +11,13 @@
 (function() {
     'use strict';
 
+    // Check if map element exists and is visible
+    const mapElement = document.getElementById('map');
+    if (!mapElement || mapElement.style.display === 'none') {
+        console.log('Map element not ready, skipping initialization');
+        return;
+    }
+
     // Get initial locations data from template
     const initialLocationsData = window.INITIAL_LOCATIONS_DATA || null;
     const translations = window.MAP_TRANSLATIONS || {};

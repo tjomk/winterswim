@@ -938,12 +938,14 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
     padding: 0 !important;
     display: flex;
     flex-direction: column;
+    min-height: 500px; /* Ensure container has height even when map not loaded */
 }
 
 #map {
     width: 100%;
     flex: 1;
     touch-action: pan-y;
+    min-height: 500px; /* Ensure map has minimum height */
 }
 
 /* Gesture Handling Styles */
@@ -2174,6 +2176,10 @@ body {
     
     #map {
         min-height: 300px;
+    }
+    
+    .map-placeholder {
+        min-height: 40vh;
     }
 }
 
