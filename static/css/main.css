@@ -570,6 +570,12 @@ img {
     border-color: #334155;
 }
 
+/* Ensure anchor tags with button classes don't get default anchor hover styles */
+a.btn-primary:hover {
+    text-decoration: none;
+    color: white;
+}
+
 .btn-secondary {
     background: transparent;
     color: var(--primary-blue);
@@ -579,6 +585,11 @@ img {
 
 .btn-secondary:hover:not(:disabled) {
     background: rgba(30, 41, 59, 0.05);
+}
+
+/* Ensure anchor tags with secondary button classes don't get default anchor hover styles */
+a.btn-secondary:hover {
+    text-decoration: none;
 }
 
 .btn-outline {
@@ -593,6 +604,11 @@ img {
     color: var(--accent-blue);
 }
 
+/* Ensure anchor tags with outline button classes don't get default anchor hover styles */
+a.btn-outline:hover {
+    text-decoration: none;
+}
+
 .btn-success {
     color: white;
     background-color: var(--color-success);
@@ -605,6 +621,13 @@ img {
     border-color: var(--color-error);
 }
 
+/* Ensure anchor tags with success/danger button classes don't get default anchor hover styles */
+a.btn-success:hover,
+a.btn-danger:hover {
+    text-decoration: none;
+    color: white;
+}
+
 .btn-location {
     background: #f1f5f9;
     border-color: var(--border-color);
@@ -613,6 +636,11 @@ img {
 
 .btn-location:hover:not(:disabled) {
     background: #e2e8f0;
+}
+
+/* Ensure anchor tags with location button classes don't get default anchor hover styles */
+a.btn-location:hover {
+    text-decoration: none;
 }
 
 .btn-location i {
