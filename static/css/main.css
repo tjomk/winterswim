@@ -210,6 +210,8 @@ html {
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Fix for mobile horizontal scrolling issue */
+    overflow-x: hidden;
 }
 
 body {
@@ -221,6 +223,8 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
+    min-width: 100%;
 }
 
 main {
@@ -1070,16 +1074,6 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
     background-color: var(--color-primary-dark) !important;
     border-color: var(--color-primary-dark) !important;
     color: white !important;
-}
-
-/* Fix for mobile horizontal scrolling issue */
-html {
-    overflow-x: hidden;
-}
-
-body {
-    overflow-x: hidden;
-    min-width: 100%;
 }
 
 /* SEO Context Section for Tracker */
