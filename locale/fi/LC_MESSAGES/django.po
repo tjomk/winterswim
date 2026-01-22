@@ -1187,10 +1187,6 @@ msgstr ""
 msgid "Winter Swimming Location"
 msgstr "Talviuintipaikka"
 
-#: templates/locations/location_detail.html:80
-msgid "Back to list"
-msgstr "Takaisin listaan"
-
 #: templates/locations/location_detail.html:103
 msgid "Photo"
 msgstr "Kuva"

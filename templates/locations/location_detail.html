@@ -77,8 +77,6 @@
     {# Breadcrumb navigation #}
     {% include 'components/breadcrumbs.html' with breadcrumbs=breadcrumb_list %}
 
-    <a href="{% url 'locations:list' %}" class="btn btn-secondary mb-md">← {% trans "Back to list" %}</a>
-
     <h1>{{ location.name }}</h1>
 
     <p class="mb-md">
@@ -153,7 +151,7 @@
                     {% endif %}
                 </ul>
             {% endif %}
-            
+
             <!-- Tracker Integration -->
             <div class="tracker-integration mt-md">
                 <h3>{% trans "Swimming here today?" %}</h3>
