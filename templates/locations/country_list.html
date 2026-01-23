@@ -2,23 +2,16 @@
 {% load i18n %}
 
 {% block title %}{% trans 'Countries' %} - {% trans 'Winter Swimming Locations' %}{% endblock %}
-
 {% block meta_description %}{% trans 'Browse winter swimming locations by country. Find swimming spots, saunas, and facilities organized by location.' %}{% endblock %}
-
 {% block meta_keywords %}{% trans 'winter swimming countries, winter swimming by location, ice swimming destinations' %}{% endblock %}
-
 {% block content %}
-<div class="page-header">
-    <div class="container">
-        {# Breadcrumb navigation #}
+<div class="container" style="padding-bottom: 3rem;">
+    <div class="page-header">
         {% include 'components/breadcrumbs.html' with breadcrumbs=breadcrumb_list %}
-
         <h1>{% trans 'Browse by Country' %}</h1>
         <p>{% trans 'Explore winter swimming locations around the world' %}</p>
     </div>
-</div>
 
-<div class="container" style="padding-bottom: 3rem;">
     {% if countries %}
         <div class="countries-grid">
             {% for country_data in countries %}

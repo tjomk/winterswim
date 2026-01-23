@@ -4,7 +4,7 @@ Views for blog application.
 Implements blog listing, category filtering, and article detail views.
 """
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView
 from django.utils.translation import get_language, gettext as _
 from django.urls import reverse

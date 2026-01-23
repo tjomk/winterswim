@@ -8,11 +8,8 @@
 
 {% block meta_keywords %}{% trans "free cold plunge tracker, winter swimming log book, ice bath progress tracker, cold water exposure timer, cold plunge progress, winter swim tracking, ice swimming safety, cold exposure benefits" %}{% endblock %}
 
-{% block extra_css %}
-{% endblock %}
-
 {% block content %}
-<div class="container">
+<div class="container mt-xl">
     <div id="js-translations" style="display: none;"
 
          data-geolocation-not-supported="{% trans "Geolocation is not supported by your browser." %}"
@@ -35,6 +32,7 @@
          data-no-plunges-recorded="{% trans "No plunges recorded yet." %}"
          data-avg-duration="{% trans "Avg Duration" %}"
     ></div>
+    {% include 'components/breadcrumbs.html' with breadcrumbs=breadcrumb_list %}
 
 <div class="tracker-container">
     <header class="tracker-header">
@@ -68,19 +66,19 @@
             <h2>{% trans "Why Track Your Cold Plunge Sessions?" %}</h2>
             <div class="context-content">
                 <p>{% trans "Tracking your winter swimming sessions is more than just keeping a log - it's about safety, progress, and understanding your body's response to cold exposure." %}</p>
-                
+
                 <h3>{% trans "Safety First" %}</h3>
                 <p>{% trans "By recording water temperature, air temperature, and wind conditions, you can identify patterns and avoid dangerous conditions. Sudden drops in water temperature or high wind speeds can significantly impact your cold exposure experience." %}</p>
-                
+
                 <h3>{% trans "Monitor Your Progress" %}</h3>
                 <p>{% trans "See how your endurance improves over time. Track your duration from those first 30-second plunges to longer sessions. Notice how your body adapts to colder temperatures as you build resilience." %}</p>
-                
+
                 <h3>{% trans "Privacy-Focused Design" %}</h3>
                 <p>{% trans "Unlike other apps that require accounts and store your health data on remote servers, our tracker uses your browser's local storage. Your data stays private and never leaves your device." %}</p>
-                
+
                 <h3>{% trans "Scientific Benefits" %}</h3>
                 <p>{% trans "Studies show that consistent cold water exposure can boost immunity, reduce inflammation, and improve mental resilience. By tracking your sessions, you can correlate your cold plunges with overall well-being improvements." %}</p>
-                
+
                 <p class="cta-text">{% trans "Start your cold exposure journey today - every plunge counts!" %}</p>
             </div>
         </div>
@@ -157,13 +155,13 @@
         <div id="plunge-list" class="plunge-list">
             <div class="empty-state">{% trans "No plunges recorded yet." %}</div>
         </div>
-        
+
         <div class="internal-linking-section">
             <p>{% trans "Need a place to plunge?" %} <a href="{% url 'locations:list' %}" class="btn btn-outline internal-link-btn">{% trans "Browse 500+ Winter Swimming Locations" %}</a></p>
         </div>
     </section>
 
-</div> 
+</div>
 {% endblock %}
 
 {% block extra_js %}
@@ -176,7 +174,7 @@
             }
         });
     </script>
-    
+
     <!-- SoftwareApplication Schema Markup for SEO -->
     <script type="application/ld+json">
     {

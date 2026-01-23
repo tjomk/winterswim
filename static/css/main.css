@@ -406,8 +406,6 @@ img {
     align-items: center;
     justify-content: space-between;
     min-height: var(--header-height);
-    padding-left: var(--spacing-lg);
-    padding-right: var(--spacing-lg);
 }
 
 .site-logo {
@@ -941,6 +939,138 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
  * 6. PAGE-SPECIFIC STYLES
  * ============================================
  */
+
+/* Sitemap */
+.sitemap-section {
+    margin-bottom: var(--spacing-xl, 2rem);
+    padding-bottom: var(--spacing-xl, 2rem);
+    border-bottom: 1px solid var(--border-color, #e0e0e0);
+}
+
+.sitemap-section:last-child {
+    border-bottom: none;
+}
+
+.sitemap-section h2 {
+    color: var(--primary-color, #0066cc);
+    margin-bottom: var(--spacing-md, 1rem);
+    font-size: 1.5rem;
+}
+
+.sitemap-section h3 {
+    color: var(--text-primary, #333);
+    margin-top: var(--spacing-md, 1rem);
+    margin-bottom: var(--spacing-sm, 0.5rem);
+    font-size: 1.2rem;
+}
+
+.sitemap-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sitemap-list li {
+    padding: var(--spacing-sm, 0.5rem) 0;
+    border-bottom: 1px solid var(--border-light, #f0f0f0);
+}
+
+.sitemap-list li:last-child {
+    border-bottom: none;
+}
+
+.sitemap-list a {
+    color: var(--primary-color, #0066cc);
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.2s ease;
+}
+
+.sitemap-list a:hover {
+    color: var(--primary-color-dark, #004c99);
+    text-decoration: underline;
+}
+
+.sitemap-type-group {
+    margin-bottom: var(--spacing-lg, 1.5rem);
+}
+
+.sitemap-locations-list {
+    list-style: none;
+    padding-left: var(--spacing-md, 1rem);
+    margin: 0;
+    column-count: 1;
+}
+
+@media (min-width: 768px) {
+    .sitemap-locations-list {
+        column-count: 2;
+        column-gap: var(--spacing-lg, 1.5rem);
+    }
+}
+
+@media (min-width: 1200px) {
+    .sitemap-locations-list {
+        column-count: 3;
+    }
+}
+
+.sitemap-locations-list li {
+    padding: var(--spacing-xs, 0.25rem) 0;
+    break-inside: avoid;
+}
+
+.sitemap-locations-list a {
+    color: var(--text-primary, #333);
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.sitemap-locations-list a:hover {
+    color: var(--primary-color, #0066cc);
+    text-decoration: underline;
+}
+
+.sitemap-location-address {
+    color: var(--text-secondary, #666);
+    font-size: 0.9rem;
+}
+
+/* Statistics Section */
+.sitemap-stats {
+    background: var(--bg-light, #f8f9fa);
+    padding: var(--spacing-lg, 1.5rem);
+    border-radius: var(--radius-md, 8px);
+    border: none;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-md, 1rem);
+    margin-top: var(--spacing-md, 1rem);
+}
+
+.stat-card {
+    background: white;
+    padding: var(--spacing-md, 1rem);
+    border-radius: var(--radius-sm, 4px);
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary-color, #0066cc);
+    margin-bottom: var(--spacing-xs, 0.25rem);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary, #666);
+}
+
 
 /* Map Page */
 .map-page {
@@ -1502,21 +1632,6 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
 }
 
 /* Blog Styles */
-.blog-header {
-    text-align: center;
-    margin-bottom: 3rem;
-}
-
-.blog-header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-}
-
-.blog-header .lead {
-    font-size: 1.25rem;
-    color: var(--color-text-secondary);
-}
-
 .category-nav {
     display: flex;
     flex-wrap: wrap;
@@ -2750,7 +2865,6 @@ div.form-checkbox:not(#id_facilities) input[type="radio"] {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding: 0 4px;
     margin: 2rem 0;
 }
 

@@ -1,46 +1,57 @@
-from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic.base import TemplateView
+from django.utils.translation import gettext as _
+from django.urls import reverse
 from .services.weather_service import WeatherService
 import logging
 
 logger = logging.getLogger(__name__)
 
-def plunge_list(request):
-    return render(request, 'plunge_tracker/plunge_list.html', {})
+class TrackerView(TemplateView):
+    template_name = 'plunge_tracker/plunge_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['breadcrumb_list'] = [
+            (_('Home'), reverse('locations:map')),
+            (_('Tracker'), None),
+        ]
+        return context
+
 
 @require_GET
 @csrf_exempt
 def get_weather_data(request):
     """
     API endpoint to fetch weather data for given coordinates.
-    
+
     Expects GET parameters:
     - latitude: Latitude coordinate
     - longitude: Longitude coordinate
-    
+
     Returns JSON response with weather data or error message.
     """
     try:
         latitude = float(request.GET.get('latitude'))
         longitude = float(request.GET.get('longitude'))
-        
+
         if not (-90 <= latitude <= 90) or not (-180 <= longitude <= 180):
             return JsonResponse({
                 'success': False,
                 'error': 'Invalid coordinates'
             }, status=400)
-            
+
         weather_service = WeatherService()
         weather_data = weather_service.get_current_weather(latitude, longitude)
-        
+
         if weather_data:
             # Convert wind direction to compass format
             compass_direction = weather_service.convert_wind_direction_to_compass(
                 weather_data.get('winddirection')
             )
-            
+
             return JsonResponse({
                 'success': True,
                 'data': {
@@ -55,7 +66,7 @@ def get_weather_data(request):
                 'success': False,
                 'error': 'Unable to fetch weather data'
             }, status=500)
-            
+
     except (ValueError, TypeError) as e:
         logger.error(f"Invalid coordinates in weather request: {e}")
         return JsonResponse({

@@ -364,6 +364,7 @@ class CountryDetailView(DetailView):
         from django.urls import reverse
         context['breadcrumb_list'] = [
             (_('Home'), reverse('locations:map')),
+            (_('Countries'), reverse('locations:country_list')),
             (country, None),  # Current page - no link
         ]
 

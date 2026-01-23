@@ -10,10 +10,9 @@
 {% endblock %}
 
 {% block content %}
-<div class="container mt-xl">
-    {% include 'components/breadcrumbs.html' with breadcrumbs=breadcrumb_list %}
-
-    <div class="blog-header">
+<div class="container">
+    <div class="page-header">
+        {% include 'components/breadcrumbs.html' with breadcrumbs=breadcrumb_list %}
         <h1>{{ page_title }}</h1>
         <p class="lead">{% trans 'Guides, tips, and stories from the winter swimming community' %}</p>
     </div>

@@ -14,8 +14,9 @@
 {% block meta_twitter_description %}{% blocktrans count count=location_count with country=country city_count=city_count %}Looking for places to go winter swimming in {{ country }}? We have a list of {{ count }} spots in {{ city_count }} cities.{% plural %}Looking for places to go winter swimming in {{ country }}? We have a list of {{ count }} spots in {{ city_count }} cities.{% endblocktrans %}{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <div class="container">
+
+<div class="container" style="padding-bottom: 3rem;">
+    <div class="page-header">
         {# Breadcrumb navigation #}
         {% include 'components/breadcrumbs.html' with breadcrumbs=breadcrumb_list %}
 
@@ -28,9 +29,7 @@
             {% endblocktrans %}
         </p>
     </div>
-</div>
 
-<div class="container" style="padding-bottom: 3rem;">
     {% if cities %}
         <div class="cities-grid">
             {% for city_data in cities %}
