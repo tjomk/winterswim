@@ -14,8 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Translations
     const translations = translationsElem.dataset;
 
-    getLocationBtn.parentNode.insertBefore(weatherLoadingIndicator, getLocationBtn.nextSibling);
-
     // Form Inputs
     const dateTimeInput = document.getElementById('date-time');
     const durationMinutesInput = document.getElementById('duration-minutes');
