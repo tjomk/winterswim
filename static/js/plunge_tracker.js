@@ -14,11 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Translations
     const translations = translationsElem.dataset;
 
-    // Weather loading indicator
-    const weatherLoadingIndicator = document.createElement('div');
-    weatherLoadingIndicator.className = 'weather-loading';
-    weatherLoadingIndicator.textContent = translations.fetchingWeather || 'Fetching weather...';
-    weatherLoadingIndicator.style.display = 'none';
     getLocationBtn.parentNode.insertBefore(weatherLoadingIndicator, getLocationBtn.nextSibling);
 
     // Form Inputs
@@ -257,7 +252,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Show loading indicator
-        weatherLoadingIndicator.style.display = 'inline-block';
         getLocationBtn.disabled = true;
 
         navigator.geolocation.getCurrentPosition(
@@ -288,13 +282,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Don't show error to user as it's not critical
                 } finally {
                     // Hide loading indicator
-                    weatherLoadingIndicator.style.display = 'none';
                     getLocationBtn.disabled = false;
                 }
             },
             (error) => {
                 alert(translations.unableToRetrieveLocation);
-                weatherLoadingIndicator.style.display = 'none';
                 getLocationBtn.disabled = false;
             }
         );
@@ -361,8 +353,9 @@ document.addEventListener('DOMContentLoaded', () => {
     importFileInput.addEventListener('change', handleImportPlunges);
 
     plungeList.addEventListener('click', (e) => {
-        if (e.target.classList.contains('delete-btn')) {
-            const plungeItem = e.target.closest('.plunge-item');
+        const deleteButton = e.target.closest('.delete-btn');
+        if (deleteButton) {
+            const plungeItem = deleteButton.closest('.plunge-item');
             const plungeId = parseInt(plungeItem.dataset.id, 10);
             handleDeletePlunge(plungeId);
         }
