@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Translations
     const translations = translationsElem.dataset;
-    
+
     // Weather loading indicator
     const weatherLoadingIndicator = document.createElement('div');
     weatherLoadingIndicator.className = 'weather-loading';
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getWindDirectionClass(windDirection) {
         if (!windDirection) return '';
-        
+
         const direction = windDirection.toLowerCase();
         const directionMap = {
             'n': 'direction-n',
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'w': 'direction-w',
             'nw': 'direction-nw'
         };
-        
+
         return directionMap[direction] || '';
     }
 
@@ -88,19 +88,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         plunges.sort((a, b) => new Date(b.date) - new Date(a.date));
-
         plunges.forEach(plunge => {
             const plungeItem = document.createElement('div');
             plungeItem.className = 'plunge-item';
             plungeItem.setAttribute('data-id', plunge.id);
             const notAvailable = translations.notAvailable || 'N/A';
-            
+
             // Format date for display
             const plungeDateTime = new Date(plunge.date);
-            const formattedDate = plungeDateTime.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+            const formattedDate = plungeDateTime.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
             });
             const formattedTime = plungeDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -119,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <i data-lucide="trash-2"></i>
                     </button>
                 </div>
-                
+
                 <div class="item-data-grid">
                     <div class="data-chip" title="Duration">
                         <i data-lucide="timer"></i>
@@ -147,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             plungeList.appendChild(plungeItem);
         });
-        
+
         // Re-initialize Lucide icons after rendering plunges
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();
@@ -155,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderStatistics() {
-        const totalSessions = plunges.length;
+        const sessionCount = plunges.length;
         const totalTimeInSeconds = plunges.reduce((total, plunge) => {
             const minutes = parseInt(plunge.durationMinutes, 10) || 0;
             const seconds = parseInt(plunge.durationSeconds, 10) || 0;
@@ -167,14 +166,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Calculate average duration
         let avgDurationText = '0m 0s';
-        if (totalSessions > 0) {
-            const avgTimeInSeconds = totalTimeInSeconds / totalSessions;
+        if (sessionCount > 0) {
+            const avgTimeInSeconds = totalTimeInSeconds / sessionCount;
             const avgMinutes = Math.floor(avgTimeInSeconds / 60);
             const avgSeconds = Math.round(avgTimeInSeconds % 60);
             avgDurationText = `${avgMinutes}m ${avgSeconds}s`;
         }
 
-        totalSessions.textContent = totalSessions;
+        totalSessions.textContent = sessionCount;
         totalTime.textContent = `${totalMinutes}m ${remainingSeconds}s`;
         avgDuration.textContent = avgDurationText;
     }
@@ -216,20 +215,20 @@ document.addEventListener('DOMContentLoaded', () => {
         // Adjust for timezone to get correct local time
         const timeZoneOffset = now.getTimezoneOffset() * 60000; // offset in milliseconds
         const localTime = new Date(now - timeZoneOffset);
-        
+
         const year = localTime.getUTCFullYear();
         const month = (localTime.getUTCMonth() + 1).toString().padStart(2, '0');
         const day = localTime.getUTCDate().toString().padStart(2, '0');
         const hours = localTime.getUTCHours().toString().padStart(2, '0');
         const minutes = localTime.getUTCMinutes().toString().padStart(2, '0');
-        
+
         dateTimeInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
     }
 
     function fetchWeatherData(latitude, longitude) {
         return new Promise((resolve, reject) => {
-            const url = `/plunge-tracker/api/weather/?latitude=${latitude}&longitude=${longitude}`;
-            
+            const url = `/tracker/api/weather/?latitude=${latitude}&longitude=${longitude}`;
+
             fetch(url)
                 .then(response => {
                     if (!response.ok) {
@@ -250,29 +249,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         });
     }
-    
+
     function handleGetLocation() {
         if (!navigator.geolocation) {
             alert(translations.geolocationNotSupported);
             return;
         }
-        
+
         // Show loading indicator
         weatherLoadingIndicator.style.display = 'inline-block';
         getLocationBtn.disabled = true;
-        
+
         navigator.geolocation.getCurrentPosition(
             async (position) => {
                 try {
                     latitudeInput.value = position.coords.latitude.toFixed(6);
                     longitudeInput.value = position.coords.longitude.toFixed(6);
-                    
+
                     // Fetch weather data for this location
                     const weatherData = await fetchWeatherData(
                         position.coords.latitude,
                         position.coords.longitude
                     );
-                    
+
                     // Fill in weather data
                     if (weatherData.temperature !== undefined) {
                         airTempInput.value = weatherData.temperature;
@@ -283,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (weatherData.winddirection) {
                         windDirectionInput.value = weatherData.winddirection;
                     }
-                    
+
                 } catch (error) {
                     console.error('Weather fetch failed:', error);
                     // Don't show error to user as it's not critical
@@ -377,13 +376,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Adjust for timezone to get correct local time
     const timeZoneOffset = now.getTimezoneOffset() * 60000; // offset in milliseconds
     const localTime = new Date(now - timeZoneOffset);
-    
+
     const year = localTime.getUTCFullYear();
     const month = (localTime.getUTCMonth() + 1).toString().padStart(2, '0');
     const day = localTime.getUTCDate().toString().padStart(2, '0');
     const hours = localTime.getUTCHours().toString().padStart(2, '0');
     const minutes = localTime.getUTCMinutes().toString().padStart(2, '0');
-    
+
     dateTimeInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
     render();
 });
